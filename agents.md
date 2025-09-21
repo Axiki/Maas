@@ -125,3 +125,15 @@
 - Log any issues needing backend fixes.  
 **Status:** TODO  
 **Log:**  
+
+---
+
+## Agent 19 — Data Plumbing
+**Scope:** Portal analytics, metrics stores, and sync flows.
+**Tasks:**
+- Move Portal summary/quick stats onto shared data sources.
+- Provide refresh cadence controls aligned with offline mode.
+- Surface status, loading, and error handling for metrics consumers.
+**Status:** DONE
+**Log:**
+- Connected Portal metrics to a new `usePortalMetrics` hook backed by mock analytics data with offline-aware refresh logic. Added manual refresh/interval controls in the UI and documented loading/error handling for the summary cards.
