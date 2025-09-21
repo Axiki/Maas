@@ -70,14 +70,15 @@
 ---
 
 ## Agent 6 — Hero Section
-**Scope:** Main landing section (logo, slogan, CTA).  
-**Tasks:**  
-- Center logo properly.  
-- Add slogan text with correct typography.  
-- Add primary CTA button with hover state.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Main landing section (logo, slogan, CTA).
+**Tasks:**
+- Center logo properly.
+- Add slogan text with correct typography.
+- Add primary CTA button with hover state.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Built `PortalHero` with MotionWrapper animations that respect reduced-motion preferences, added brand badge, headline/subhead, supporting copy, and shared button variant routing to `/pos`. Verified keyboard focus order/tab activation for the CTA and noted responsive stack → two-column layout across 375px, 768px, and 1280px breakpoints.
 
 ---
 
