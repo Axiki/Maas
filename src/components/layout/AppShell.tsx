@@ -10,6 +10,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { appConfigs } from '../../config/apps';
 import { ThemeModeToggle } from '../ui/ThemeModeToggle';
+import { Footer } from './Footer';
 
 const MotionButton = motion(Button);
 
@@ -25,7 +26,7 @@ export const AppShell: React.FC = () => {
   const shouldRenderPaper = paperShader.enabled && paperShader.surfaces.includes('background');
 
   return (
-    <div className="min-h-screen bg-bg-dust text-ink relative">
+    <div className="relative flex min-h-screen flex-col bg-bg-dust text-ink">
       {shouldRenderPaper && (
         <PaperShader
           intensity={paperShader.intensity}
@@ -34,8 +35,8 @@ export const AppShell: React.FC = () => {
         />
       )}
 
-      <header className="bg-surface-100/80 backdrop-blur-sm border-b border-line sticky top-0 z-40">
-        <div className="flex items-center justify-between h-16 px-4">
+      <header className="sticky top-0 z-40 border-b border-line bg-surface-100/80 backdrop-blur-sm">
+        <div className="flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-4">
             {!isPortal && (
               <MotionButton
@@ -53,11 +54,11 @@ export const AppShell: React.FC = () => {
             <div className="flex items-center gap-3">
               {currentApp && (
                 <>
-                  <div className="p-2 rounded-lg bg-primary-100">
+                  <div className="rounded-lg bg-primary-100 p-2">
                     <Grid3x3 size={20} className="text-primary-600" />
                   </div>
                   <div>
-                    <h1 className="font-semibold text-lg">{currentApp.name}</h1>
+                    <h1 className="text-lg font-semibold">{currentApp.name}</h1>
                     <p className="text-sm text-muted">{currentApp.description}</p>
                   </div>
                 </>
@@ -71,14 +72,14 @@ export const AppShell: React.FC = () => {
 
             {user && (
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500">
+                  <span className="text-sm font-medium text-white">
                     {user.name.charAt(0).toUpperCase()}
                   </span>
                 </div>
                 <div className="hidden sm:block">
                   <p className="text-sm font-medium">{user.name}</p>
-                  <p className="text-xs text-muted capitalize">{user.role}</p>
+                  <p className="text-xs capitalize text-muted">{user.role}</p>
                 </div>
               </div>
             )}
@@ -86,11 +87,13 @@ export const AppShell: React.FC = () => {
         </div>
       </header>
 
-      <main className="relative z-10">
+      <main className="relative z-10 flex-1">
         <PageTransition>
           <Outlet />
         </PageTransition>
       </main>
+
+      <Footer />
     </div>
   );
 };
