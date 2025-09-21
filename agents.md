@@ -125,3 +125,15 @@
 - Log any issues needing backend fixes.  
 **Status:** TODO  
 **Log:**  
+
+---
+
+## Agent 16 — Reports Dashboard
+**Scope:** Build and verify the analytics dashboard experience for /reports.
+**Tasks:**
+- Implement KPI tiles and chart placeholders for reporting.
+- Wire mock datasets for sales, inventory, and purchasing trends.
+- Provide export hooks ready for backend integration.
+**Status:** DONE
+**Log:**
+- Implemented the new Reports dashboard with filters, KPI tiles, chart placeholders, and export stubs; verified the /reports route now renders the dashboard without regressions.
