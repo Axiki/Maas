@@ -118,10 +118,22 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 11 — Loading States
+**Scope:** Skeleton UIs, global overlays, and accessible loading indicators.
+**Tasks:**
+- Build shared skeleton primitives for cards, tables, and list rows.
+- Integrate skeletons into Portal, POS, and Backoffice surfaces.
+- Provide a suite-level overlay respecting motion preferences.
+**Status:** DONE
+**Log:**
+- Added reusable skeleton components and motion-safe styling, introduced a global loading overlay, and connected Portal, POS, and Backoffice flows to surface accessible loading feedback without altering existing behaviours.
