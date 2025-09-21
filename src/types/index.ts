@@ -3,6 +3,8 @@ export interface Tenant {
   id: string;
   name: string;
   settings: TenantSettings;
+  subscriptionTier?: AppTier;
+  featureFlags?: string[];
 }
 
 export interface TenantSettings {
@@ -33,6 +35,10 @@ export interface User {
   storeId: string;
   pin?: string;
   lastLogin?: Date;
+  subscriptionTier?: AppTier;
+  permissions?: AppPermission[];
+  favoriteApps?: string[];
+  featureFlags?: string[];
 }
 
 export type UserRole = 'cashier' | 'waiter' | 'bartender' | 'supervisor' | 'manager' | 'owner';
@@ -162,6 +168,20 @@ export interface KdsItem {
 }
 
 // App routing
+export type AppTier = 'core' | 'plus' | 'premium';
+
+export type AppPermission =
+  | 'orders:manage'
+  | 'kitchen:manage'
+  | 'catalog:manage'
+  | 'inventory:manage'
+  | 'customers:manage'
+  | 'promotions:manage'
+  | 'reports:view'
+  | 'calendar:manage'
+  | 'accounting:view'
+  | 'settings:manage';
+
 export interface AppConfig {
   id: string;
   name: string;
@@ -169,6 +189,9 @@ export interface AppConfig {
   icon: string;
   route: string;
   roles: UserRole[];
+  tier: AppTier;
+  permissions?: AppPermission[];
+  featureFlags?: string[];
   isFavorite?: boolean;
   hasNotifications?: boolean;
   isPWA?: boolean;

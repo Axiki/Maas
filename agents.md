@@ -118,10 +118,21 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 23 — Launcher Experience
+**Scope:** Application launcher metadata, filtering, and presentation.
+**Tasks:**
+- Document service-level changes for the launcher.
+- Capture portal UI adjustments tied to the new filtering logic.
+**Status:** DONE
+**Log:**
+- Established a launcher service to handle tier/permission/flag filtering, added metadata to app configs, and refreshed the portal UI to surface badges, counts, and restricted states. Noted existing lint issues in unrelated files when running `npm run lint`.
