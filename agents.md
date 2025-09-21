@@ -106,14 +106,15 @@
 ---
 
 ## Agent 9 — Forms & Inputs
-**Scope:** Input fields, contact forms, search bars.  
-**Tasks:**  
-- Style inputs and textareas.  
-- Apply palette + typography.  
-- Add focus states and validation feedback.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Input fields, contact forms, search bars.
+**Tasks:**
+- Style inputs and textareas.
+- Apply palette + typography.
+- Add focus states and validation feedback.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Added `.form-field`, `.form-label`, `.form-input`, `.form-helper`, and `.form-range` utilities in `src/index.css` to standardize spacing, focus states, validation colors, and range styling for both light and dark themes. Linting via `npm run lint` exposed existing TypeScript/ESLint errors in unrelated components (`POS.tsx`, `Portal.tsx`, `PaperShader.tsx`, `StatusIndicator.tsx`, `themeStore.ts`); no changes applied to those files to maintain scope.
 
 ---
 
