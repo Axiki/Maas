@@ -83,13 +83,99 @@ export interface Modifier {
   price: number;
 }
 
+export interface CustomerVisit {
+  date: string;
+  storeId: string;
+  orderId: string;
+  channel: 'dine-in' | 'takeaway' | 'delivery';
+  totalSpend: number;
+  pointsEarned: number;
+  pointsRedeemed?: number;
+}
+
+export interface LoyaltyExpiration {
+  points: number;
+  expiresOn: string;
+}
+
+export interface LoyaltyActivity {
+  id: string;
+  type: 'earn' | 'redeem' | 'adjust';
+  points: number;
+  balanceAfter: number;
+  date: string;
+  reference?: string;
+  note?: string;
+}
+
+export interface LoyaltyAccount {
+  tier: 'Bronze' | 'Silver' | 'Gold' | 'Platinum';
+  lifetimePoints: number;
+  pointsToNextReward: number;
+  lastEarnedOn?: string;
+  lastRedeemedOn?: string;
+  expiring?: LoyaltyExpiration[];
+  history: LoyaltyActivity[];
+}
+
+export interface StoreCreditLedgerEntry {
+  id: string;
+  type: 'issue' | 'redeem' | 'expire' | 'adjust';
+  amount: number;
+  balanceAfter: number;
+  date: string;
+  reference?: string;
+  note?: string;
+}
+
+export interface StoreCreditAccount {
+  id: string;
+  balance: number;
+  issuedOn: string;
+  expiresOn?: string;
+  lastUsedOn?: string;
+  ledger: StoreCreditLedgerEntry[];
+}
+
+export type GiftCardStatus = 'active' | 'redeemed' | 'void';
+
+export interface GiftCardTransaction {
+  id: string;
+  type: 'issue' | 'redeem' | 'refund' | 'adjust';
+  amount: number;
+  balanceAfter: number;
+  date: string;
+  reference?: string;
+  note?: string;
+}
+
+export interface GiftCard {
+  code: string;
+  originalValue: number;
+  balance: number;
+  status: GiftCardStatus;
+  issuedOn: string;
+  expiresOn?: string;
+  lastUsedOn?: string;
+  purchaseStoreId: string;
+  recipientName?: string;
+  transactions: GiftCardTransaction[];
+}
+
 export interface Customer {
   id: string;
   name: string;
   phone?: string;
   email?: string;
+  birthday?: string;
+  tags?: string[];
+  notes?: string;
   loyaltyPoints: number;
   storeCreditBalance: number;
+  visits: CustomerVisit[];
+  loyalty: LoyaltyAccount;
+  storeCredits: StoreCreditAccount[];
+  giftCards: GiftCard[];
 }
 
 export interface Order {
