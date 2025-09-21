@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { shallow } from 'zustand/shallow';
 import { TenantSettings } from '../types';
 
 export type ThemeMode = 'light' | 'dark' | 'auto';
@@ -32,7 +31,7 @@ const defaultPaperShader: PaperShaderState = {
 
 export const useThemeStore = create<ThemeState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       mode: 'auto',
       systemMode: 'light',
       resolvedMode: 'light',

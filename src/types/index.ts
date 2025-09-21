@@ -31,11 +31,27 @@ export interface User {
   name: string;
   role: UserRole;
   storeId: string;
-  pin?: string;
   lastLogin?: Date;
+  security?: UserSecurityProfile;
+}
+
+export interface UserSecurityProfile {
+  pinHash?: string;
+  pinUpdatedAt?: string;
+  twoFactorEnabled?: boolean;
+  twoFactorVerifiedAt?: string;
+  recoveryEmail?: string;
 }
 
 export type UserRole = 'cashier' | 'waiter' | 'bartender' | 'supervisor' | 'manager' | 'owner';
+
+export type PermissionKey =
+  | 'pos.processPayment'
+  | 'pos.voidItem'
+  | 'backoffice.manageSecurity'
+  | 'backoffice.configureTwoFactor';
+
+export type DeviceContext = 'backoffice' | 'pos';
 
 export interface Category {
   id: string;

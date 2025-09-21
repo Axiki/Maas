@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
-import { Search, Plus, Minus, Trash2, User, CreditCard, Clock } from 'lucide-react';
+import { Search, Plus, Minus, Trash2, CreditCard, Clock } from 'lucide-react';
 import { MotionWrapper, AnimatedList } from '../ui/MotionWrapper';
 import { useCartStore } from '../../stores/cartStore';
 import { useOfflineStore } from '../../stores/offlineStore';
 import { useAuthStore } from '../../stores/authStore';
-import { Product, Category } from '../../types';
+import { Product, Category, PermissionKey } from '../../types';
 import { mockProducts, mockCategories } from '../../data/mockData';
+import { PinEntryModal } from '../ui/PinEntryModal';
 
 export const POS: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,6 +16,11 @@ export const POS: React.FC = () => {
   const [products] = useState<Product[]>(mockProducts);
   const [categories] = useState<Category[]>(mockCategories);
   const gridRef = useRef<HTMLDivElement>(null);
+  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
+  const [pinError, setPinError] = useState<string | null>(null);
+  const [pinSubmitting, setPinSubmitting] = useState(false);
+  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
+  const [pendingPermission, setPendingPermission] = useState<PermissionKey | null>(null);
   
   const { 
     items, 
@@ -29,7 +35,8 @@ export const POS: React.FC = () => {
   } = useCartStore();
   
   const { queueOrder } = useOfflineStore();
-  const { user, store } = useAuthStore();
+  const { user, store, hasPermission, requirePinForAction, recordPinVerification, validatePin } = useAuthStore();
+  const canProcessPayment = hasPermission('pos.processPayment');
 
   // Filter products
   const filteredProducts = products.filter(product => {
@@ -62,7 +69,7 @@ export const POS: React.FC = () => {
     addItem(product);
   };
 
-  const handleCheckout = async () => {
+  const finalizeCheckout = async () => {
     if (items.length === 0 || !user || !store) return;
 
     const order = {
@@ -92,19 +99,72 @@ export const POS: React.FC = () => {
 
     try {
       await queueOrder(order);
-      // Clear cart after successful order
       useCartStore.getState().clearCart();
-      
-      // Show success feedback
       console.log('Order queued successfully:', order.id);
     } catch (error) {
       console.error('Failed to process order:', error);
     }
   };
 
+  const handleCheckout = () => {
+    if (items.length === 0 || !user || !store) return;
+
+    const action: PermissionKey = 'pos.processPayment';
+
+    if (!canProcessPayment) {
+      alert('You do not have permission to process payments.');
+      return;
+    }
+
+    if (requirePinForAction(action)) {
+      setPendingAction(() => finalizeCheckout);
+      setPendingPermission(action);
+      setPinError(null);
+      setIsPinModalOpen(true);
+      return;
+    }
+
+    finalizeCheckout();
+  };
+
+  const handlePinSubmit = (pin: string) => {
+    setPinSubmitting(true);
+    setPinError(null);
+
+    const isValid = validatePin(pin);
+
+    if (!isValid) {
+      setPinError('Invalid PIN. Please try again.');
+      setPinSubmitting(false);
+      return;
+    }
+
+    if (pendingPermission) {
+      recordPinVerification(pendingPermission);
+    }
+
+    const action = pendingAction;
+    setIsPinModalOpen(false);
+    setPendingAction(null);
+    setPendingPermission(null);
+    setPinSubmitting(false);
+
+    if (action) {
+      action();
+    }
+  };
+
+  const handlePinClose = () => {
+    setIsPinModalOpen(false);
+    setPendingAction(null);
+    setPendingPermission(null);
+    setPinError(null);
+  };
+
   return (
-    <MotionWrapper type="page">
-      <div className="h-[calc(100vh-4rem)] flex">
+    <>
+      <MotionWrapper type="page">
+        <div className="h-[calc(100vh-4rem)] flex">
         {/* Cart Sidebar */}
         <div className="w-80 bg-surface-100 border-r border-line flex flex-col">
           {/* Cart Header */}
@@ -211,7 +271,7 @@ export const POS: React.FC = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleCheckout}
-              disabled={items.length === 0}
+              disabled={items.length === 0 || !canProcessPayment}
               className="w-full bg-primary-500 text-white py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
             >
               <CreditCard size={18} />
@@ -320,6 +380,17 @@ export const POS: React.FC = () => {
           </div>
         </div>
       </div>
-    </MotionWrapper>
+      </MotionWrapper>
+
+      <PinEntryModal
+        open={isPinModalOpen}
+        onClose={handlePinClose}
+        onSubmit={handlePinSubmit}
+        isSubmitting={pinSubmitting}
+        error={pinError}
+        title="Manager PIN Required"
+        description="Process payment is protected. Enter a valid PIN to continue."
+      />
+    </>
   );
 };
