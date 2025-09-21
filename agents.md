@@ -16,8 +16,9 @@
 - Fix misaligned sections, spacing, and grid inconsistencies.  
 - Improve responsiveness (mobile/tablet/desktop).  
 - Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Status:** DONE
+**Log:**
+- Created the Reports dashboard layout with KPI tiles, filters, chart placeholder, and export controls backed by new mock data; chart integration still pending when library is ready.
 
 ---
 
