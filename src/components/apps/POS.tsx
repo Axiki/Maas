@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { Button } from '@mas/ui';
 import { gsap } from 'gsap';
 import { Search, Plus, Minus, Trash2, User, CreditCard, Clock } from 'lucide-react';
 import { MotionWrapper, AnimatedList } from '../ui/MotionWrapper';
@@ -8,6 +9,8 @@ import { useOfflineStore } from '../../stores/offlineStore';
 import { useAuthStore } from '../../stores/authStore';
 import { Product, Category } from '../../types';
 import { mockProducts, mockCategories } from '../../data/mockData';
+
+const MotionButton = motion(Button);
 
 export const POS: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -207,16 +210,18 @@ export const POS: React.FC = () => {
               </div>
             </div>
             
-            <motion.button
+            <MotionButton
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleCheckout}
               disabled={items.length === 0}
-              className="w-full bg-primary-500 text-white py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
+              variant="primary"
+              size="lg"
+              className="w-full"
             >
               <CreditCard size={18} />
               Process Payment
-            </motion.button>
+            </MotionButton>
           </div>
         </div>
 
