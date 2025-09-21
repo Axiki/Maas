@@ -57,8 +57,8 @@ export const AppShell: React.FC = () => {
                     <Grid3x3 size={20} className="text-primary-600" />
                   </div>
                   <div>
-                    <h1 className="font-semibold text-lg">{currentApp.name}</h1>
-                    <p className="text-sm text-muted">{currentApp.description}</p>
+                    <h1 className="heading-xs">{currentApp.name}</h1>
+                    <p className="body-sm text-muted">{currentApp.description}</p>
                   </div>
                 </>
               )}
@@ -72,13 +72,13 @@ export const AppShell: React.FC = () => {
             {user && (
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">
+                  <span className="body-sm font-medium text-white">
                     {user.name.charAt(0).toUpperCase()}
                   </span>
                 </div>
                 <div className="hidden sm:block">
-                  <p className="text-sm font-medium">{user.name}</p>
-                  <p className="text-xs text-muted capitalize">{user.role}</p>
+                  <p className="body-sm font-medium">{user.name}</p>
+                  <p className="body-xs text-muted capitalize">{user.role}</p>
                 </div>
               </div>
             )}
