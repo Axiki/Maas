@@ -1,13 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
-import { Search, Plus, Minus, Trash2, User, CreditCard, Clock } from 'lucide-react';
+import { Search, Plus, Minus, Trash2, CreditCard, Clock, Sparkles } from 'lucide-react';
 import { MotionWrapper, AnimatedList } from '../ui/MotionWrapper';
 import { useCartStore } from '../../stores/cartStore';
 import { useOfflineStore } from '../../stores/offlineStore';
 import { useAuthStore } from '../../stores/authStore';
-import { Product, Category } from '../../types';
+import { Product, Category, PromotionPreviewBadge } from '../../types';
 import { mockProducts, mockCategories } from '../../data/mockData';
+
+const badgeToneClasses: Record<PromotionPreviewBadge['tone'], string> = {
+  discount: 'bg-primary-100 text-primary-600 border border-primary-200',
+  reward: 'bg-success/10 text-success border border-success/40',
+  info: 'bg-surface-200 text-ink border border-line'
+};
+
+const badgeIconToneClasses: Record<PromotionPreviewBadge['tone'], string> = {
+  discount: 'text-primary-600',
+  reward: 'text-success',
+  info: 'text-muted'
+};
 
 export const POS: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -298,12 +310,28 @@ export const POS: React.FC = () => {
                   <p className="text-primary-600 font-semibold">
                     ${product.price.toFixed(2)}
                   </p>
-                  
+
                   {product.variants.length > 0 && (
                     <p className="text-xs text-muted mt-1">
                       {product.variants.length} variant{product.variants.length !== 1 ? 's' : ''}
                     </p>
                   )}
+
+                  {product.promotionBadges?.length ? (
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {product.promotionBadges.map((badge) => (
+                        <span
+                          key={badge.id}
+                          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+                            badgeToneClasses[badge.tone]
+                          }`}
+                        >
+                          <Sparkles size={12} className={badgeIconToneClasses[badge.tone]} />
+                          {badge.label}
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
                 </motion.div>
               ))}
             </div>

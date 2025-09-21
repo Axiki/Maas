@@ -1,4 +1,5 @@
 // Core business entities
+import { PromotionPreviewBadge } from './promotions';
 export interface Tenant {
   id: string;
   name: string;
@@ -59,6 +60,7 @@ export interface Product {
   modifierGroups: ModifierGroup[];
   isActive: boolean;
   stationTags: string[];
+  promotionBadges?: PromotionPreviewBadge[];
 }
 
 export interface ProductVariant {
@@ -189,3 +191,5 @@ export interface MotionPresets {
     duration: number;
   };
 }
+
+export * from './promotions';
