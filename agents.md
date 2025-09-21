@@ -46,14 +46,15 @@
 ---
 
 ## Agent 4 — Animations & Transitions
-**Scope:** Smooth motion, hover states, page transitions.  
-**Tasks:**  
-- Review current animations.  
-- Add smooth transitions to navbar, buttons, hero, and modals.  
-- Ensure performance is preserved.  
-- Document all changes here.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Smooth motion, hover states, page transitions.
+**Tasks:**
+- Review current animations.
+- Add smooth transitions to navbar, buttons, hero, and modals.
+- Ensure performance is preserved.
+- Document all changes here.
+**Status:** DONE
+**Log:**
+- 2024-10-22: Added reduced-motion guards to Portal & POS GSAP timelines, aligned hover/press transitions with motion tokens, and synced Tailwind utilities to token durations. Validation: `npm run lint` (fails due to pre-existing unused imports in StatusIndicator/themeStore outside Agent 4 scope).
 
 ---
 

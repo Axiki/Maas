@@ -1,13 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
-import { Search, Plus, Minus, Trash2, User, CreditCard, Clock } from 'lucide-react';
+import { Search, Plus, Minus, Trash2, CreditCard, Clock } from 'lucide-react';
 import { MotionWrapper, AnimatedList } from '../ui/MotionWrapper';
 import { useCartStore } from '../../stores/cartStore';
 import { useOfflineStore } from '../../stores/offlineStore';
 import { useAuthStore } from '../../stores/authStore';
 import { Product, Category } from '../../types';
 import { mockProducts, mockCategories } from '../../data/mockData';
+import { theme } from '../../config/theme';
+
+const transitionEase = `cubic-bezier(${theme.motion.routeTransition.ease.join(',')})`;
+const parsedTransitionEase = gsap.parseEase(transitionEase);
+const hoverTransition = {
+  duration: theme.motion.pressScale.duration,
+  ease: theme.motion.routeTransition.ease,
+};
+const pressScale = theme.motion.pressScale.scale;
+const tapScale = 1 - (pressScale - 1);
 
 export const POS: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -41,21 +51,68 @@ export const POS: React.FC = () => {
 
   // GSAP animation for product grid
   useEffect(() => {
-    if (gridRef.current && filteredProducts.length > 0) {
-      const productCards = gridRef.current.children;
-      
-      gsap.fromTo(productCards,
+    if (!gridRef.current || typeof window === 'undefined') {
+      return;
+    }
+
+    const productCards = gridRef.current.children;
+    if (!productCards.length) {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const animateProducts = () => {
+      if (!productCards.length) {
+        return undefined;
+      }
+
+      if (mediaQuery.matches) {
+        gsap.set(productCards, { opacity: 1, y: 0, scale: 1 });
+        return undefined;
+      }
+
+      return gsap.fromTo(
+        productCards,
         { y: 12, opacity: 0, scale: 0.95 },
         {
           y: 0,
           opacity: 1,
           scale: 1,
-          duration: 0.15,
-          stagger: 0.02,
-          ease: "power2.out"
+          duration: theme.motion.itemStagger.duration,
+          stagger: theme.motion.itemStagger.delay,
+          ease: parsedTransitionEase,
         }
       );
+    };
+
+    let animation = animateProducts();
+
+    const handlePreferenceChange = () => {
+      if (animation) {
+        animation.kill();
+        animation = undefined;
+      }
+
+      animation = animateProducts();
+    };
+
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', handlePreferenceChange);
+    } else {
+      mediaQuery.addListener(handlePreferenceChange);
     }
+
+    return () => {
+      if (typeof mediaQuery.removeEventListener === 'function') {
+        mediaQuery.removeEventListener('change', handlePreferenceChange);
+      } else {
+        mediaQuery.removeListener(handlePreferenceChange);
+      }
+
+      if (animation) {
+        animation.kill();
+      }
+    };
   }, [filteredProducts]);
 
   const handleAddProduct = (product: Product) => {
@@ -114,9 +171,9 @@ export const POS: React.FC = () => {
               <div className="flex gap-1">
                 <button
                   onClick={() => setOrderType('dine-in')}
-                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${
-                    orderType === 'dine-in' 
-                      ? 'bg-primary-500 text-white' 
+                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors duration-[var(--transition-item-duration)] ease-[var(--transition-route-ease)] ${
+                    orderType === 'dine-in'
+                      ? 'bg-primary-500 text-white'
                       : 'bg-surface-200 text-muted hover:bg-surface-300'
                   }`}
                 >
@@ -124,9 +181,9 @@ export const POS: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setOrderType('takeaway')}
-                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${
-                    orderType === 'takeaway' 
-                      ? 'bg-primary-500 text-white' 
+                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors duration-[var(--transition-item-duration)] ease-[var(--transition-route-ease)] ${
+                    orderType === 'takeaway'
+                      ? 'bg-primary-500 text-white'
                       : 'bg-surface-200 text-muted hover:bg-surface-300'
                   }`}
                 >
@@ -161,7 +218,7 @@ export const POS: React.FC = () => {
                       </div>
                       <button
                         onClick={() => removeItem(item.id)}
-                        className="p-1 text-muted hover:text-danger transition-colors"
+                        className="p-1 text-muted hover:text-danger transition-colors duration-[var(--transition-item-duration)] ease-[var(--transition-route-ease)]"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -171,14 +228,14 @@ export const POS: React.FC = () => {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
-                          className="w-7 h-7 rounded-lg bg-surface-100 flex items-center justify-center hover:bg-line transition-colors"
+                        className="w-7 h-7 rounded-lg bg-surface-100 flex items-center justify-center hover:bg-line transition-colors duration-[var(--transition-item-duration)] ease-[var(--transition-route-ease)]"
                         >
                           <Minus size={14} />
                         </button>
                         <span className="w-8 text-center font-medium">{item.quantity}</span>
                         <button
                           onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
-                          className="w-7 h-7 rounded-lg bg-surface-100 flex items-center justify-center hover:bg-line transition-colors"
+                        className="w-7 h-7 rounded-lg bg-surface-100 flex items-center justify-center hover:bg-line transition-colors duration-[var(--transition-item-duration)] ease-[var(--transition-route-ease)]"
                         >
                           <Plus size={14} />
                         </button>
@@ -208,11 +265,12 @@ export const POS: React.FC = () => {
             </div>
             
             <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: pressScale }}
+              whileTap={{ scale: tapScale }}
+              transition={hoverTransition}
               onClick={handleCheckout}
               disabled={items.length === 0}
-              className="w-full bg-primary-500 text-white py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
+              className="w-full bg-primary-500 text-white py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-600 transition-colors duration-[var(--transition-item-duration)] ease-[var(--transition-route-ease)] flex items-center justify-center gap-2"
             >
               <CreditCard size={18} />
               Process Payment
@@ -241,7 +299,7 @@ export const POS: React.FC = () => {
             <div className="flex gap-2 overflow-x-auto pb-2">
               <button
                 onClick={() => setSelectedCategory('all')}
-                className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors ${
+                className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors duration-[var(--transition-item-duration)] ease-[var(--transition-route-ease)] ${
                   selectedCategory === 'all'
                     ? 'bg-primary-500 text-white'
                     : 'bg-surface-200 text-muted hover:bg-line'
@@ -253,7 +311,7 @@ export const POS: React.FC = () => {
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors duration-[var(--transition-item-duration)] ease-[var(--transition-route-ease)] ${
                     selectedCategory === category.id
                       ? 'bg-primary-500 text-white'
                       : 'bg-surface-200 text-muted hover:bg-line'
@@ -274,10 +332,11 @@ export const POS: React.FC = () => {
               {filteredProducts.map((product) => (
                 <motion.div
                   key={product.id}
-                  whileHover={{ scale: 1.02, boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ scale: pressScale, boxShadow: theme.elevation.card }}
+                  whileTap={{ scale: tapScale }}
+                  transition={hoverTransition}
                   onClick={() => handleAddProduct(product)}
-                  className="bg-surface-100 rounded-lg p-4 cursor-pointer border border-line hover:border-primary-200 transition-all group"
+                  className="bg-surface-100 rounded-lg p-4 cursor-pointer border border-line hover:border-primary-200 transition-all duration-[var(--transition-item-duration)] ease-[var(--transition-route-ease)] group"
                 >
                   <div className="aspect-square bg-surface-200 rounded-lg mb-3 flex items-center justify-center">
                     {product.image ? (
@@ -291,7 +350,7 @@ export const POS: React.FC = () => {
                     )}
                   </div>
                   
-                  <h4 className="font-medium text-sm mb-1 group-hover:text-primary-600 transition-colors">
+                  <h4 className="font-medium text-sm mb-1 group-hover:text-primary-600 transition-colors duration-[var(--transition-item-duration)] ease-[var(--transition-route-ease)]">
                     {product.name}
                   </h4>
                   

@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import * as LucideIcons from 'lucide-react';
+import type { LucideProps } from 'lucide-react';
 import { MotionWrapper } from '../ui/MotionWrapper';
 import { useAuthStore } from '../../stores/authStore';
 import { getAvailableApps } from '../../config/apps';
@@ -10,19 +11,47 @@ import { theme } from '../../config/theme';
 import { Card } from '@mas/ui';
 
 const MotionCard = motion(Card);
+const transitionEase = `cubic-bezier(${theme.motion.routeTransition.ease.join(',')})`;
+const parsedTransitionEase = gsap.parseEase(transitionEase);
+const hoverTransition = {
+  duration: theme.motion.pressScale.duration,
+  ease: theme.motion.routeTransition.ease,
+};
+const pressScale = theme.motion.pressScale.scale;
+const tapScale = 1 - (pressScale - 1);
 
 export const Portal: React.FC = () => {
   const navigate = useNavigate();
   const { user, tenant } = useAuthStore();
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const availableApps = user ? getAvailableApps(user.role) : [];
+  const availableApps = useMemo(
+    () => (user ? getAvailableApps(user.role) : []),
+    [user]
+  );
 
   useEffect(() => {
-    if (gridRef.current) {
-      const cards = gridRef.current.children;
+    if (!gridRef.current || typeof window === 'undefined') {
+      return;
+    }
 
-      gsap.fromTo(
+    const cards = gridRef.current.children;
+    if (!cards.length) {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const animateCards = () => {
+      if (!cards.length) {
+        return undefined;
+      }
+
+      if (mediaQuery.matches) {
+        gsap.set(cards, { opacity: 1, y: 0, scale: 1 });
+        return undefined;
+      }
+
+      return gsap.fromTo(
         cards,
         {
           y: 24,
@@ -35,10 +64,39 @@ export const Portal: React.FC = () => {
           scale: 1,
           duration: theme.motion.itemStagger.duration,
           stagger: theme.motion.itemStagger.delay,
-          ease: 'power2.out',
+          ease: parsedTransitionEase,
         }
       );
+    };
+
+    let animation = animateCards();
+
+    const handlePreferenceChange = () => {
+      if (animation) {
+        animation.kill();
+        animation = undefined;
+      }
+
+      animation = animateCards();
+    };
+
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', handlePreferenceChange);
+    } else {
+      mediaQuery.addListener(handlePreferenceChange);
     }
+
+    return () => {
+      if (typeof mediaQuery.removeEventListener === 'function') {
+        mediaQuery.removeEventListener('change', handlePreferenceChange);
+      } else {
+        mediaQuery.removeListener(handlePreferenceChange);
+      }
+
+      if (animation) {
+        animation.kill();
+      }
+    };
   }, [availableApps]);
 
   const handleAppClick = (route: string) => {
@@ -57,20 +115,25 @@ export const Portal: React.FC = () => {
 
         <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {availableApps.map((app) => {
-            const IconComponent = (LucideIcons as any)[app.icon] || LucideIcons.Package;
+            const iconKey = (app.icon in LucideIcons ? app.icon : 'Package') as keyof typeof LucideIcons;
+            const IconComponent = LucideIcons[iconKey] as React.ComponentType<LucideProps>;
 
             return (
               <MotionCard
                 key={app.id}
-                whileHover={{ scale: 1.02, boxShadow: theme.elevation.modal }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: pressScale, boxShadow: theme.elevation.modal }}
+                whileTap={{ scale: tapScale }}
+                transition={hoverTransition}
                 padding
-                className="cursor-pointer border-line/70 hover:border-primary-200 transition-all duration-200 group shadow-sm hover:shadow-md"
+                className="cursor-pointer border-line/70 hover:border-primary-200 transition-all duration-[var(--transition-item-duration)] ease-[var(--transition-route-ease)] group shadow-sm hover:shadow-md"
                 onClick={() => handleAppClick(app.route)}
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="p-3 rounded-lg bg-primary-100 group-hover:bg-primary-500 transition-colors">
-                    <IconComponent size={24} className="text-primary-600 group-hover:text-white transition-colors" />
+                  <div className="p-3 rounded-lg bg-primary-100 group-hover:bg-primary-500 transition-colors duration-[var(--transition-item-duration)] ease-[var(--transition-route-ease)]">
+                    <IconComponent
+                      size={24}
+                      className="text-primary-600 group-hover:text-white transition-colors duration-[var(--transition-item-duration)] ease-[var(--transition-route-ease)]"
+                    />
                   </div>
 
                   {app.hasNotifications && <div className="w-2 h-2 rounded-full bg-danger animate-pulse" />}
@@ -82,7 +145,7 @@ export const Portal: React.FC = () => {
                   )}
                 </div>
 
-                <h3 className="font-semibold text-lg mb-2 group-hover:text-primary-600 transition-colors">{app.name}</h3>
+                <h3 className="font-semibold text-lg mb-2 group-hover:text-primary-600 transition-colors duration-[var(--transition-item-duration)] ease-[var(--transition-route-ease)]">{app.name}</h3>
 
                 <p className="text-muted text-sm leading-relaxed">{app.description}</p>
               </MotionCard>
