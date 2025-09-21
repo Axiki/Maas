@@ -10,6 +10,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { appConfigs } from '../../config/apps';
 import { ThemeModeToggle } from '../ui/ThemeModeToggle';
+import { LoadingOverlay } from '../ui/LoadingOverlay';
 
 const MotionButton = motion(Button);
 
@@ -26,6 +27,7 @@ export const AppShell: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-bg-dust text-ink relative">
+      <LoadingOverlay />
       {shouldRenderPaper && (
         <PaperShader
           intensity={paperShader.intensity}

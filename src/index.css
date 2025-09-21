@@ -93,4 +93,43 @@
   [data-paper-cards='true'] .paper-card::before {
     opacity: var(--paper-card-opacity);
   }
+
+  .skeleton-surface {
+    position: relative;
+    overflow: hidden;
+    border-radius: inherit;
+    background: rgba(var(--color-surface-200) / 0.7);
+  }
+
+  .skeleton-surface::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      120deg,
+      transparent,
+      rgba(var(--color-primary-100) / 0.45),
+      transparent
+    );
+    animation: skeleton-wave 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+}
+
+@keyframes skeleton-wave {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-surface::after {
+    animation: none;
+    transform: none;
+    background: rgba(var(--color-primary-200) / 0.25);
+  }
 }
