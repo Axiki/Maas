@@ -37,6 +37,29 @@ export interface User {
 
 export type UserRole = 'cashier' | 'waiter' | 'bartender' | 'supervisor' | 'manager' | 'owner';
 
+export interface DiscountRule {
+  role: UserRole;
+  maxSelfDiscountPercent: number;
+  maxManagerDiscountPercent: number;
+  approvalRoles: UserRole[];
+}
+
+export interface DiscountApprovalEvent {
+  id: string;
+  timestamp: Date;
+  storeId?: string;
+  cartItemId: string;
+  orderId?: string;
+  productName: string;
+  discountPercent: number;
+  discountAmount: number;
+  reason: string;
+  requestedByUserId?: string;
+  requestedByUserName?: string;
+  requestedByRole: UserRole;
+  approvedByRole: UserRole;
+}
+
 export interface Category {
   id: string;
   name: string;
@@ -117,6 +140,9 @@ export interface OrderLine {
   quantity: number;
   price: number;
   discount: number;
+  discountPercent: number;
+  discountReason?: string;
+  discountApprovedByRole?: UserRole | null;
   tax: number;
   modifiers: SelectedModifier[];
   notes?: string;
