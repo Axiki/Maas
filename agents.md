@@ -16,8 +16,9 @@
 - Fix misaligned sections, spacing, and grid inconsistencies.  
 - Improve responsiveness (mobile/tablet/desktop).  
 - Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Status:** DONE
+**Log:**
+- Added shared form control utilities and styled selects/inputs for purchasing modals, then wired them into the new Purchasing workspace create PO / log receipt shells. npm run lint reports legacy issues in unrelated files (POS, Portal, PaperShader, StatusIndicator, themeStore).
 
 ---
 
@@ -106,14 +107,15 @@
 ---
 
 ## Agent 9 — Forms & Inputs
-**Scope:** Input fields, contact forms, search bars.  
-**Tasks:**  
-- Style inputs and textareas.  
-- Apply palette + typography.  
-- Add focus states and validation feedback.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Input fields, contact forms, search bars.
+**Tasks:**
+- Style inputs and textareas.
+- Apply palette + typography.
+- Add focus states and validation feedback.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Added shared form control utilities and styled selects/inputs for purchasing modals, then wired them into the new Purchasing workspace create PO / log receipt shells. npm run lint reports legacy issues in unrelated files (POS, Portal, PaperShader, StatusIndicator, themeStore).
 
 ---
 

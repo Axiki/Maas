@@ -43,6 +43,14 @@ export const appConfigs: AppConfig[] = [
     roles: ['manager', 'owner']
   },
   {
+    id: 'purchasing',
+    name: 'Purchasing',
+    description: 'Manage suppliers, purchase orders, and receiving',
+    icon: 'ShoppingBag',
+    route: '/purchasing',
+    roles: ['supervisor', 'manager', 'owner']
+  },
+  {
     id: 'customers',
     name: 'Customers',
     description: 'Customer management and loyalty',

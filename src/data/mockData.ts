@@ -1,4 +1,14 @@
-import { Product, Category, Customer, User, Store, Tenant } from '../types';
+import {
+  Product,
+  Category,
+  Customer,
+  User,
+  Store,
+  Tenant,
+  Supplier,
+  PurchaseOrder,
+  GoodsReceipt
+} from '../types';
 
 export const mockTenant: Tenant = {
   id: 'tenant-1',
@@ -278,5 +288,184 @@ export const mockCustomers: Customer[] = [
     phone: '555-0103',
     loyaltyPoints: 2100,
     storeCreditBalance: 25.00
+  }
+];
+
+export const mockSuppliers: Supplier[] = [
+  {
+    id: 'sup-1',
+    name: 'Coastal Produce Cooperative',
+    contactName: 'Miguel Santos',
+    contactEmail: 'orders@coastalproduce.com',
+    contactPhone: '(555) 210-4456',
+    categories: ['Produce', 'Herbs'],
+    leadTimeDays: 2,
+    rating: 4.8,
+    lastOrderDate: new Date('2024-07-08T10:15:00'),
+    nextDeliveryDate: new Date('2024-07-12T08:30:00'),
+    terms: 'Net 15',
+    notes: 'Delivers Monday, Wednesday, Friday before 10am.'
+  },
+  {
+    id: 'sup-2',
+    name: 'Harbor Meats & Provisions',
+    contactName: 'Lena Fischer',
+    contactEmail: 'lfischer@harbormeats.com',
+    contactPhone: '(555) 308-2299',
+    categories: ['Proteins', 'Dairy'],
+    leadTimeDays: 3,
+    rating: 4.6,
+    lastOrderDate: new Date('2024-07-05T14:45:00'),
+    nextDeliveryDate: new Date('2024-07-13T07:45:00'),
+    terms: 'Net 30',
+    notes: 'Aging room specials every Thursday. Requires dock access.'
+  },
+  {
+    id: 'sup-3',
+    name: 'Bluewave Beverages',
+    contactName: 'Aaron Patel',
+    contactEmail: 'aaron.patel@bluewavebev.com',
+    contactPhone: '(555) 410-7721',
+    categories: ['Beverages', 'Mixers'],
+    leadTimeDays: 5,
+    rating: 4.4,
+    lastOrderDate: new Date('2024-07-02T09:30:00'),
+    nextDeliveryDate: new Date('2024-07-16T09:00:00'),
+    terms: 'Net 45',
+    notes: 'Offers palletized delivery; provide liftgate instructions when ordering.'
+  }
+];
+
+export const mockPurchaseOrders: PurchaseOrder[] = [
+  {
+    id: 'po-1001',
+    supplierId: 'sup-1',
+    reference: '1001',
+    status: 'draft',
+    expectedOn: new Date('2024-07-12'),
+    createdAt: new Date('2024-07-10T11:20:00'),
+    totalAmount: 482.4,
+    currency: 'USD',
+    lines: [
+      {
+        id: 'po-1001-line-1',
+        productName: 'Heirloom Tomatoes (case)',
+        quantityOrdered: 12,
+        unitCost: 24.5,
+        receivedQuantity: 0
+      },
+      {
+        id: 'po-1001-line-2',
+        productName: 'Living Basil Plants',
+        quantityOrdered: 18,
+        unitCost: 7.8,
+        receivedQuantity: 0
+      }
+    ],
+    notes: 'Confirm organic certification for basil plants.'
+  },
+  {
+    id: 'po-1002',
+    supplierId: 'sup-2',
+    reference: '1002',
+    status: 'sent',
+    expectedOn: new Date('2024-07-14'),
+    createdAt: new Date('2024-07-09T16:00:00'),
+    totalAmount: 1285.75,
+    currency: 'USD',
+    lines: [
+      {
+        id: 'po-1002-line-1',
+        productName: 'Prime Ribeye (14oz)',
+        quantityOrdered: 24,
+        unitCost: 28.5,
+        receivedQuantity: 0
+      },
+      {
+        id: 'po-1002-line-2',
+        productName: 'Cultured Butter (2lb)',
+        quantityOrdered: 12,
+        unitCost: 6.25,
+        receivedQuantity: 0
+      }
+    ],
+    notes: 'Request vacuum-sealed packs with 14-day shelf life.'
+  },
+  {
+    id: 'po-0999',
+    supplierId: 'sup-3',
+    reference: '0999',
+    status: 'received',
+    expectedOn: new Date('2024-07-09'),
+    createdAt: new Date('2024-07-04T13:30:00'),
+    totalAmount: 612.9,
+    currency: 'USD',
+    lines: [
+      {
+        id: 'po-0999-line-1',
+        productName: 'Sparkling Water (24pk)',
+        quantityOrdered: 10,
+        unitCost: 12.5,
+        receivedQuantity: 8,
+        variance: -2
+      },
+      {
+        id: 'po-0999-line-2',
+        productName: 'Ginger Beer (case)',
+        quantityOrdered: 6,
+        unitCost: 18.75,
+        receivedQuantity: 6,
+        variance: 0
+      }
+    ],
+    notes: 'Partial shortage on sparkling water noted in GRN-901.'
+  }
+];
+
+export const mockGoodsReceipts: GoodsReceipt[] = [
+  {
+    id: 'grn-901',
+    purchaseOrderId: 'po-0999',
+    supplierId: 'sup-3',
+    reference: 'GRN-901',
+    status: 'reconciled',
+    receivedAt: new Date('2024-07-09T17:45:00'),
+    receivedBy: 'Sarah Johnson',
+    notes: 'Short two cases of sparkling water pending credit.',
+    items: [
+      {
+        id: 'grn-901-item-1',
+        productName: 'Sparkling Water (24pk)',
+        orderedQuantity: 10,
+        receivedQuantity: 8,
+        unitCost: 12.5
+      },
+      {
+        id: 'grn-901-item-2',
+        productName: 'Ginger Beer (case)',
+        orderedQuantity: 6,
+        receivedQuantity: 6,
+        unitCost: 18.75
+      }
+    ]
+  },
+  {
+    id: 'grn-902',
+    purchaseOrderId: 'po-1002',
+    supplierId: 'sup-2',
+    reference: 'GRN-902',
+    status: 'pending',
+    receivedAt: new Date('2024-07-10T15:10:00'),
+    receivedBy: 'Devin Carter',
+    notes: 'Awaiting butcher verification before posting receipt.',
+    items: [
+      {
+        id: 'grn-902-item-1',
+        productName: 'Prime Ribeye (14oz)',
+        orderedQuantity: 24,
+        receivedQuantity: 0,
+        unitCost: 28.5
+      }
+    ]
   }
 ];
