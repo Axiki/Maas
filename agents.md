@@ -70,14 +70,17 @@
 ---
 
 ## Agent 6 — Hero Section
-**Scope:** Main landing section (logo, slogan, CTA).  
-**Tasks:**  
-- Center logo properly.  
-- Add slogan text with correct typography.  
-- Add primary CTA button with hover state.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Main landing section (logo, slogan, CTA).
+**Tasks:**
+- Center logo properly.
+- Add slogan text with correct typography.
+- Add primary CTA button with hover state.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Created a dedicated `PortalHero` layout with MAS badge, headline/subhead, feature highlights, and CTA using MotionWrapper while applying the #EE766D/#24242E/#D6D6D6 palette and responsive typography.
+- CTA links to `/pos` with accessible hover/focus styling and accompanying feature copy reinforcing portal value.
+- `npm run lint` surfaces pre-existing issues outside Agent 6 scope; hero files pass (see command output).
 
 ---
 
