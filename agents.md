@@ -125,3 +125,15 @@
 - Log any issues needing backend fixes.  
 **Status:** TODO  
 **Log:**  
+
+---
+
+## Agent 26 — Tendering
+**Scope:** Checkout tender workflows, multi-method payments, and tender validation.
+**Tasks:**
+- Add support for recording multiple tender types at checkout.
+- Validate tender balances before queuing orders.
+- Surface tender references and idempotency keys in payloads.
+**Status:** DONE
+**Log:**
+- 2025-09-21: Implemented cash/card/wallet tender modals with balance validation, added tender breakdown and idempotency keys to queued orders. Tests: `npm run lint` (fails due to pre-existing lint errors outside scope).
