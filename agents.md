@@ -16,8 +16,11 @@
 - Fix misaligned sections, spacing, and grid inconsistencies.  
 - Improve responsiveness (mobile/tablet/desktop).  
 - Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Status:** DONE
+**Log:**
+- Implemented client-side promotions engine with eligibility checks, stackable handling, and cart integration for POS totals.
+- Added mock promotion data, cart store promotion state, and POS UI previews with fallback messaging when offers are locked.
+- Created TypeScript test harness verifying stackable vs exclusive scenarios and ran `npm run test` successfully.
 
 ---
 

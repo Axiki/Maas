@@ -7,7 +7,7 @@ import { useCartStore } from '../../stores/cartStore';
 import { useOfflineStore } from '../../stores/offlineStore';
 import { useAuthStore } from '../../stores/authStore';
 import { Product, Category } from '../../types';
-import { mockProducts, mockCategories } from '../../data/mockData';
+import { mockProducts, mockCategories, mockPromotions } from '../../data/mockData';
 
 export const POS: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,20 +16,33 @@ export const POS: React.FC = () => {
   const [categories] = useState<Category[]>(mockCategories);
   const gridRef = useRef<HTMLDivElement>(null);
   
-  const { 
-    items, 
-    subtotal, 
-    tax, 
-    total, 
+  const {
+    items,
+    subtotal,
+    tax,
+    total,
     orderType,
-    addItem, 
-    updateItemQuantity, 
+    addItem,
+    updateItemQuantity,
     removeItem,
-    setOrderType 
+    setOrderType,
+    promotionDiscountTotal,
+    appliedPromotions,
+    ineligiblePromotions,
+    setPromotions,
+    setStoreId
   } = useCartStore();
   
   const { queueOrder } = useOfflineStore();
   const { user, store } = useAuthStore();
+
+  useEffect(() => {
+    setPromotions(mockPromotions);
+  }, [setPromotions]);
+
+  useEffect(() => {
+    setStoreId(store?.id);
+  }, [setStoreId, store?.id]);
 
   // Filter products
   const filteredProducts = products.filter(product => {
@@ -191,8 +204,8 @@ export const POS: React.FC = () => {
           </div>
 
           {/* Cart Totals & Checkout */}
-          <div className="p-4 border-t border-line">
-            <div className="space-y-2 mb-4">
+          <div className="p-4 border-t border-line space-y-4">
+            <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span>Subtotal</span>
                 <span>${subtotal.toFixed(2)}</span>
@@ -201,12 +214,53 @@ export const POS: React.FC = () => {
                 <span>Tax</span>
                 <span>${tax.toFixed(2)}</span>
               </div>
+              {promotionDiscountTotal > 0 && (
+                <div className="flex justify-between text-sm text-success">
+                  <span>Promotions</span>
+                  <span>- ${promotionDiscountTotal.toFixed(2)}</span>
+                </div>
+              )}
               <div className="flex justify-between font-semibold">
                 <span>Total</span>
                 <span>${total.toFixed(2)}</span>
               </div>
             </div>
-            
+
+            {appliedPromotions.length > 0 && (
+              <div className="rounded-lg border border-success/40 bg-success/10 p-3 text-xs text-success">
+                <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-success/80">Applied deals</p>
+                <div className="mt-2 space-y-2 text-sm">
+                  {appliedPromotions.map((promotion) => (
+                    <div key={promotion.promotionId} className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">{promotion.name}</span>
+                        <span className="font-semibold">-${promotion.discount.toFixed(2)}</span>
+                      </div>
+                      {promotion.summary && (
+                        <p className="text-xs text-success/80">{promotion.summary}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {ineligiblePromotions.length > 0 && (
+              <div className="rounded-lg border border-dashed border-line bg-surface-200/60 p-3 text-xs text-muted">
+                <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-ink/70">Available deals</p>
+                <div className="mt-2 space-y-2">
+                  {ineligiblePromotions.map((promotion) => (
+                    <div key={promotion.promotionId} className="space-y-0.5">
+                      <p className="text-sm font-medium text-ink">{promotion.name}</p>
+                      <p className="text-xs text-muted">
+                        {promotion.suggestion ?? promotion.reason}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

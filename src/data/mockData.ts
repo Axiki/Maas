@@ -1,4 +1,4 @@
-import { Product, Category, Customer, User, Store, Tenant } from '../types';
+import { Product, Category, Customer, User, Store, Tenant, Promotion } from '../types';
 
 export const mockTenant: Tenant = {
   id: 'tenant-1',
@@ -262,7 +262,9 @@ export const mockCustomers: Customer[] = [
     phone: '555-0101',
     email: 'john.smith@email.com',
     loyaltyPoints: 1250,
-    storeCreditBalance: 15.50
+    storeCreditBalance: 15.50,
+    tags: ['loyalty-gold'],
+    loyaltyTier: 'gold'
   },
   {
     id: 'cust-2',
@@ -270,13 +272,97 @@ export const mockCustomers: Customer[] = [
     phone: '555-0102',
     email: 'emily.davis@email.com',
     loyaltyPoints: 750,
-    storeCreditBalance: 0
+    storeCreditBalance: 0,
+    tags: ['loyalty-silver'],
+    loyaltyTier: 'silver'
   },
   {
     id: 'cust-3',
     name: 'Michael Johnson',
     phone: '555-0103',
     loyaltyPoints: 2100,
-    storeCreditBalance: 25.00
+    storeCreditBalance: 25.00,
+    tags: ['loyalty-gold'],
+    loyaltyTier: 'gold'
+  }
+];
+
+export const mockPromotions: Promotion[] = [
+  {
+    id: 'promo-dinner-duo',
+    name: 'Dinner Duo Bundle',
+    description: 'Margherita pizza and buffalo wings for a bundled price.',
+    priority: 5,
+    stackable: false,
+    status: 'active',
+    rule: {
+      type: 'BUNDLE',
+      bundleItems: [
+        { productId: 'prod-3', quantity: 1 },
+        { productId: 'prod-6', quantity: 1 }
+      ],
+      bundlePrice: 28
+    },
+    constraints: {
+      minSubtotal: 20,
+      orderTypes: ['dine-in', 'takeaway'],
+      stores: ['store-1']
+    }
+  },
+  {
+    id: 'promo-happy-hour-apps',
+    name: 'Happy Hour Appetizers',
+    description: '10% off appetizers during weekday happy hour.',
+    priority: 10,
+    stackable: true,
+    status: 'active',
+    rule: {
+      type: 'PERCENT',
+      target: { type: 'CATEGORY', categoryIds: ['cat-1'] },
+      value: 10
+    },
+    constraints: {
+      days: [1, 2, 3, 4, 5],
+      startTime: '15:00',
+      endTime: '18:00',
+      stores: ['store-1']
+    }
+  },
+  {
+    id: 'promo-wine-trio',
+    name: 'Wine Trio',
+    description: 'Buy two house wines, get the third for $2.',
+    priority: 20,
+    stackable: true,
+    status: 'active',
+    rule: {
+      type: 'BXGY',
+      buy: { productId: 'prod-5', quantity: 2 },
+      get: { productId: 'prod-5', quantity: 1, rewardType: 'PRICE', value: 2 }
+    },
+    constraints: {
+      orderTypes: ['dine-in', 'takeaway'],
+      stores: ['store-1'],
+      minSubtotal: 10,
+      maxRedemptionsPerOrder: 2
+    }
+  },
+  {
+    id: 'promo-loyalty-thankyou',
+    name: 'Gold Loyalty Thank You',
+    description: '$5 off orders for Gold tier loyalty members over $40.',
+    priority: 30,
+    stackable: true,
+    status: 'active',
+    rule: {
+      type: 'AMOUNT',
+      target: { type: 'ORDER' },
+      value: 5
+    },
+    constraints: {
+      minSubtotal: 40,
+      requiredLoyaltyTier: 'gold',
+      stores: ['store-1']
+    }
   }
 ];
