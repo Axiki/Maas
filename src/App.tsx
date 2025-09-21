@@ -8,6 +8,7 @@ import { POS } from './components/apps/POS';
 import { BackOffice } from './components/apps/BackOffice';
 import { useAuthStore } from './stores/authStore';
 import { useOfflineStore } from './stores/offlineStore';
+import { useTelemetryStore } from './stores/telemetryStore';
 
 // Placeholder components for other apps
 const KDS = () => <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-6"><h2 className="text-2xl font-bold">Kitchen Display System</h2><p className="text-muted mt-2">Coming soon...</p></motion.div>;
@@ -22,6 +23,7 @@ const Accounting = () => <motion.div initial={{ opacity: 0 }} animate={{ opacity
 function App() {
   const { isAuthenticated } = useAuthStore();
   const { loadCachedData, setOfflineStatus } = useOfflineStore();
+  const fetchTelemetry = useTelemetryStore((state) => state.fetchTelemetry);
 
   useEffect(() => {
     // Load cached data on startup
@@ -39,6 +41,15 @@ function App() {
       window.removeEventListener('offline', handleOffline);
     };
   }, [loadCachedData, setOfflineStatus]);
+
+  useEffect(() => {
+    fetchTelemetry();
+    const interval = setInterval(() => {
+      fetchTelemetry({ silent: true });
+    }, 60_000);
+
+    return () => clearInterval(interval);
+  }, [fetchTelemetry]);
 
   if (!isAuthenticated) {
     return (

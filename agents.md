@@ -118,10 +118,24 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+ 
+---
+
+## Agent 11 — Observability & Logging
+**Scope:** Centralized logging, incident surfacing, telemetry UI.
+**Tasks:**
+- Create shared logger with incident context support.
+- Surface critical telemetry incidents in Portal and BackOffice.
+- Feed observability data into status indicators.
+- Document logging conventions and fallbacks.
+**Status:** DONE
+**Log:**
+- 2024-12-14: Reviewed existing stores/components; no telemetry or logger utilities present. Planning centralized logger, telemetry store, and UI surfacing per request.
+- 2024-12-14: Added incident-aware logger, telemetry store + client, surfaced critical banners in Portal/BackOffice, and extended status indicator with observability data. Logger now persists fallback incident IDs from API meta when missing. Lint blocked by missing npm registry packages (403).

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card, Button } from '@mas/ui';
 import { useTheme } from '../../stores/themeStore';
+import { IncidentBanner } from '../ui/IncidentBanner';
+import { useTelemetryStore } from '../../stores/telemetryStore';
 
 const themeModes = [
   { id: 'light', label: 'Light' },
@@ -12,6 +14,17 @@ const paperSurfaces: Array<'background' | 'cards'> = ['background', 'cards'];
 
 export const BackOffice: React.FC = () => {
   const { mode, paperShader, setMode, updatePaperShader } = useTheme();
+  const { alerts, acknowledgeAlert } = useTelemetryStore((state) => ({
+    alerts: state.alerts,
+    acknowledgeAlert: state.acknowledgeAlert,
+  }));
+
+  const criticalBackOfficeAlerts = alerts.filter(
+    (alert) =>
+      !alert.acknowledged &&
+      alert.severity === 'critical' &&
+      (alert.scopes.includes('backoffice') || alert.scopes.includes('global')),
+  );
 
   const toggleSurface = (surface: 'background' | 'cards') => {
     const set = new Set(paperShader.surfaces);
@@ -27,6 +40,10 @@ export const BackOffice: React.FC = () => {
   return (
     <div className="p-6">
       <div className="max-w-5xl mx-auto space-y-8">
+        {criticalBackOfficeAlerts.length > 0 && (
+          <IncidentBanner alerts={criticalBackOfficeAlerts} onAcknowledge={acknowledgeAlert} />
+        )}
+
         <div>
           <h1 className="text-3xl font-bold mb-2">Backoffice Settings</h1>
           <p className="text-muted max-w-2xl">
