@@ -1,5 +1,13 @@
 import { create } from 'zustand';
-import { CartItem, Product, ProductVariant, SelectedModifier, Customer } from '../types';
+import {
+  CartItem,
+  Product,
+  ProductVariant,
+  SelectedModifier,
+  Customer,
+  CartPayment,
+  PaymentMethod
+} from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
 interface CartState {
@@ -10,7 +18,8 @@ interface CartState {
   subtotal: number;
   tax: number;
   total: number;
-  
+  payments: CartPayment[];
+
   addItem: (product: Product, variant?: ProductVariant, modifiers?: SelectedModifier[], quantity?: number) => void;
   updateItemQuantity: (itemId: string, quantity: number) => void;
   removeItem: (itemId: string) => void;
@@ -18,6 +27,9 @@ interface CartState {
   setCustomer: (customer: Customer | null) => void;
   setTableNumber: (tableNumber: string | null) => void;
   setOrderType: (orderType: 'dine-in' | 'takeaway' | 'delivery') => void;
+  addPayment: (payment: { method: PaymentMethod; amount: number; reference?: string }) => void;
+  removePayment: (paymentId: string) => void;
+  clearPayments: () => void;
   clearCart: () => void;
   calculateTotals: () => void;
 }
@@ -30,6 +42,7 @@ export const useCartStore = create<CartState>((set, get) => ({
   subtotal: 0,
   tax: 0,
   total: 0,
+  payments: [],
 
   addItem: (product, variant, modifiers = [], quantity = 1) => {
     const state = get();
@@ -105,13 +118,36 @@ export const useCartStore = create<CartState>((set, get) => ({
   setTableNumber: (tableNumber) => set({ tableNumber }),
   setOrderType: (orderType) => set({ orderType }),
 
+  addPayment: ({ method, amount, reference }) => {
+    const trimmedReference = reference?.trim();
+    const payment: CartPayment = {
+      id: uuidv4(),
+      method,
+      amount,
+      reference: trimmedReference ? trimmedReference : undefined,
+      idempotencyKey: uuidv4(),
+      createdAt: new Date()
+    };
+
+    const state = get();
+    set({ payments: [...state.payments, payment] });
+  },
+
+  removePayment: (paymentId) => {
+    const state = get();
+    set({ payments: state.payments.filter(payment => payment.id !== paymentId) });
+  },
+
+  clearPayments: () => set({ payments: [] }),
+
   clearCart: () => set({
     items: [],
     customer: null,
     tableNumber: null,
     subtotal: 0,
     tax: 0,
-    total: 0
+    total: 0,
+    payments: []
   }),
 
   calculateTotals: () => {

@@ -106,14 +106,16 @@
 ---
 
 ## Agent 9 — Forms & Inputs
-**Scope:** Input fields, contact forms, search bars.  
-**Tasks:**  
-- Style inputs and textareas.  
-- Apply palette + typography.  
-- Add focus states and validation feedback.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Input fields, contact forms, search bars.
+**Tasks:**
+- Style inputs and textareas.
+- Apply palette + typography.
+- Add focus states and validation feedback.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Implemented multi-tender payment flow in the POS footer with modal forms for cash, card, and wallet, including validation, offline restrictions, balance summary, and idempotency-aware order payload updates.
+- `npm run lint` reports existing repository issues (Portal.tsx, PaperShader.tsx, StatusIndicator.tsx, themeStore.ts) unrelated to this change.
 
 ---
 
