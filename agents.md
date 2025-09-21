@@ -125,3 +125,15 @@
 - Log any issues needing backend fixes.  
 **Status:** TODO  
 **Log:**  
+
+---
+
+## Agent 11 — Kitchen Display System
+**Scope:** Build the KDS experience with live ticket lanes.
+**Tasks:**
+- Create KDS component with animated lanes and actionable tickets.
+- Provide supporting mock data and types.
+- Wire component into the shell using mocks.
+**Status:** DONE
+**Log:**
+- 2025-02-14: Implemented animated KDS lanes driven by new mock data/types and routed through App; lint check reports pre-existing issues in other modules (POS, Portal, PaperShader, StatusIndicator, themeStore).

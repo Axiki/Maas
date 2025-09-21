@@ -143,24 +143,6 @@ export interface CartItem extends OrderLine {
   variant?: ProductVariant;
 }
 
-export interface KdsTicket {
-  id: string;
-  orderId: string;
-  stationTag: string;
-  items: KdsItem[];
-  status: 'new' | 'in-progress' | 'done';
-  createdAt: Date;
-  estimatedTime?: number;
-}
-
-export interface KdsItem {
-  productName: string;
-  variantName?: string;
-  quantity: number;
-  modifiers: string[];
-  notes?: string;
-}
-
 // App routing
 export interface AppConfig {
   id: string;
@@ -189,3 +171,5 @@ export interface MotionPresets {
     duration: number;
   };
 }
+
+export * from './kds';
