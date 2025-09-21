@@ -10,26 +10,30 @@
 ---
 
 ## Agent 1 — Layout
-**Scope:** Analyze and fix page layouts (grid, spacing, alignment, responsiveness).  
-**Tasks:**  
-- Review current layout structure.  
-- Fix misaligned sections, spacing, and grid inconsistencies.  
-- Improve responsiveness (mobile/tablet/desktop).  
-- Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Analyze and fix page layouts (grid, spacing, alignment, responsiveness).
+**Tasks:**
+- Review current layout structure.
+- Fix misaligned sections, spacing, and grid inconsistencies.
+- Improve responsiveness (mobile/tablet/desktop).
+- Keep existing functionality untouched.
+**Status:** TODO
+**Log:**
 
 ---
 
 ## Agent 2 — Palette
-**Scope:** Apply and enforce color palette (#EE766D, #24242E, #D6D6D6).  
-**Tasks:**  
-- Identify current colors in use.  
-- Replace off-palette values with correct ones.  
-- Ensure Tailwind config and global tokens are updated.  
-- Verify consistency across all components.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Apply and enforce color palette (#EE766D, #24242E, #D6D6D6).
+**Tasks:**
+- Identify current colors in use.
+- Replace off-palette values with correct ones.
+- Ensure Tailwind config and global tokens are updated.
+- Verify consistency across all components.
+**Status:** DONE
+**Log:**
+- Replaced light/dark token values with the sanctioned #EE766D/#24242E/#D6D6D6 palette so headers, cards, and status accents now pull from Tailwind classes instead of stray hex codes.
+- Recolored mock category seeds to a stepped primary tint ramp to match the refreshed palette for downstream charts and badges.
+- Light/dark review: inspected Portal and POS layouts to confirm they exclusively use the new token classes and verified both `:root` and `[data-theme='dark']` blocks in the built CSS render the updated values (no contrast regressions observed).
+- QA: `npm run lint` (fails because of pre-existing lint debt in unrelated files) / `npm run build` (passes; confirms theming compiles).
 
 ---
 
