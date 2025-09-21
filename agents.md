@@ -16,8 +16,8 @@
 - Fix misaligned sections, spacing, and grid inconsistencies.  
 - Improve responsiveness (mobile/tablet/desktop).  
 - Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Status:** TODO
+**Log:**
 
 ---
 
@@ -118,10 +118,23 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** DONE
+**Log:**
+- Verified discount enforcement leverages new permissions config, adds audit entries, and preserves cart totals; noted global lint failures stem from unrelated legacy files.
+
+---
+
+## Agent 27 — Approvals Oversight
+**Scope:** Manual validation of approval workflows and audit visibility.
+**Tasks:**
+- Exercise discount override scenarios end-to-end.
+- Confirm audit events surface in Backoffice.
+- Capture regressions or blocking issues.
+**Status:** TODO
+**Log:**
+- Manual POS override checks blocked in this environment (no interactive session); audit trail rendering verified via code review, but hands-on validation remains pending.
