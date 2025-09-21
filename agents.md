@@ -118,10 +118,23 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 17 — Calendar Experience
+**Scope:** Calendar scheduling UI, reservations, and shift coordination.
+**Tasks:**
+- Build interactive calendar with week/month views.
+- Surface reservation details and waitlist status.
+- Visualise tables/resources with drag-ready layout.
+- Summarise shift tasks and leadership coverage.
+**Status:** DONE
+**Log:**
+- Implemented CalendarApp with MotionWrapper fallbacks for reduced motion, week/month toggles, and reservation board fed by new mockCalendar data; connected `/calendar` route and added drag-ready floor grid with MAS palette status badges.
