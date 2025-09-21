@@ -118,10 +118,34 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 11 — BackOffice Devices
+**Scope:** Backoffice hardware visibility and quick diagnostics UI.
+**Tasks:**
+- Surface registered device metadata.
+- Provide connection controls with optimistic updates.
+- Wire hardware test actions with async placeholders.
+**Status:** DONE
+**Log:**
+- Added a hardware devices card with mocked metadata, optimistic connect/disconnect toggles, and offline-aware action handlers that log outcomes.
+
+---
+
+## Agent 20 — QA & Testing
+**Scope:** Track verification steps and outcomes across the suite.
+**Tasks:**
+- Run relevant automated checks.
+- Document pass/fail results with context.
+- Flag blocking issues for follow-up.
+**Status:** DONE
+**Log:**
+- Ran `npm run lint`; command fails because of pre-existing lint violations in POS, Portal, PaperShader, StatusIndicator, and themeStore modules. BackOffice additions introduce no new errors.
