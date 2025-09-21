@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import { Card, Button } from '@mas/ui';
 import { useTheme } from '../../stores/themeStore';
 
@@ -12,6 +12,8 @@ const paperSurfaces: Array<'background' | 'cards'> = ['background', 'cards'];
 
 export const BackOffice: React.FC = () => {
   const { mode, paperShader, setMode, updatePaperShader } = useTheme();
+  const intensityId = useId();
+  const speedId = useId();
 
   const toggleSurface = (surface: 'background' | 'cards') => {
     const set = new Set(paperShader.surfaces);
@@ -80,9 +82,12 @@ export const BackOffice: React.FC = () => {
             </div>
 
             <div className="space-y-4">
-              <label className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-ink">Grain intensity</span>
+              <div className="form-field">
+                <label htmlFor={intensityId} className="form-label">
+                  Grain intensity
+                </label>
                 <input
+                  id={intensityId}
                   type="range"
                   min={0}
                   max={1}
@@ -91,14 +96,19 @@ export const BackOffice: React.FC = () => {
                   onChange={(event) =>
                     updatePaperShader({ intensity: parseFloat(event.target.value) })
                   }
-                  className="w-full accent-primary-500"
+                  className="form-range"
                 />
-                <span className="text-xs text-muted">{paperShader.intensity.toFixed(2)}</span>
-              </label>
+                <span className="form-helper text-right">
+                  Current intensity: {paperShader.intensity.toFixed(2)}
+                </span>
+              </div>
 
-              <label className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-ink">Animation speed</span>
+              <div className="form-field">
+                <label htmlFor={speedId} className="form-label">
+                  Animation speed
+                </label>
                 <input
+                  id={speedId}
                   type="range"
                   min={0}
                   max={3}
@@ -107,10 +117,12 @@ export const BackOffice: React.FC = () => {
                   onChange={(event) =>
                     updatePaperShader({ animationSpeed: parseFloat(event.target.value) })
                   }
-                  className="w-full accent-primary-500"
+                  className="form-range"
                 />
-                <span className="text-xs text-muted">{paperShader.animationSpeed.toFixed(1)}x</span>
-              </label>
+                <span className="form-helper text-right">
+                  Playback speed: {paperShader.animationSpeed.toFixed(1)}x
+                </span>
+              </div>
             </div>
 
             <div>

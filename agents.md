@@ -106,14 +106,16 @@
 ---
 
 ## Agent 9 — Forms & Inputs
-**Scope:** Input fields, contact forms, search bars.  
-**Tasks:**  
-- Style inputs and textareas.  
-- Apply palette + typography.  
-- Add focus states and validation feedback.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Input fields, contact forms, search bars.
+**Tasks:**
+- Style inputs and textareas.
+- Apply palette + typography.
+- Add focus states and validation feedback.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Created shared `.form-field`, `.form-label`, `.form-input`, `.form-helper`, and `.form-range` component classes in `src/index.css` with palette-aligned states for light and dark themes, plus updated helper, placeholder, and focus treatments.
+- Refactored Login, POS search/category controls, and BackOffice sliders to adopt the shared form system, adding semantic labels, helper copy, and accessible range ids; manually confirmed focus outlines, placeholder contrast, and slider accents meet accessibility guidance. `npm run lint` still flags pre-existing issues in Portal, PaperShader, StatusIndicator, and themeStore outside this scope.
 
 ---
 

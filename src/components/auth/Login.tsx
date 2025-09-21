@@ -53,43 +53,47 @@ export const Login: React.FC = () => {
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-ink mb-2">
+            <div className="form-field">
+              <label htmlFor="email" className="form-label">
                 Email Address
               </label>
               <input
                 id="email"
                 type="email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-line rounded-lg bg-surface-200/50 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
+                className="form-input"
                 placeholder="Enter your email"
                 required
               />
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-ink mb-2">
+            <div className="form-field">
+              <label htmlFor="password" className="form-label">
                 Password
               </label>
               <div className="relative">
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 pr-12 border border-line rounded-lg bg-surface-200/50 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
+                  className="form-input pr-12"
                   placeholder="Enter your password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-ink transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted transition-colors hover:text-ink"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
+              <p className="form-helper">Use at least 8 characters for a strong password.</p>
             </div>
 
             <motion.button

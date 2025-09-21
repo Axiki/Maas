@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useId } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
-import { Search, Plus, Minus, Trash2, User, CreditCard, Clock } from 'lucide-react';
+import { Search, Plus, Minus, Trash2, CreditCard, Clock } from 'lucide-react';
 import { MotionWrapper, AnimatedList } from '../ui/MotionWrapper';
 import { useCartStore } from '../../stores/cartStore';
 import { useOfflineStore } from '../../stores/offlineStore';
@@ -15,6 +15,8 @@ export const POS: React.FC = () => {
   const [products] = useState<Product[]>(mockProducts);
   const [categories] = useState<Category[]>(mockCategories);
   const gridRef = useRef<HTMLDivElement>(null);
+  const searchId = useId();
+  const categoryId = useId();
   
   const { 
     items, 
@@ -224,44 +226,49 @@ export const POS: React.FC = () => {
         <div className="flex-1 flex flex-col">
           {/* Search & Categories */}
           <div className="p-4 border-b border-line">
-            <div className="flex gap-4 mb-4">
-              <div className="relative flex-1 max-w-md">
-                <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted" />
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-line rounded-lg bg-surface-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                />
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
+              <div className="form-field flex-1 max-w-md">
+                <label htmlFor={searchId} className="form-label">
+                  Search products
+                </label>
+                <div className="relative">
+                  <Search
+                    size={18}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
+                    aria-hidden="true"
+                  />
+                  <input
+                    id={searchId}
+                    type="search"
+                    inputMode="search"
+                    placeholder="Search by name or scan a barcode"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="form-input pl-10"
+                  />
+                </div>
+                <p className="form-helper">Press enter to submit barcode scans instantly.</p>
               </div>
-            </div>
 
-            {/* Category Tabs */}
-            <div className="flex gap-2 overflow-x-auto pb-2">
-              <button
-                onClick={() => setSelectedCategory('all')}
-                className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors ${
-                  selectedCategory === 'all'
-                    ? 'bg-primary-500 text-white'
-                    : 'bg-surface-200 text-muted hover:bg-line'
-                }`}
-              >
-                All Items
-              </button>
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors ${
-                    selectedCategory === category.id
-                      ? 'bg-primary-500 text-white'
-                      : 'bg-surface-200 text-muted hover:bg-line'
-                  }`}
+              <div className="form-field w-full max-w-xs">
+                <label htmlFor={categoryId} className="form-label">
+                  Category filter
+                </label>
+                <select
+                  id={categoryId}
+                  value={selectedCategory}
+                  onChange={(event) => setSelectedCategory(event.target.value)}
+                  className="form-input"
                 >
-                  {category.name}
-                </button>
-              ))}
+                  <option value="all">All categories</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+                <p className="form-helper">Use to narrow results for quick service.</p>
+              </div>
             </div>
           </div>
 
