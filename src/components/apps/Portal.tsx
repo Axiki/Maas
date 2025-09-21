@@ -49,8 +49,8 @@ export const Portal: React.FC = () => {
     <MotionWrapper type="page" className="p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2">Welcome back, {user?.name}</h2>
-          <p className="text-muted">
+          <h2 className="type-heading-xl mb-2">Welcome back, {user?.name}</h2>
+          <p className="type-body-lg text-muted">
             {tenant?.name} • {user?.role}
           </p>
         </div>
@@ -76,15 +76,15 @@ export const Portal: React.FC = () => {
                   {app.hasNotifications && <div className="w-2 h-2 rounded-full bg-danger animate-pulse" />}
 
                   {app.isPWA && (
-                    <div className="text-xs text-muted font-medium px-2 py-1 bg-surface-200 rounded">
+                    <div className="type-body-sm text-muted font-medium px-2 py-1 bg-surface-200 rounded">
                       PWA
                     </div>
                   )}
                 </div>
 
-                <h3 className="font-semibold text-lg mb-2 group-hover:text-primary-600 transition-colors">{app.name}</h3>
+                <h3 className="type-heading-sm mb-2 group-hover:text-primary-600 transition-colors">{app.name}</h3>
 
-                <p className="text-muted text-sm leading-relaxed">{app.description}</p>
+                <p className="type-body-md text-muted">{app.description}</p>
               </MotionCard>
             );
           })}
@@ -92,44 +92,44 @@ export const Portal: React.FC = () => {
 
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card>
-            <h3 className="font-semibold mb-4">Today&apos;s Summary</h3>
+            <h3 className="type-heading-xs mb-4">Today&apos;s Summary</h3>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-muted">Orders</span>
-                <span className="font-medium">24</span>
+                <span className="type-body-lg text-muted">Orders</span>
+                <span className="type-body-lg font-medium">24</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted">Revenue</span>
-                <span className="font-medium">$1,245.50</span>
+                <span className="type-body-lg text-muted">Revenue</span>
+                <span className="type-body-lg font-medium">$1,245.50</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted">Avg. Order</span>
-                <span className="font-medium">$51.90</span>
+                <span className="type-body-lg text-muted">Avg. Order</span>
+                <span className="type-body-lg font-medium">$51.90</span>
               </div>
             </div>
           </Card>
 
           <Card>
-            <h3 className="font-semibold mb-4">Quick Stats</h3>
+            <h3 className="type-heading-xs mb-4">Quick Stats</h3>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-muted">Active Tables</span>
-                <span className="font-medium">8/12</span>
+                <span className="type-body-lg text-muted">Active Tables</span>
+                <span className="type-body-lg font-medium">8/12</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted">Kitchen Queue</span>
-                <span className="font-medium">3 tickets</span>
+                <span className="type-body-lg text-muted">Kitchen Queue</span>
+                <span className="type-body-lg font-medium">3 tickets</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted">Low Stock Items</span>
-                <span className="font-medium text-warning">5</span>
+                <span className="type-body-lg text-muted">Low Stock Items</span>
+                <span className="type-body-lg font-medium text-warning">5</span>
               </div>
             </div>
           </Card>
 
           <Card>
-            <h3 className="font-semibold mb-4">Recent Activity</h3>
-            <div className="space-y-3 text-sm">
+            <h3 className="type-heading-xs mb-4">Recent Activity</h3>
+            <div className="space-y-3 type-body-md">
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-success" />
                 <span className="text-muted">Order #1234 completed</span>

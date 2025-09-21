@@ -69,6 +69,38 @@
 }
 
 @layer components {
+  .type-heading-xl {
+    @apply text-3xl font-semibold leading-tight tracking-tight;
+  }
+
+  .type-heading-lg {
+    @apply text-2xl font-semibold leading-tight;
+  }
+
+  .type-heading-md {
+    @apply text-xl font-semibold leading-snug;
+  }
+
+  .type-heading-sm {
+    @apply text-lg font-semibold leading-snug;
+  }
+
+  .type-heading-xs {
+    @apply text-base font-semibold leading-snug;
+  }
+
+  .type-body-lg {
+    @apply text-base leading-relaxed;
+  }
+
+  .type-body-md {
+    @apply text-sm leading-relaxed;
+  }
+
+  .type-body-sm {
+    @apply text-xs leading-relaxed;
+  }
+
   .paper-card {
     position: relative;
     overflow: hidden;
