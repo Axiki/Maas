@@ -1,6 +1,6 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { theme } from '../../config/theme';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { routeTransitionTiming, itemStaggerTiming } from '../../utils/motion';
 
 interface MotionWrapperProps {
   children: React.ReactNode;
@@ -8,6 +8,7 @@ interface MotionWrapperProps {
   className?: string;
   layoutId?: string;
   delay?: number;
+  forceMotion?: boolean;
 }
 
 const variants = {
@@ -38,21 +39,26 @@ export const MotionWrapper: React.FC<MotionWrapperProps> = ({
   type = 'page',
   className = '',
   layoutId,
-  delay = 0
+  delay = 0,
+  forceMotion = false
 }) => {
   const variant = variants[type];
-  
+  const prefersReducedMotion = useReducedMotion();
+  const shouldReduceMotion = prefersReducedMotion && !forceMotion;
+
+  const transition = {
+    duration: shouldReduceMotion ? 0 : routeTransitionTiming.duration,
+    ease: routeTransitionTiming.ease,
+    delay: shouldReduceMotion ? 0 : delay
+  };
+
   return (
     <motion.div
       layoutId={layoutId}
       initial={variant.initial}
       animate={variant.animate}
       exit={variant.exit}
-      transition={{
-        duration: theme.motion.routeTransition.duration,
-        ease: theme.motion.routeTransition.ease,
-        delay
-      }}
+      transition={transition}
       className={className}
       whileTap={{ scale: type === 'card' ? 0.98 : 1 }}
     >
@@ -71,7 +77,7 @@ export const AnimatedList: React.FC<{
         <MotionWrapper
           key={index}
           type="list-item"
-          delay={index * theme.motion.itemStagger.delay}
+          delay={index * itemStaggerTiming.delay}
         >
           {child}
         </MotionWrapper>
