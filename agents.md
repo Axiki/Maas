@@ -58,14 +58,15 @@
 ---
 
 ## Agent 5 — Navbar
-**Scope:** Header, navigation bar, logo, menu.  
-**Tasks:**  
-- Apply palette + typography.  
-- Add hover/active states.  
-- Keep routing intact.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Header, navigation bar, logo, menu.
+**Tasks:**
+- Apply palette + typography.
+- Add hover/active states.
+- Keep routing intact.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Refactored the app shell header to include a pill-style navigation mapped from `appConfigs`, with `aria-current` applied to the active route, escape/route-change handling for the mobile disclosure, and palette-compliant styling plus dynamic icons that respect user role filtering. Validated focus order, toggle button keyboard access (Tab/Space/Enter), and arrow/Escape interactions; lint surfaced pre-existing repository errors outside navbar scope.
 
 ---
 
