@@ -118,10 +118,22 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 22 — Offline Diagnostics
+**Scope:** Offline queue visibility, cache health signals, and support export tooling.
+**Tasks:**
+- Surface queued order metrics and sync status in Backoffice.
+- Raise warnings for stale caches or storage errors.
+- Provide downloadable support logs.
+**Status:** DONE
+**Log:**
+- 2024-12-08: Added diagnostics card in Backoffice with queue metrics, cache age warnings, retry action wired to `syncQueuedOrders`, and JSON/CSV log exports. Storage failures now bubble into UI warnings. No open issues.
