@@ -35,6 +35,14 @@ export const appConfigs: AppConfig[] = [
     roles: ['manager', 'owner']
   },
   {
+    id: 'imports',
+    name: 'Data Imports',
+    description: 'Upload spreadsheets and validate catalog data',
+    icon: 'FileSpreadsheet',
+    route: '/imports',
+    roles: ['manager', 'owner']
+  },
+  {
     id: 'inventory',
     name: 'Inventory',
     description: 'Stock management and tracking',
