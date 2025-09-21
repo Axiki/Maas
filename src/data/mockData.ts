@@ -38,31 +38,31 @@ export const mockCategories: Category[] = [
     id: 'cat-1',
     name: 'Appetizers',
     sortOrder: 1,
-    color: '#E44343'
+    color: '#C7524A'
   },
   {
     id: 'cat-2',
     name: 'Main Courses',
     sortOrder: 2,
-    color: '#148A3B'
+    color: '#D45F56'
   },
   {
     id: 'cat-3',
     name: 'Desserts',
     sortOrder: 3,
-    color: '#C48A0A'
+    color: '#EE766D'
   },
   {
     id: 'cat-4',
     name: 'Beverages',
     sortOrder: 4,
-    color: '#B21E1E'
+    color: '#F4A59E'
   },
   {
     id: 'cat-5',
     name: 'Salads',
     sortOrder: 5,
-    color: '#2D7D32'
+    color: '#F9CFCB'
   }
 ];
 
