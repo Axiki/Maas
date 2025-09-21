@@ -118,10 +118,22 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 30 — Paper Shader
+**Scope:** Paper shader rendering, appearance controls, motion fallbacks.
+**Tasks:**
+- Extend shader state with per-surface tuning and reduced-motion defaults.
+- Update BackOffice controls with presets and reset actions.
+- Ensure renderer consumes the granular config and degrades gracefully when unsupported.
+**Status:** DONE
+**Log:**
+- Implemented per-surface shader state + tenant merge handling, refreshed BackOffice controls with presets/reset, and upgraded rendering to honor reduced-motion static fallbacks and WebGL failures. Lint still reports pre-existing issues in POS, Portal, and StatusIndicator.

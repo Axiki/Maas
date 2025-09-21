@@ -1,16 +1,107 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
-import { TenantSettings } from '../types';
+import {
+  TenantSettings,
+  PaperShaderSettings,
+  PaperShaderSurface,
+  PaperShaderSurfaceConfig,
+  PaperShaderReducedMotionConfig,
+} from '../types';
 
 export type ThemeMode = 'light' | 'dark' | 'auto';
 
-export interface PaperShaderState {
-  enabled: boolean;
-  intensity: number;
-  animationSpeed: number;
-  surfaces: Array<'background' | 'cards'>;
-}
+export type PaperShaderState = PaperShaderSettings;
+
+export type PaperShaderUpdate = Partial<Omit<PaperShaderState, 'surfaces' | 'reducedMotion'>> & {
+  surfaces?: Partial<Record<PaperShaderSurface, Partial<PaperShaderSurfaceConfig>>>;
+  reducedMotion?: Partial<PaperShaderReducedMotionConfig>;
+};
+
+const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
+const clampNonNegative = (value: number) => Math.max(0, value);
+
+export const createDefaultPaperShader = (): PaperShaderState => ({
+  enabled: true,
+  surfaces: {
+    background: {
+      enabled: true,
+      intensity: 0.5,
+      animationSpeed: 1,
+    },
+    cards: {
+      enabled: true,
+      intensity: 0.35,
+      animationSpeed: 0,
+    },
+  },
+  reducedMotion: {
+    mode: 'static',
+    intensityMultiplier: 0.6,
+  },
+});
+
+const defaultPaperShader = createDefaultPaperShader();
+
+const mergePaperShaderState = (
+  base: PaperShaderState,
+  update?: PaperShaderUpdate | PaperShaderState
+): PaperShaderState => {
+  if (!update) {
+    return base;
+  }
+
+  const { surfaces: surfaceUpdates, reducedMotion: reducedMotionUpdate, ...rest } =
+    update as PaperShaderUpdate;
+
+  const nextSurfaces: PaperShaderState['surfaces'] = {
+    background: { ...base.surfaces.background },
+    cards: { ...base.surfaces.cards },
+  };
+
+  if (surfaceUpdates) {
+    (Object.keys(surfaceUpdates) as PaperShaderSurface[]).forEach((surface) => {
+      const incoming = surfaceUpdates[surface];
+      if (!incoming || !nextSurfaces[surface]) {
+        return;
+      }
+
+      const currentSurface = nextSurfaces[surface];
+      nextSurfaces[surface] = {
+        ...currentSurface,
+        ...incoming,
+        enabled: incoming.enabled ?? currentSurface.enabled,
+        intensity:
+          incoming.intensity !== undefined
+            ? clamp01(incoming.intensity)
+            : currentSurface.intensity,
+        animationSpeed:
+          incoming.animationSpeed !== undefined
+            ? clampNonNegative(incoming.animationSpeed)
+            : currentSurface.animationSpeed,
+      };
+    });
+  }
+
+  const nextReducedMotion = reducedMotionUpdate
+    ? {
+        ...base.reducedMotion,
+        ...reducedMotionUpdate,
+        intensityMultiplier:
+          reducedMotionUpdate.intensityMultiplier !== undefined
+            ? clamp01(reducedMotionUpdate.intensityMultiplier)
+            : base.reducedMotion.intensityMultiplier,
+      }
+    : base.reducedMotion;
+
+  return {
+    ...base,
+    ...rest,
+    enabled: rest.enabled ?? base.enabled,
+    surfaces: nextSurfaces,
+    reducedMotion: nextReducedMotion,
+  };
+};
 
 interface ThemeState {
   mode: ThemeMode;
@@ -19,20 +110,14 @@ interface ThemeState {
   paperShader: PaperShaderState;
   setMode: (mode: ThemeMode) => void;
   setSystemMode: (mode: 'light' | 'dark') => void;
-  updatePaperShader: (settings: Partial<PaperShaderState>) => void;
+  updatePaperShader: (settings: PaperShaderUpdate) => void;
+  resetPaperShader: () => void;
   applyTenantSettings: (settings?: TenantSettings) => void;
 }
 
-const defaultPaperShader: PaperShaderState = {
-  enabled: true,
-  intensity: 0.5,
-  animationSpeed: 1,
-  surfaces: ['background', 'cards'],
-};
-
 export const useThemeStore = create<ThemeState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       mode: 'auto',
       systemMode: 'light',
       resolvedMode: 'light',
@@ -54,22 +139,13 @@ export const useThemeStore = create<ThemeState>()(
 
       updatePaperShader: (settings) => {
         set((state) => ({
-          paperShader: {
-            ...state.paperShader,
-            ...settings,
-            intensity:
-              settings.intensity !== undefined
-                ? Math.min(1, Math.max(0, settings.intensity))
-                : state.paperShader.intensity,
-            animationSpeed:
-              settings.animationSpeed !== undefined
-                ? Math.max(0, settings.animationSpeed)
-                : state.paperShader.animationSpeed,
-            surfaces:
-              settings.surfaces !== undefined && settings.surfaces.length > 0
-                ? settings.surfaces
-                : state.paperShader.surfaces,
-          },
+          paperShader: mergePaperShaderState(state.paperShader, settings),
+        }));
+      },
+
+      resetPaperShader: () => {
+        set(() => ({
+          paperShader: createDefaultPaperShader(),
         }));
       },
 
@@ -82,21 +158,7 @@ export const useThemeStore = create<ThemeState>()(
 
           const tenantShader = settings.paperShader;
           const nextPaperShader: PaperShaderState = tenantShader
-            ? {
-                enabled: tenantShader.enabled ?? state.paperShader.enabled,
-                intensity:
-                  tenantShader.intensity !== undefined
-                    ? Math.min(1, Math.max(0, tenantShader.intensity))
-                    : state.paperShader.intensity,
-                animationSpeed:
-                  tenantShader.animationSpeed !== undefined
-                    ? Math.max(0, tenantShader.animationSpeed)
-                    : state.paperShader.animationSpeed,
-                surfaces:
-                  tenantShader.surfaces && tenantShader.surfaces.length > 0
-                    ? tenantShader.surfaces
-                    : state.paperShader.surfaces,
-              }
+            ? mergePaperShaderState(state.paperShader, tenantShader)
             : state.paperShader;
 
           // Use JSON.stringify for deep comparison to avoid infinite loops
@@ -127,6 +189,24 @@ export const useThemeStore = create<ThemeState>()(
     }),
     {
       name: 'mas-theme-store',
+      merge: (persistedState, currentState) => {
+        if (!persistedState || typeof persistedState !== 'object') {
+          return currentState;
+        }
+
+        const incoming = persistedState as Partial<ThemeState> & {
+          paperShader?: unknown;
+        };
+
+        return {
+          ...currentState,
+          ...incoming,
+          paperShader: mergePaperShaderState(
+            currentState.paperShader,
+            incoming.paperShader as PaperShaderUpdate | PaperShaderState | undefined
+          ),
+        };
+      },
       partialize: (state) => ({
         mode: state.mode,
         paperShader: state.paperShader,
@@ -136,9 +216,15 @@ export const useThemeStore = create<ThemeState>()(
 );
 
 export const useTheme = () =>
-  useThemeStore((state) => ({
-    mode: state.mode,
-    resolvedMode: state.resolvedMode,
-    systemMode: state.systemMode,
-    paperShader: state.paperShader,
-  }));
+  useThemeStore(
+    (state) => ({
+      mode: state.mode,
+      resolvedMode: state.resolvedMode,
+      systemMode: state.systemMode,
+      paperShader: state.paperShader,
+      setMode: state.setMode,
+      updatePaperShader: state.updatePaperShader,
+      resetPaperShader: state.resetPaperShader,
+    }),
+    shallow
+  );

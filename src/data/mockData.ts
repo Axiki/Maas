@@ -9,9 +9,22 @@ export const mockTenant: Tenant = {
     theme: 'light',
     paperShader: {
       enabled: true,
-      intensity: 0.5,
-      animationSpeed: 1.0,
-      surfaces: ['background', 'cards']
+      surfaces: {
+        background: {
+          enabled: true,
+          intensity: 0.5,
+          animationSpeed: 1,
+        },
+        cards: {
+          enabled: true,
+          intensity: 0.32,
+          animationSpeed: 0,
+        },
+      },
+      reducedMotion: {
+        mode: 'static',
+        intensityMultiplier: 0.55,
+      },
     }
   }
 };
