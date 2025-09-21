@@ -57,8 +57,8 @@ export const AppShell: React.FC = () => {
                     <Grid3x3 size={20} className="text-primary-600" />
                   </div>
                   <div>
-                    <h1 className="font-semibold text-lg">{currentApp.name}</h1>
-                    <p className="text-sm text-muted">{currentApp.description}</p>
+                    <h1 className="heading-sm text-ink">{currentApp.name}</h1>
+                    <p className="body-xs text-muted">{currentApp.description}</p>
                   </div>
                 </>
               )}

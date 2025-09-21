@@ -30,6 +30,30 @@ export default {
       fontFamily: {
         sans: ['"Inter"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
       },
+      fontSize: {
+        display: ['clamp(2.5rem, 4vw, 3rem)', { lineHeight: '1.1', fontWeight: '700', letterSpacing: '-0.01em' }],
+        'heading-xl': [
+          'clamp(2.25rem, 3.5vw, 2.75rem)',
+          { lineHeight: '1.1', fontWeight: '700', letterSpacing: '-0.01em' },
+        ],
+        'heading-lg': [
+          'clamp(2rem, 3.5vw, 2.5rem)',
+          { lineHeight: '1.15', fontWeight: '600', letterSpacing: '-0.01em' },
+        ],
+        'heading-md': [
+          'clamp(1.5rem, 2.5vw, 1.875rem)',
+          { lineHeight: '1.2', fontWeight: '600', letterSpacing: '-0.005em' },
+        ],
+        'heading-sm': [
+          'clamp(1.25rem, 2vw, 1.5rem)',
+          { lineHeight: '1.3', fontWeight: '600' },
+        ],
+        'body-lg': ['1.125rem', { lineHeight: '1.6', fontWeight: '400' }],
+        'body-md': ['1rem', { lineHeight: '1.6', fontWeight: '400' }],
+        'body-sm': ['0.875rem', { lineHeight: '1.45', fontWeight: '400' }],
+        'body-xs': ['0.75rem', { lineHeight: '1.4', fontWeight: '500' }],
+        eyebrow: ['0.75rem', { lineHeight: '1.2', letterSpacing: '0.18em', fontWeight: '600' }],
+      },
       borderRadius: {
         sm: 'var(--radius-sm)',
         md: 'var(--radius-md)',

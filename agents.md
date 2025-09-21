@@ -16,8 +16,11 @@
 - Fix misaligned sections, spacing, and grid inconsistencies.  
 - Improve responsiveness (mobile/tablet/desktop).  
 - Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Status:** DONE
+**Log:**
+- Established shared typography system with new CSS vars, base heading/body rules, and utilities; wired Tailwind fontSize scale to mirror the layer for reuse across teams.
+- Updated Login, BackOffice, and AppShell typography to consume the new classes so hero/navbar can adopt them without overrides.
+- Ran `npm run lint` to validate naming; command surfaced pre-existing lint errors in other modules (POS.tsx, Portal.tsx, PaperShader.tsx, StatusIndicator.tsx, themeStore.ts) outside typography scope.
 
 ---
 
