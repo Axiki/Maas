@@ -21,10 +21,13 @@ export const appConfigs: AppConfig[] = [
   {
     id: 'kds',
     name: 'Kitchen Display',
-    description: 'Manage kitchen orders',
-    icon: 'Chef',
+    description: 'Prioritize and bump kitchen tickets in real time',
+    icon: 'UtensilsCrossed',
     route: '/kds',
-    roles: ['supervisor', 'manager', 'owner']
+    roles: ['supervisor', 'manager', 'owner'],
+    heroImage: 'https://images.pexels.com/photos/5531556/pexels-photo-5531556.jpeg?auto=compress&cs=tinysrgb&w=640',
+    heroImageAlt: 'Chef plating dishes beneath a kitchen display screen',
+    heroAccent: '#EE766D'
   },
   {
     id: 'products',

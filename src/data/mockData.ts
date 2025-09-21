@@ -1,4 +1,4 @@
-import { Product, Category, Customer, User, Store, Tenant } from '../types';
+import { Product, Category, Customer, User, Store, Tenant, KdsTicket } from '../types';
 
 export const mockTenant: Tenant = {
   id: 'tenant-1',
@@ -278,5 +278,130 @@ export const mockCustomers: Customer[] = [
     phone: '555-0103',
     loyaltyPoints: 2100,
     storeCreditBalance: 25.00
+  }
+];
+
+export const mockKdsTickets: KdsTicket[] = [
+  {
+    id: 'ticket-101',
+    orderId: '1043',
+    stationTag: 'grill',
+    status: 'new',
+    createdAt: new Date(Date.now() - 2 * 60 * 1000),
+    estimatedTime: 14,
+    items: [
+      {
+        productName: 'Grilled Salmon',
+        variantName: 'Regular',
+        quantity: 1,
+        modifiers: ['Medium'],
+        notes: 'No salt on veggies'
+      },
+      {
+        productName: 'Garden Salad',
+        quantity: 1,
+        modifiers: ['Dressing on side']
+      }
+    ]
+  },
+  {
+    id: 'ticket-102',
+    orderId: '1044',
+    stationTag: 'cold-prep',
+    status: 'new',
+    createdAt: new Date(Date.now() - 5 * 60 * 1000),
+    estimatedTime: 10,
+    items: [
+      {
+        productName: 'Caesar Salad',
+        quantity: 2,
+        modifiers: ['Extra parmesan', 'No anchovies']
+      },
+      {
+        productName: 'House Wine',
+        variantName: 'Red',
+        quantity: 2,
+        modifiers: []
+      }
+    ]
+  },
+  {
+    id: 'ticket-103',
+    orderId: '1045',
+    stationTag: 'pizza',
+    status: 'in-progress',
+    createdAt: new Date(Date.now() - 11 * 60 * 1000),
+    estimatedTime: 6,
+    items: [
+      {
+        productName: 'Margherita Pizza',
+        variantName: '16 inch',
+        quantity: 1,
+        modifiers: ['Extra basil'],
+        notes: 'Slice into 8 pieces'
+      },
+      {
+        productName: 'Buffalo Wings',
+        quantity: 1,
+        modifiers: ['Hot']
+      }
+    ]
+  },
+  {
+    id: 'ticket-104',
+    orderId: '1046',
+    stationTag: 'dessert',
+    status: 'in-progress',
+    createdAt: new Date(Date.now() - 15 * 60 * 1000),
+    estimatedTime: 4,
+    items: [
+      {
+        productName: 'Chocolate Cake',
+        quantity: 2,
+        modifiers: ['Warm slice']
+      }
+    ]
+  },
+  {
+    id: 'ticket-105',
+    orderId: '1041',
+    stationTag: 'expo',
+    status: 'done',
+    createdAt: new Date(Date.now() - 22 * 60 * 1000),
+    estimatedTime: 0,
+    items: [
+      {
+        productName: 'Ribeye Steak',
+        quantity: 1,
+        modifiers: ['Medium rare', 'Mashed potatoes']
+      },
+      {
+        productName: 'House Wine',
+        variantName: 'White',
+        quantity: 1,
+        modifiers: []
+      }
+    ]
+  },
+  {
+    id: 'ticket-106',
+    orderId: '1038',
+    stationTag: 'bar',
+    status: 'done',
+    createdAt: new Date(Date.now() - 28 * 60 * 1000),
+    estimatedTime: 0,
+    items: [
+      {
+        productName: 'House Wine',
+        variantName: 'Rosé',
+        quantity: 2,
+        modifiers: []
+      },
+      {
+        productName: 'Buffalo Wings',
+        quantity: 1,
+        modifiers: ['Medium']
+      }
+    ]
   }
 ];

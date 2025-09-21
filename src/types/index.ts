@@ -172,6 +172,9 @@ export interface AppConfig {
   isFavorite?: boolean;
   hasNotifications?: boolean;
   isPWA?: boolean;
+  heroImage?: string;
+  heroImageAlt?: string;
+  heroAccent?: string;
 }
 
 // Motion and UI
