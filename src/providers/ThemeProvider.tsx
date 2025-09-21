@@ -35,13 +35,50 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const root = document.documentElement;
-    if (paperShader.surfaces.includes('cards') && paperShader.enabled) {
-      root.dataset.paperCards = 'true';
-    } else {
-      delete root.dataset.paperCards;
+    const cards = paperShader.surfaces.cards;
+
+    const applyCardAppearance = (prefersReducedMotion: boolean) => {
+      const cardsEnabled = paperShader.enabled && cards.enabled && cards.intensity > 0;
+
+      if (prefersReducedMotion && paperShader.reducedMotion.mode === 'disabled') {
+        delete root.dataset.paperCards;
+        root.style.setProperty('--paper-card-opacity', '0');
+        return;
+      }
+
+      const multiplier =
+        prefersReducedMotion && paperShader.reducedMotion.mode === 'static'
+          ? paperShader.reducedMotion.intensityMultiplier
+          : 1;
+
+      const finalIntensity = cardsEnabled ? cards.intensity * multiplier : 0;
+
+      if (finalIntensity > 0) {
+        root.dataset.paperCards = 'true';
+        root.style.setProperty('--paper-card-opacity', (finalIntensity * 0.35).toFixed(3));
+      } else {
+        delete root.dataset.paperCards;
+        root.style.setProperty('--paper-card-opacity', '0');
+      }
+    };
+
+    if (typeof window === 'undefined') {
+      applyCardAppearance(false);
+      return;
     }
 
-    root.style.setProperty('--paper-card-opacity', (paperShader.intensity * 0.35).toFixed(3));
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    applyCardAppearance(mediaQuery.matches);
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      applyCardAppearance(event.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleChange);
+    };
   }, [paperShader]);
 
   useEffect(() => {

@@ -5,16 +5,30 @@ export interface Tenant {
   settings: TenantSettings;
 }
 
+export type PaperShaderSurface = 'background' | 'cards';
+
+export interface PaperShaderSurfaceConfig {
+  enabled: boolean;
+  intensity: number;
+  animationSpeed: number;
+}
+
+export interface PaperShaderReducedMotionConfig {
+  mode: 'static' | 'disabled';
+  intensityMultiplier: number;
+}
+
+export interface PaperShaderSettings {
+  enabled: boolean;
+  surfaces: Record<PaperShaderSurface, PaperShaderSurfaceConfig>;
+  reducedMotion: PaperShaderReducedMotionConfig;
+}
+
 export interface TenantSettings {
   currency: string;
   timezone: string;
   theme: 'light' | 'dark' | 'auto';
-  paperShader: {
-    enabled: boolean;
-    intensity: number;
-    animationSpeed: number;
-    surfaces: ('background' | 'cards')[];
-  };
+  paperShader: PaperShaderSettings;
 }
 
 export interface Store {
