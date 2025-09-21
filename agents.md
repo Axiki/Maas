@@ -58,14 +58,15 @@
 ---
 
 ## Agent 5 — Navbar
-**Scope:** Header, navigation bar, logo, menu.  
-**Tasks:**  
-- Apply palette + typography.  
-- Add hover/active states.  
-- Keep routing intact.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Header, navigation bar, logo, menu.
+**Tasks:**
+- Apply palette + typography.
+- Add hover/active states.
+- Keep routing intact.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Applied the dark #24242E header surface, refreshed the MAS badge typography, and retuned hover/focus motion tokens on the back button, status pill, and theme toggle using the #EE766D/#D6D6D6 palette. Responsiveness verified at 375 px, 768 px, and 1280 px widths.
 
 ---
 
