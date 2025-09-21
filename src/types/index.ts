@@ -161,6 +161,90 @@ export interface KdsItem {
   notes?: string;
 }
 
+// Inventory
+export type StockLevel = 'critical' | 'low' | 'optimal' | 'overstock';
+export type ExpiryStatus = 'expired' | 'expiring' | 'fresh';
+
+export interface InventoryItem {
+  id: string;
+  name: string;
+  sku: string;
+  category: string;
+  unit: string;
+  unitCost: number;
+  currentQuantity: number;
+  reorderPoint: number;
+  parLevel: number;
+  averageDailyUsage: number;
+  coverageDays: number;
+  lastUpdated: string;
+  expiryDate: string;
+  daysUntilExpiry: number;
+  expiryStatus: ExpiryStatus;
+  stockStatus: StockLevel;
+  fefoBatch: string;
+  fefoSequence: number;
+  supplier: string;
+  storageLocation: string;
+}
+
+export interface InventoryMovement {
+  id: string;
+  itemId: string;
+  sku: string;
+  type: 'receiving' | 'transfer' | 'adjustment' | 'waste';
+  quantity: number;
+  unit: string;
+  reference: string;
+  performedBy: string;
+  timestamp: string;
+  sourceOrDestination: string;
+  notes?: string;
+  batchNumber?: string;
+  expiryDate?: string;
+}
+
+export interface InventoryCountSchedule {
+  id: string;
+  name: string;
+  scheduledFor: string;
+  status: 'scheduled' | 'in-progress' | 'completed';
+  countedBy: string[];
+  variance: number;
+  lastCounted?: string;
+  focusAreas: string[];
+}
+
+export interface InventoryBatch {
+  id: string;
+  itemId: string;
+  sku: string;
+  batchNumber: string;
+  supplier: string;
+  receivedOn: string;
+  expiryDate: string;
+  daysUntilExpiry: number;
+  quantity: number;
+  unit: string;
+  remainingUnits: number;
+  fefoRank: number;
+  status: ExpiryStatus;
+  storageLocation: string;
+}
+
+export interface InventoryAlert {
+  id: string;
+  name: string;
+  sku: string;
+  stockStatus: StockLevel;
+  expiryStatus: ExpiryStatus;
+  currentQuantity: number;
+  reorderPoint: number;
+  daysUntilExpiry: number;
+  fefoBatch: string;
+  message: string;
+}
+
 // App routing
 export interface AppConfig {
   id: string;

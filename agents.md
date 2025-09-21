@@ -16,8 +16,9 @@
 - Fix misaligned sections, spacing, and grid inconsistencies.  
 - Improve responsiveness (mobile/tablet/desktop).  
 - Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Status:** DONE
+**Log:**
+- Built the inventory dashboard layout with KPI grid, alert rail, and tabbed detail views while keeping responsive spacing and existing flows intact.
 
 ---
 
