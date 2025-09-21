@@ -1,0 +1,60 @@
+:root {
+  color-scheme: light;
+  --color-bg-dust: 236 235 232;
+  --color-surface-100: 245 245 244;
+  --color-surface-200: 232 231 228;
+  --color-primary-700: 178 30 30;
+  --color-primary-600: 209 46 46;
+  --color-primary-500: 228 67 67;
+  --color-primary-200: 241 159 159;
+  --color-primary-100: 252 232 232;
+  --color-ink: 10 10 10;
+  --color-ink-70: 10 10 10;
+  --color-line: 217 215 211;
+  --color-muted: 154 153 148;
+  --color-success: 20 138 59;
+  --color-warning: 196 138 10;
+  --color-danger: 178 30 30;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-modal: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+  --transition-route-duration: 0.22s;
+  --transition-route-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-item-duration: 0.18s;
+  --transition-item-delay: 30ms;
+  --transition-press-scale: 160ms;
+  --paper-card-opacity: 0.2;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg-dust: 26 26 26;
+  --color-surface-100: 42 42 42;
+  --color-surface-200: 58 58 58;
+  --color-primary-700: 255 107 107;
+  --color-primary-600: 255 82 82;
+  --color-primary-500: 255 68 68;
+  --color-primary-200: 255 158 158;
+  --color-primary-100: 74 26 26;
+  --color-ink: 245 245 244;
+  --color-ink-70: 245 245 244;
+  --color-line: 74 74 74;
+  --color-muted: 154 153 148;
+  --color-success: 76 175 80;
+  --color-warning: 255 152 0;
+  --color-danger: 255 82 82;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-route-duration: 0s;
+    --transition-item-duration: 0s;
+    --transition-item-delay: 0s;
+    --transition-press-scale: 0s;
+  }
+}

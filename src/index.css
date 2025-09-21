@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import './styles/tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: rgb(var(--color-bg-dust));
+    color: rgb(var(--color-ink));
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    background-color: rgb(var(--color-bg-dust));
+    color: rgb(var(--color-ink));
+    margin: 0;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: rgba(var(--color-primary-500) / 0.24);
+    color: rgb(var(--color-ink));
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+    background: transparent;
+  }
+
+  [data-theme='dark'] body {
+    background-color: rgb(var(--color-bg-dust));
+    color: rgb(var(--color-ink));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgba(var(--color-primary-500) / 0.6);
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  .font-tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  .paper-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .paper-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.12),
+        rgba(255, 255, 255, 0)
+      ),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23000' fill-opacity='0.04' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+    background-size: cover, 4px 4px;
+    transition: opacity 0.3s ease;
+  }
+
+  [data-paper-cards='true'] .paper-card::before {
+    opacity: var(--paper-card-opacity);
+  }
+}
