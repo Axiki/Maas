@@ -104,122 +104,7 @@ export const POS: React.FC = () => {
 
   return (
     <MotionWrapper type="page">
-      <div className="h-[calc(100vh-4rem)] flex">
-        {/* Cart Sidebar */}
-        <div className="w-80 bg-surface-100 border-r border-line flex flex-col">
-          {/* Cart Header */}
-          <div className="p-4 border-b border-line">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold">Current Order</h3>
-              <div className="flex gap-1">
-                <button
-                  onClick={() => setOrderType('dine-in')}
-                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${
-                    orderType === 'dine-in' 
-                      ? 'bg-primary-500 text-white' 
-                      : 'bg-surface-200 text-muted hover:bg-surface-300'
-                  }`}
-                >
-                  Dine In
-                </button>
-                <button
-                  onClick={() => setOrderType('takeaway')}
-                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${
-                    orderType === 'takeaway' 
-                      ? 'bg-primary-500 text-white' 
-                      : 'bg-surface-200 text-muted hover:bg-surface-300'
-                  }`}
-                >
-                  Takeaway
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Cart Items */}
-          <div className="flex-1 overflow-y-auto">
-            {items.length === 0 ? (
-              <div className="flex items-center justify-center h-full text-muted">
-                <div className="text-center">
-                  <Clock size={48} className="mx-auto mb-3 opacity-50" />
-                  <p>No items in cart</p>
-                </div>
-              </div>
-            ) : (
-              <AnimatedList className="p-4 space-y-3">
-                {items.map((item) => (
-                  <div key={item.id} className="bg-surface-200 rounded-lg p-3">
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm">{item.product.name}</h4>
-                        {item.variant && (
-                          <p className="text-xs text-muted">{item.variant.name}</p>
-                        )}
-                        <p className="text-sm font-medium text-primary-600">
-                          ${(item.price * item.quantity).toFixed(2)}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => removeItem(item.id)}
-                        className="p-1 text-muted hover:text-danger transition-colors"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
-                          className="w-7 h-7 rounded-lg bg-surface-100 flex items-center justify-center hover:bg-line transition-colors"
-                        >
-                          <Minus size={14} />
-                        </button>
-                        <span className="w-8 text-center font-medium">{item.quantity}</span>
-                        <button
-                          onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
-                          className="w-7 h-7 rounded-lg bg-surface-100 flex items-center justify-center hover:bg-line transition-colors"
-                        >
-                          <Plus size={14} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </AnimatedList>
-            )}
-          </div>
-
-          {/* Cart Totals & Checkout */}
-          <div className="p-4 border-t border-line">
-            <div className="space-y-2 mb-4">
-              <div className="flex justify-between text-sm">
-                <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span>Tax</span>
-                <span>${tax.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between font-semibold">
-                <span>Total</span>
-                <span>${total.toFixed(2)}</span>
-              </div>
-            </div>
-            
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleCheckout}
-              disabled={items.length === 0}
-              className="w-full bg-primary-500 text-white py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
-            >
-              <CreditCard size={18} />
-              Process Payment
-            </motion.button>
-          </div>
-        </div>
-
+      <div className="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
           {/* Search & Categories */}
@@ -317,6 +202,121 @@ export const POS: React.FC = () => {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Cart Sidebar */}
+        <div className="w-full lg:w-96 xl:w-[28rem] bg-surface-100 border-t lg:border-t-0 lg:border-l border-line flex flex-col">
+          {/* Cart Header */}
+          <div className="p-4 border-b border-line">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold">Current Order</h3>
+              <div className="flex gap-1">
+                <button
+                  onClick={() => setOrderType('dine-in')}
+                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${
+                    orderType === 'dine-in'
+                      ? 'bg-primary-500 text-white'
+                      : 'bg-surface-200 text-muted hover:bg-surface-300'
+                  }`}
+                >
+                  Dine In
+                </button>
+                <button
+                  onClick={() => setOrderType('takeaway')}
+                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${
+                    orderType === 'takeaway'
+                      ? 'bg-primary-500 text-white'
+                      : 'bg-surface-200 text-muted hover:bg-surface-300'
+                  }`}
+                >
+                  Takeaway
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Cart Items */}
+          <div className="flex-1 overflow-y-auto">
+            {items.length === 0 ? (
+              <div className="flex items-center justify-center h-full text-muted">
+                <div className="text-center">
+                  <Clock size={48} className="mx-auto mb-3 opacity-50" />
+                  <p>No items in cart</p>
+                </div>
+              </div>
+            ) : (
+              <AnimatedList className="p-4 space-y-3">
+                {items.map((item) => (
+                  <div key={item.id} className="bg-surface-200 rounded-lg p-3">
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm">{item.product.name}</h4>
+                        {item.variant && (
+                          <p className="text-xs text-muted">{item.variant.name}</p>
+                        )}
+                        <p className="text-sm font-medium text-primary-600">
+                          ${(item.price * item.quantity).toFixed(2)}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        className="p-1 text-muted hover:text-danger transition-colors"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
+                          className="w-7 h-7 rounded-lg bg-surface-100 flex items-center justify-center hover:bg-line transition-colors"
+                        >
+                          <Minus size={14} />
+                        </button>
+                        <span className="w-8 text-center font-medium">{item.quantity}</span>
+                        <button
+                          onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
+                          className="w-7 h-7 rounded-lg bg-surface-100 flex items-center justify-center hover:bg-line transition-colors"
+                        >
+                          <Plus size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </AnimatedList>
+            )}
+          </div>
+
+          {/* Cart Totals & Checkout */}
+          <div className="p-4 border-t border-line">
+            <div className="space-y-2 mb-4">
+              <div className="flex justify-between text-sm">
+                <span>Subtotal</span>
+                <span>${subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Tax</span>
+                <span>${tax.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between font-semibold">
+                <span>Total</span>
+                <span>${total.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleCheckout}
+              disabled={items.length === 0}
+              className="w-full bg-primary-500 text-white py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
+            >
+              <CreditCard size={18} />
+              Process Payment
+            </motion.button>
           </div>
         </div>
       </div>
