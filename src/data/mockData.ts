@@ -1,4 +1,14 @@
-import { Product, Category, Customer, User, Store, Tenant } from '../types';
+import {
+  Product,
+  Category,
+  Customer,
+  User,
+  Store,
+  Tenant,
+  ProductVariantSummary,
+  PriceList,
+  SalesChannel,
+} from '../types';
 
 export const mockTenant: Tenant = {
   id: 'tenant-1',
@@ -253,6 +263,164 @@ export const mockProducts: Product[] = [
     isActive: true,
     stationTags: ['grill']
   }
+];
+
+const productUpdateSeeds = [
+  '2024-08-12T14:30:00Z',
+  '2024-08-09T11:15:00Z',
+  '2024-08-07T18:20:00Z',
+  '2024-08-05T09:45:00Z',
+  '2024-08-03T16:10:00Z',
+  '2024-08-01T13:25:00Z',
+];
+
+const determineChannels = (tags: string[]): SalesChannel[] => {
+  const channels = new Set<SalesChannel>(['dine-in', 'takeaway']);
+
+  if (tags.some((tag) => ['pizza', 'delivery', 'grill'].includes(tag))) {
+    channels.add('delivery');
+  }
+
+  if (tags.includes('bar')) {
+    channels.add('happy-hour');
+  }
+
+  return Array.from(channels);
+};
+
+export const mockProductVariants: ProductVariantSummary[] = mockProducts.flatMap((product, index) => {
+  const updatedAt = productUpdateSeeds[index % productUpdateSeeds.length];
+  const channels = determineChannels(product.stationTags);
+
+  if (product.variants.length === 0) {
+    const price = Number(product.price.toFixed(2));
+    const cost = Number(product.cost.toFixed(2));
+    const margin = price
+      ? Number((((price - cost) / price) * 100).toFixed(1))
+      : 0;
+
+    return [
+      {
+        id: `${product.id}-base`,
+        productId: product.id,
+        productName: product.name,
+        variantName: 'Base Price',
+        sku: product.barcode ?? `${product.id}-BASE`,
+        price,
+        cost,
+        margin,
+        isActive: product.isActive,
+        isPrimary: true,
+        channels,
+        lastUpdated: updatedAt,
+      },
+    ];
+  }
+
+  return product.variants.map((variant, variantIndex) => {
+    const price = Number(variant.price.toFixed(2));
+    const cost = Number(product.cost.toFixed(2));
+    const margin = price
+      ? Number((((price - cost) / price) * 100).toFixed(1))
+      : 0;
+
+    return {
+      id: variant.id,
+      productId: product.id,
+      productName: product.name,
+      variantName: variant.name,
+      sku: variant.sku,
+      price,
+      cost,
+      margin,
+      isActive: product.isActive,
+      isPrimary: variantIndex === 0,
+      channels,
+      lastUpdated: updatedAt,
+    };
+  });
+});
+
+export const mockPriceLists: PriceList[] = [
+  {
+    id: 'pl-1',
+    name: 'Main Dining Room',
+    channel: 'dine-in',
+    locations: ['store-1'],
+    currency: 'USD',
+    status: 'active',
+    isDefault: true,
+    updatedAt: '2024-08-12T15:45:00Z',
+    items: mockProductVariants.map((variant) => ({
+      productId: variant.productId,
+      variantId: variant.id,
+      price: variant.price,
+      isOverride: false,
+    })),
+  },
+  {
+    id: 'pl-2',
+    name: 'Delivery Platforms',
+    channel: 'delivery',
+    locations: ['store-1'],
+    currency: 'USD',
+    status: 'active',
+    schedule: {
+      start: '2024-08-01T00:00:00Z',
+      daysOfWeek: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    },
+    updatedAt: '2024-08-09T10:00:00Z',
+    items: mockProductVariants
+      .filter((variant) => variant.channels.includes('delivery'))
+      .map((variant) => ({
+        productId: variant.productId,
+        variantId: variant.id,
+        price: Number((variant.price + 1.5).toFixed(2)),
+        compareAtPrice: variant.price,
+        isOverride: true,
+      })),
+  },
+  {
+    id: 'pl-3',
+    name: 'Happy Hour Specials',
+    channel: 'happy-hour',
+    locations: ['store-1'],
+    currency: 'USD',
+    status: 'scheduled',
+    schedule: {
+      start: '2024-08-15T16:00:00Z',
+      end: '2024-08-15T19:00:00Z',
+      daysOfWeek: ['Thu', 'Fri'],
+      timeWindow: {
+        start: '16:00',
+        end: '19:00',
+      },
+    },
+    updatedAt: '2024-08-05T09:30:00Z',
+    items: [
+      {
+        productId: 'prod-5',
+        variantId: 'var-5',
+        price: 6.5,
+        compareAtPrice: 7.99,
+        isOverride: true,
+      },
+      {
+        productId: 'prod-1',
+        variantId: 'prod-1-base',
+        price: 10.5,
+        compareAtPrice: 12.99,
+        isOverride: true,
+      },
+      {
+        productId: 'prod-6',
+        variantId: 'prod-6-base',
+        price: 12.99,
+        compareAtPrice: 14.99,
+        isOverride: true,
+      },
+    ],
+  },
 ];
 
 export const mockCustomers: Customer[] = [

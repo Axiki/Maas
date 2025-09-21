@@ -69,6 +69,23 @@ export interface ProductVariant {
   sku: string;
 }
 
+export type SalesChannel = 'dine-in' | 'takeaway' | 'delivery' | 'happy-hour' | 'catering';
+
+export interface ProductVariantSummary {
+  id: string;
+  productId: string;
+  productName: string;
+  variantName: string;
+  sku: string;
+  price: number;
+  cost: number;
+  margin: number;
+  isActive: boolean;
+  isPrimary: boolean;
+  channels: SalesChannel[];
+  lastUpdated: string;
+}
+
 export interface ModifierGroup {
   id: string;
   name: string;
@@ -90,6 +107,37 @@ export interface Customer {
   email?: string;
   loyaltyPoints: number;
   storeCreditBalance: number;
+}
+
+export interface PriceListItem {
+  productId: string;
+  variantId?: string;
+  price: number;
+  compareAtPrice?: number;
+  isOverride?: boolean;
+}
+
+export interface PriceListSchedule {
+  start: string;
+  end?: string;
+  daysOfWeek?: string[];
+  timeWindow?: {
+    start: string;
+    end: string;
+  };
+}
+
+export interface PriceList {
+  id: string;
+  name: string;
+  channel: SalesChannel;
+  locations: string[];
+  currency: string;
+  status: 'active' | 'scheduled' | 'draft' | 'expired';
+  isDefault?: boolean;
+  schedule?: PriceListSchedule;
+  updatedAt: string;
+  items: PriceListItem[];
 }
 
 export interface Order {
