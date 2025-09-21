@@ -16,8 +16,10 @@
 - Fix misaligned sections, spacing, and grid inconsistencies.  
 - Improve responsiveness (mobile/tablet/desktop).  
 - Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Status:** DONE
+**Log:**
+- Added calendar layout with week/month toggle, drag-friendly scheduling grid, and sidebars for reservations/tasks while keeping palette + responsiveness intact.
+- Introduced calendar service hook placeholder to prepare for ICS export integrations.
 
 ---
 
