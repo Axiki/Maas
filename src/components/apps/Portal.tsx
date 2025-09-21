@@ -8,6 +8,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { getAvailableApps } from '../../config/apps';
 import { theme } from '../../config/theme';
 import { Card } from '@mas/ui';
+import { PortalHero, PageContainer } from './portal/PortalHero';
 
 const MotionCard = motion(Card);
 
@@ -46,16 +47,24 @@ export const Portal: React.FC = () => {
   };
 
   return (
-    <MotionWrapper type="page" className="p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2">Welcome back, {user?.name}</h2>
-          <p className="text-muted">
-            {tenant?.name} • {user?.role}
-          </p>
+    <MotionWrapper type="page" className="pb-16">
+      <PageContainer className="pt-10">
+        <PortalHero />
+      </PageContainer>
+
+      <PageContainer className="mt-12 space-y-10">
+        <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:items-end sm:justify-between sm:text-left">
+          <div>
+            <h2 className="text-balance text-2xl font-semibold text-ink sm:text-3xl">
+              Welcome back, {user?.name}
+            </h2>
+            <p className="text-sm text-muted sm:text-base">
+              {tenant?.name} • {user?.role}
+            </p>
+          </div>
         </div>
 
-        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div ref={gridRef} className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {availableApps.map((app) => {
             const IconComponent = (LucideIcons as any)[app.icon] || LucideIcons.Package;
 
@@ -90,7 +99,7 @@ export const Portal: React.FC = () => {
           })}
         </div>
 
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <Card>
             <h3 className="font-semibold mb-4">Today&apos;s Summary</h3>
             <div className="space-y-3">
@@ -145,7 +154,7 @@ export const Portal: React.FC = () => {
             </div>
           </Card>
         </div>
-      </div>
+      </PageContainer>
     </MotionWrapper>
   );
 };

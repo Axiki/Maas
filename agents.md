@@ -10,14 +10,14 @@
 ---
 
 ## Agent 1 — Layout
-**Scope:** Analyze and fix page layouts (grid, spacing, alignment, responsiveness).  
-**Tasks:**  
-- Review current layout structure.  
-- Fix misaligned sections, spacing, and grid inconsistencies.  
-- Improve responsiveness (mobile/tablet/desktop).  
-- Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Analyze and fix page layouts (grid, spacing, alignment, responsiveness).
+**Tasks:**
+- Review current layout structure.
+- Fix misaligned sections, spacing, and grid inconsistencies.
+- Improve responsiveness (mobile/tablet/desktop).
+- Keep existing functionality untouched.
+**Status:** TODO
+**Log:**
 
 ---
 
@@ -28,8 +28,8 @@
 - Replace off-palette values with correct ones.  
 - Ensure Tailwind config and global tokens are updated.  
 - Verify consistency across all components.  
-**Status:** TODO  
-**Log:**  
+**Status:** TODO
+**Log:**
 
 ---
 
@@ -70,14 +70,15 @@
 ---
 
 ## Agent 6 — Hero Section
-**Scope:** Main landing section (logo, slogan, CTA).  
-**Tasks:**  
-- Center logo properly.  
-- Add slogan text with correct typography.  
-- Add primary CTA button with hover state.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Main landing section (logo, slogan, CTA).
+**Tasks:**
+- Center logo properly.
+- Add slogan text with correct typography.
+- Add primary CTA button with hover state.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Implemented a motion-enabled Portal hero with brand badge, typography utilities, palette-aligned copy, animated feature bullets, and an accessible CTA wired to /pos. Wrapped the launcher content with the new PageContainer so the hero, welcome block, and app grid stack cleanly on small screens.
 
 ---
 
