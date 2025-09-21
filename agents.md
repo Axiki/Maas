@@ -125,3 +125,15 @@
 - Log any issues needing backend fixes.  
 **Status:** TODO  
 **Log:**  
+
+---
+
+## Agent 18 — Accounting Experience
+**Scope:** Implement accounting dashboards, exports, and compliance alerts.
+**Tasks:**
+- Build production-ready accounting overview.
+- Wire widgets to shared accounting mock data.
+- Surface alerts and export controls for finance teams.
+**Status:** DONE
+**Log:**
+- Implemented AccountingDashboard with four widgets, shared status indicators, export controls, and routing tied to mockAccounting dataset; no outstanding issues.
