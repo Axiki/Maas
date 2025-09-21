@@ -118,10 +118,23 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 11 — Accounting Dashboard
+**Scope:** Build accounting overview panels and exports.
+**Tasks:**
+- Implement dashboard widgets that mirror reporting mock data.
+- Surface export controls with disabled placeholders until APIs exist.
+- Keep currency, tax, and cash figures aligned with reporting mocks.
+**Status:** DONE
+**Log:**
+- Integrated shared mock accounting summary, added responsive widgets for Daybook, Tax, Cash, and Mini P&L with trend tokens, and wired up disabled CSV/XLSX exports pending backend endpoints.
+- `npm run lint` reports pre-existing issues in other modules (POS, Portal, PaperShader, StatusIndicator, themeStore); left untouched per scope boundaries.
