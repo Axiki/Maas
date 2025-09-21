@@ -94,14 +94,22 @@
 ---
 
 ## Agent 8 — Buttons & CTAs
-**Scope:** Button styles across site.  
-**Tasks:**  
-- Standardize button size, radius, and hover states.  
-- Apply palette colors correctly.  
-- Ensure accessibility contrast ratios.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Button styles across site.
+**Tasks:**
+- Standardize button size, radius, and hover states.
+- Apply palette colors correctly.
+- Ensure accessibility contrast ratios.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Updated `src/packages/ui/button.tsx` to apply the MAS palette, add a `cta` variant, and unify transitions/focus rings for consistency.
+- Lint run blocked by pre-existing issues in other components (POS, Portal, PaperShader, StatusIndicator, themeStore); no changes applied to stay within scope.
+- Variant matrix:
+  - Primary — default `bg-[#EE766D] text-[#24242E]` · hover `bg-[#e55e54]` · focus offset `#D6D6D6` · disabled tone reductions.
+  - Secondary — default `bg-[#D6D6D6] text-[#24242E]` · hover `bg-[#c6c6c6]` · focus offset `#D6D6D6` · softened disabled palette.
+  - Outline — default `border/text #24242E` on transparent · hover fills `#24242E` with `#D6D6D6` text · focus offset `#D6D6D6` · muted disabled border/text.
+  - Ghost — default text `#24242E` · hover surface `#D6D6D6`/70 · focus offset `#D6D6D6` · low-emphasis disabled text.
+  - CTA — default `bg-[#24242E] text-[#D6D6D6]` with shadow · hover swaps to `bg-[#EE766D] text-[#24242E]` · focus offset `#24242E` · dimmed disabled state.
 
 ---
 

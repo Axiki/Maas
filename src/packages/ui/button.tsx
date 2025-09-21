@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@mas/utils';
 
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'cta';
 type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -11,13 +11,15 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-primary-500 text-white shadow-card hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:bg-primary-500/50 disabled:text-white/70',
+    'bg-[#EE766D] text-[#24242E] shadow-card hover:bg-[#e55e54] focus-visible:ring-offset-[#D6D6D6] disabled:bg-[#EE766D]/60 disabled:text-[#24242E]/70',
   secondary:
-    'bg-surface-100 text-ink hover:bg-surface-200 border border-line focus-visible:ring-2 focus-visible:ring-primary-500/30 disabled:text-muted disabled:bg-surface-200/60',
+    'bg-[#D6D6D6] text-[#24242E] hover:bg-[#c6c6c6] focus-visible:ring-offset-[#D6D6D6] disabled:bg-[#D6D6D6]/70 disabled:text-[#24242E]/50',
   outline:
-    'border border-line text-ink hover:border-primary-200 hover:text-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500/30 disabled:text-muted',
+    'border border-[#24242E] text-[#24242E] hover:bg-[#24242E] hover:text-[#D6D6D6] focus-visible:ring-offset-[#D6D6D6] disabled:border-[#24242E]/40 disabled:text-[#24242E]/40',
   ghost:
-    'text-muted hover:text-ink hover:bg-surface-200 focus-visible:ring-2 focus-visible:ring-primary-500/20 disabled:text-muted',
+    'text-[#24242E] hover:bg-[#D6D6D6]/70 focus-visible:ring-offset-[#D6D6D6] disabled:text-[#24242E]/40',
+  cta:
+    'bg-[#24242E] text-[#D6D6D6] shadow-card hover:bg-[#EE766D] hover:text-[#24242E] focus-visible:ring-offset-[#24242E] disabled:bg-[#24242E]/60 disabled:text-[#D6D6D6]/60',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -33,7 +35,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       ref={ref}
       type={type}
       className={cn(
-        'inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-colors duration-150 focus:outline-none disabled:cursor-not-allowed',
+        'inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EE766D] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-60',
         variantClasses[variant],
         sizeClasses[size],
         className
