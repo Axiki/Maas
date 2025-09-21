@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import './styles/tokens.css';
+@import './styles/typography.css';
 
 @tailwind base;
 @tailwind components;
@@ -13,7 +14,7 @@
   }
 
   html {
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--font-family-sans);
     background-color: rgb(var(--color-bg-dust));
     color: rgb(var(--color-ink));
     scroll-behavior: smooth;

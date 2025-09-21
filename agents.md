@@ -10,14 +10,14 @@
 ---
 
 ## Agent 1 — Layout
-**Scope:** Analyze and fix page layouts (grid, spacing, alignment, responsiveness).  
-**Tasks:**  
-- Review current layout structure.  
-- Fix misaligned sections, spacing, and grid inconsistencies.  
-- Improve responsiveness (mobile/tablet/desktop).  
-- Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Analyze and fix page layouts (grid, spacing, alignment, responsiveness).
+**Tasks:**
+- Review current layout structure.
+- Fix misaligned sections, spacing, and grid inconsistencies.
+- Improve responsiveness (mobile/tablet/desktop).
+- Keep existing functionality untouched.
+**Status:** TODO
+**Log:**
 
 ---
 
@@ -34,15 +34,15 @@
 ---
 
 ## Agent 3 — Typography
-**Scope:** Fonts, sizes, weights, and readability.  
-**Tasks:**  
-- Analyze current font stack.  
-- Apply consistent font sizes for headings, body, buttons.  
-- Fix line-height and spacing issues.  
-- Document changes here.  
-**Status:** TODO  
-**Log:**  
-
+**Scope:** Fonts, sizes, weights, and readability.
+**Tasks:**
+- Analyze current font stack.
+- Apply consistent font sizes for headings, body, buttons.
+- Fix line-height and spacing issues.
+- Document changes here.
+**Status:** DONE
+**Log:**
+- 2024-04-07: Added shared typography tokens/utilities, extended Tailwind font scale, refactored Login/Portal/BackOffice/AppShell copy to use the new helpers. `npm run lint` reports existing issues in POS, PaperShader, StatusIndicator, and themeStore outside typography scope.
 ---
 
 ## Agent 4 — Animations & Transitions
