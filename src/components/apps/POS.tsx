@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
-import { Search, Plus, Minus, Trash2, User, CreditCard, Clock } from 'lucide-react';
+import { Search, Plus, Minus, Trash2, CreditCard, Clock } from 'lucide-react';
 import { MotionWrapper, AnimatedList } from '../ui/MotionWrapper';
+import { CardSkeleton, SkeletonBlock } from '../ui/skeletons';
 import { useCartStore } from '../../stores/cartStore';
 import { useOfflineStore } from '../../stores/offlineStore';
 import { useAuthStore } from '../../stores/authStore';
@@ -12,8 +13,9 @@ import { mockProducts, mockCategories } from '../../data/mockData';
 export const POS: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [products] = useState<Product[]>(mockProducts);
-  const [categories] = useState<Category[]>(mockCategories);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const gridRef = useRef<HTMLDivElement>(null);
   
   const { 
@@ -31,6 +33,27 @@ export const POS: React.FC = () => {
   const { queueOrder } = useOfflineStore();
   const { user, store } = useAuthStore();
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const hydrateCatalog = async () => {
+      setIsLoadingProducts(true);
+      await Promise.resolve();
+
+      if (!isMounted) return;
+
+      setProducts(mockProducts);
+      setCategories(mockCategories);
+      setIsLoadingProducts(false);
+    };
+
+    hydrateCatalog();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   // Filter products
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -41,9 +64,9 @@ export const POS: React.FC = () => {
 
   // GSAP animation for product grid
   useEffect(() => {
-    if (gridRef.current && filteredProducts.length > 0) {
+    if (gridRef.current && filteredProducts.length > 0 && !isLoadingProducts) {
       const productCards = gridRef.current.children;
-      
+
       gsap.fromTo(productCards,
         { y: 12, opacity: 0, scale: 0.95 },
         {
@@ -56,7 +79,7 @@ export const POS: React.FC = () => {
         }
       );
     }
-  }, [filteredProducts]);
+  }, [filteredProducts, isLoadingProducts]);
 
   const handleAddProduct = (product: Product) => {
     addItem(product);
@@ -238,77 +261,108 @@ export const POS: React.FC = () => {
             </div>
 
             {/* Category Tabs */}
-            <div className="flex gap-2 overflow-x-auto pb-2">
-              <button
-                onClick={() => setSelectedCategory('all')}
-                className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors ${
-                  selectedCategory === 'all'
-                    ? 'bg-primary-500 text-white'
-                    : 'bg-surface-200 text-muted hover:bg-line'
-                }`}
-              >
-                All Items
-              </button>
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors ${
-                    selectedCategory === category.id
-                      ? 'bg-primary-500 text-white'
-                      : 'bg-surface-200 text-muted hover:bg-line'
-                  }`}
-                >
-                  {category.name}
-                </button>
-              ))}
+            <div className="flex gap-2 overflow-x-auto pb-2" aria-busy={isLoadingProducts}>
+              {isLoadingProducts ? (
+                <>
+                  <span className="sr-only">Loading categories</span>
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <SkeletonBlock key={`category-skeleton-${index}`} className="h-10 w-24 flex-shrink-0" rounded="lg" />
+                  ))}
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setSelectedCategory('all')}
+                    className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors ${
+                      selectedCategory === 'all'
+                        ? 'bg-primary-500 text-white'
+                        : 'bg-surface-200 text-muted hover:bg-line'
+                    }`}
+                  >
+                    All Items
+                  </button>
+                  {categories.map((category) => (
+                    <button
+                      key={category.id}
+                      onClick={() => setSelectedCategory(category.id)}
+                      className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors ${
+                        selectedCategory === category.id
+                          ? 'bg-primary-500 text-white'
+                          : 'bg-surface-200 text-muted hover:bg-line'
+                      }`}
+                    >
+                      {category.name}
+                    </button>
+                  ))}
+                </>
+              )}
             </div>
           </div>
 
           {/* Product Grid */}
           <div className="flex-1 overflow-y-auto p-4">
-            <div 
+            <div
               ref={gridRef}
               className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4"
+              aria-busy={isLoadingProducts}
             >
-              {filteredProducts.map((product) => (
-                <motion.div
-                  key={product.id}
-                  whileHover={{ scale: 1.02, boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleAddProduct(product)}
-                  className="bg-surface-100 rounded-lg p-4 cursor-pointer border border-line hover:border-primary-200 transition-all group"
-                >
-                  <div className="aspect-square bg-surface-200 rounded-lg mb-3 flex items-center justify-center">
-                    {product.image ? (
-                      <img 
-                        src={product.image} 
-                        alt={product.name}
-                        className="w-full h-full object-cover rounded-lg"
-                      />
-                    ) : (
-                      <div className="text-4xl">🍽️</div>
-                    )}
-                  </div>
-                  
-                  <h4 className="font-medium text-sm mb-1 group-hover:text-primary-600 transition-colors">
-                    {product.name}
-                  </h4>
-                  
-                  <p className="text-primary-600 font-semibold">
-                    ${product.price.toFixed(2)}
-                  </p>
-                  
-                  {product.variants.length > 0 && (
-                    <p className="text-xs text-muted mt-1">
-                      {product.variants.length} variant{product.variants.length !== 1 ? 's' : ''}
+              {isLoadingProducts ? (
+                <>
+                  <span className="sr-only">Loading products</span>
+                  {Array.from({ length: 12 }).map((_, index) => (
+                    <CardSkeleton
+                      key={`product-skeleton-${index}`}
+                      hasHeader={false}
+                      hasMedia
+                      lines={2}
+                      density="compact"
+                      className="space-y-3"
+                    >
+                      <SkeletonBlock className="h-4 w-3/4" />
+                      <SkeletonBlock className="h-4 w-1/2" />
+                    </CardSkeleton>
+                  ))}
+                </>
+              ) : (
+                filteredProducts.map((product) => (
+                  <motion.div
+                    key={product.id}
+                    whileHover={{ scale: 1.02, boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleAddProduct(product)}
+                    className="bg-surface-100 rounded-lg p-4 cursor-pointer border border-line hover:border-primary-200 transition-all group"
+                  >
+                    <div className="aspect-square bg-surface-200 rounded-lg mb-3 flex items-center justify-center">
+                      {product.image ? (
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                      ) : (
+                        <div className="text-4xl">🍽️</div>
+                      )}
+                    </div>
+
+                    <h4 className="font-medium text-sm mb-1 group-hover:text-primary-600 transition-colors">
+                      {product.name}
+                    </h4>
+
+                    <p className="text-primary-600 font-semibold">
+                      ${product.price.toFixed(2)}
                     </p>
-                  )}
-                </motion.div>
-              ))}
+
+                    {product.variants.length > 0 && (
+                      <p className="text-xs text-muted mt-1">
+                        {product.variants.length} variant{product.variants.length !== 1 ? 's' : ''}
+                      </p>
+                    )}
+                  </motion.div>
+                ))
+              )}
             </div>
-            
-            {filteredProducts.length === 0 && (
+
+            {!isLoadingProducts && filteredProducts.length === 0 && (
               <div className="flex items-center justify-center h-64 text-muted">
                 <div className="text-center">
                   <Search size={48} className="mx-auto mb-3 opacity-50" />
