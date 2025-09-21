@@ -118,10 +118,23 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 24 — Telemetry
+**Scope:** Telemetry ingestion, status surfacing, shared observability UI.
+**Tasks:**
+- Build telemetry client for incidents and health alerts.
+- Surface telemetry issues through StatusIndicator banners/tooltips.
+- Provide BackOffice with a reusable incident log.
+- Document telemetry handling updates here.
+**Status:** DONE
+**Log:**
+- Added a persisted telemetry store with incident/health helpers and exposed a lightweight telemetry client for downstream use. Linked the data to StatusIndicator for accessible alerts with severity tooltips and added a reusable TelemetryLog for BackOffice. Lint check reports pre-existing project warnings/errors (Portal hook deps, POS unused types, PaperShader escapes, theme store params); no new violations introduced by telemetry changes.
