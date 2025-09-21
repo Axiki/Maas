@@ -94,26 +94,29 @@
 ---
 
 ## Agent 8 — Buttons & CTAs
-**Scope:** Button styles across site.  
-**Tasks:**  
-- Standardize button size, radius, and hover states.  
-- Apply palette colors correctly.  
-- Ensure accessibility contrast ratios.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Button styles across site.
+**Tasks:**
+- Standardize button size, radius, and hover states.
+- Apply palette colors correctly.
+- Ensure accessibility contrast ratios.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Converted POS category chips to the shared `Button` component with a new chip variant, preserving hover/focus behaviour and palette alignment.
 
 ---
 
 ## Agent 9 — Forms & Inputs
-**Scope:** Input fields, contact forms, search bars.  
-**Tasks:**  
-- Style inputs and textareas.  
-- Apply palette + typography.  
-- Add focus states and validation feedback.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Input fields, contact forms, search bars.
+**Tasks:**
+- Style inputs and textareas.
+- Apply palette + typography.
+- Add focus states and validation feedback.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Introduced shared `.form-input`, `.form-label`, and `.form-range` tokens; labelled the POS search for screen readers and confirmed placeholder contrast at ~60% ink tint with visible focus rings and primary accent on sliders.
+- Resolved an unused POS icon import surfaced during lint validation.
 
 ---
 

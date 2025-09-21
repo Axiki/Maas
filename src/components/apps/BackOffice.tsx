@@ -81,8 +81,9 @@ export const BackOffice: React.FC = () => {
 
             <div className="space-y-4">
               <label className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-ink">Grain intensity</span>
+                <span className="form-label">Grain intensity</span>
                 <input
+                  id="shader-intensity"
                   type="range"
                   min={0}
                   max={1}
@@ -91,14 +92,18 @@ export const BackOffice: React.FC = () => {
                   onChange={(event) =>
                     updatePaperShader({ intensity: parseFloat(event.target.value) })
                   }
-                  className="w-full accent-primary-500"
+                  className="form-range"
+                  aria-describedby="shader-intensity-helper"
                 />
-                <span className="text-xs text-muted">{paperShader.intensity.toFixed(2)}</span>
+                <span id="shader-intensity-helper" className="form-helper">
+                  {paperShader.intensity.toFixed(2)}
+                </span>
               </label>
 
               <label className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-ink">Animation speed</span>
+                <span className="form-label">Animation speed</span>
                 <input
+                  id="shader-speed"
                   type="range"
                   min={0}
                   max={3}
@@ -107,9 +112,12 @@ export const BackOffice: React.FC = () => {
                   onChange={(event) =>
                     updatePaperShader({ animationSpeed: parseFloat(event.target.value) })
                   }
-                  className="w-full accent-primary-500"
+                  className="form-range"
+                  aria-describedby="shader-speed-helper"
                 />
-                <span className="text-xs text-muted">{paperShader.animationSpeed.toFixed(1)}x</span>
+                <span id="shader-speed-helper" className="form-helper">
+                  {paperShader.animationSpeed.toFixed(1)}x
+                </span>
               </label>
             </div>
 

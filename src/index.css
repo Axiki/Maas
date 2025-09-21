@@ -66,9 +66,85 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
 }
 
 @layer components {
+  .form-label {
+    @apply block text-sm font-medium text-ink;
+  }
+
+  .form-helper {
+    @apply text-xs text-muted;
+  }
+
+  .form-input {
+    @apply w-full rounded-lg border border-line/80 bg-surface-100/95 px-3 py-2 text-sm text-ink transition-[border,box-shadow] duration-150;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 focus-visible:border-primary-200;
+  }
+
+  .form-input::placeholder {
+    color: rgba(var(--color-ink) / 0.6);
+  }
+
+  .form-input:disabled {
+    @apply cursor-not-allowed border-line/60 text-muted bg-surface-200/70;
+  }
+
+  .form-range {
+    @apply w-full h-2 rounded-full bg-surface-200 transition-shadow duration-150;
+    accent-color: rgb(var(--color-primary-500));
+  }
+
+  .form-range:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(var(--color-primary-500) / 0.35);
+  }
+
+  .form-range::-webkit-slider-runnable-track {
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: rgba(var(--color-line) / 1);
+  }
+
+  .form-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 9999px;
+    background: rgb(var(--color-primary-500));
+    border: 2px solid rgb(var(--color-surface-100));
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-top: -8px;
+  }
+
+  .form-range::-moz-range-track {
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: rgba(var(--color-line) / 1);
+  }
+
+  .form-range::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 9999px;
+    background: rgb(var(--color-primary-500));
+    border: 2px solid rgb(var(--color-surface-100));
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
   .paper-card {
     position: relative;
     overflow: hidden;

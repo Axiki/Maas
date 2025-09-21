@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@mas/utils';
 
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'chip';
 type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -18,6 +18,8 @@ const variantClasses: Record<ButtonVariant, string> = {
     'border border-line text-ink hover:border-primary-200 hover:text-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500/30 disabled:text-muted',
   ghost:
     'text-muted hover:text-ink hover:bg-surface-200 focus-visible:ring-2 focus-visible:ring-primary-500/20 disabled:text-muted',
+  chip:
+    'rounded-full border border-line/80 bg-surface-100 text-muted hover:text-ink hover:border-primary-200 focus-visible:ring-2 focus-visible:ring-primary-500/40 data-[active=true]:bg-primary-500 data-[active=true]:text-white data-[active=true]:border-transparent data-[active=true]:shadow-card',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {

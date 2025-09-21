@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
-import { Search, Plus, Minus, Trash2, User, CreditCard, Clock } from 'lucide-react';
+import { Search, Plus, Minus, Trash2, CreditCard, Clock } from 'lucide-react';
+import { Button } from '@mas/ui';
 import { MotionWrapper, AnimatedList } from '../ui/MotionWrapper';
 import { useCartStore } from '../../stores/cartStore';
 import { useOfflineStore } from '../../stores/offlineStore';
@@ -226,42 +227,49 @@ export const POS: React.FC = () => {
           <div className="p-4 border-b border-line">
             <div className="flex gap-4 mb-4">
               <div className="relative flex-1 max-w-md">
+                <label htmlFor="pos-search" className="form-label sr-only">
+                  Search products
+                </label>
                 <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted" />
                 <input
+                  id="pos-search"
                   type="text"
                   placeholder="Search products..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-line rounded-lg bg-surface-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="form-input pl-10 pr-4"
                 />
               </div>
             </div>
 
             {/* Category Tabs */}
             <div className="flex gap-2 overflow-x-auto pb-2">
-              <button
+              <Button
+                variant="chip"
+                size="sm"
+                className="px-4 whitespace-nowrap"
+                data-active={selectedCategory === 'all'}
+                aria-pressed={selectedCategory === 'all'}
                 onClick={() => setSelectedCategory('all')}
-                className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors ${
-                  selectedCategory === 'all'
-                    ? 'bg-primary-500 text-white'
-                    : 'bg-surface-200 text-muted hover:bg-line'
-                }`}
               >
                 All Items
-              </button>
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors ${
-                    selectedCategory === category.id
-                      ? 'bg-primary-500 text-white'
-                      : 'bg-surface-200 text-muted hover:bg-line'
-                  }`}
-                >
-                  {category.name}
-                </button>
-              ))}
+              </Button>
+              {categories.map((category) => {
+                const isActive = selectedCategory === category.id;
+                return (
+                  <Button
+                    key={category.id}
+                    variant="chip"
+                    size="sm"
+                    className="px-4 whitespace-nowrap"
+                    data-active={isActive}
+                    aria-pressed={isActive}
+                    onClick={() => setSelectedCategory(category.id)}
+                  >
+                    {category.name}
+                  </Button>
+                );
+              })}
             </div>
           </div>
 
