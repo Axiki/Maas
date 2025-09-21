@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { shallow } from 'zustand/shallow';
 import { TenantSettings } from '../types';
 
 export type ThemeMode = 'light' | 'dark' | 'auto';
