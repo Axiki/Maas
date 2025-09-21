@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { shallow } from 'zustand/shallow';
 import { TenantSettings } from '../types';
 
 export type ThemeMode = 'light' | 'dark' | 'auto';
@@ -30,9 +29,17 @@ const defaultPaperShader: PaperShaderState = {
   surfaces: ['background', 'cards'],
 };
 
+const detectSystemMode = (fallback: 'light' | 'dark' = 'light'): 'light' | 'dark' => {
+  if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  return fallback;
+};
+
 export const useThemeStore = create<ThemeState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       mode: 'auto',
       systemMode: 'light',
       resolvedMode: 'light',
@@ -134,6 +141,27 @@ export const useThemeStore = create<ThemeState>()(
     }
   )
 );
+
+const hydrateResolvedMode = (modeOverride?: ThemeMode) => {
+  const { mode: currentMode, systemMode: currentSystemMode } = useThemeStore.getState();
+  const mode = modeOverride ?? currentMode;
+  const systemMode = detectSystemMode(currentSystemMode);
+  const resolvedMode = mode === 'auto' ? systemMode : mode;
+
+  useThemeStore.setState(
+    { systemMode, resolvedMode },
+    false,
+    'theme/hydrate-resolved-mode'
+  );
+};
+
+useThemeStore.persist?.onFinishHydration?.((state) => {
+  hydrateResolvedMode(state?.mode);
+});
+
+if (useThemeStore.persist?.hasHydrated?.()) {
+  hydrateResolvedMode();
+}
 
 export const useTheme = () =>
   useThemeStore((state) => ({

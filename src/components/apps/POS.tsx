@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
-import { Search, Plus, Minus, Trash2, User, CreditCard, Clock } from 'lucide-react';
+import { Search, Plus, Minus, Trash2, CreditCard, Clock } from 'lucide-react';
 import { MotionWrapper, AnimatedList } from '../ui/MotionWrapper';
 import { useCartStore } from '../../stores/cartStore';
 import { useOfflineStore } from '../../stores/offlineStore';
