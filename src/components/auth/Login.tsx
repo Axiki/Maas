@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Button } from '@mas/ui';
 import { LogIn, Eye, EyeOff } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { useNavigate } from 'react-router-dom';
 import { mockUser, mockStore, mockTenant } from '../../data/mockData';
 import { PaperShader } from '../ui/PaperShader';
+
+const MotionButton = motion(Button);
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('manager@bellavista.com');
@@ -92,12 +95,14 @@ export const Login: React.FC = () => {
               </div>
             </div>
 
-            <motion.button
+            <MotionButton
               type="submit"
               disabled={isLoading}
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
-              className="w-full bg-primary-500 text-white py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
+              variant="primary"
+              size="lg"
+              className="w-full"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -107,7 +112,7 @@ export const Login: React.FC = () => {
                   Sign In
                 </>
               )}
-            </motion.button>
+            </MotionButton>
           </form>
 
           {/* Demo Credentials */}

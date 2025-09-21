@@ -100,9 +100,9 @@
 - Apply palette colors correctly.  
 - Ensure accessibility contrast ratios.  
 - Document changes.  
-**Status:** TODO  
+**Status:** DONE  
 **Log:**  
-
+- Replaced Login and POS submit actions with MotionButton using refreshed primary variant while preserving animations; npm run lint still reports pre-existing repository issues outside button scope.  
 ---
 
 ## Agent 9 — Forms & Inputs
