@@ -136,9 +136,16 @@ export const useThemeStore = create<ThemeState>()(
 );
 
 export const useTheme = () =>
-  useThemeStore((state) => ({
-    mode: state.mode,
-    resolvedMode: state.resolvedMode,
-    systemMode: state.systemMode,
-    paperShader: state.paperShader,
-  }));
+  useThemeStore(
+    (state) => ({
+      mode: state.mode,
+      resolvedMode: state.resolvedMode,
+      systemMode: state.systemMode,
+      paperShader: state.paperShader,
+      setMode: state.setMode,
+      setSystemMode: state.setSystemMode,
+      updatePaperShader: state.updatePaperShader,
+      applyTenantSettings: state.applyTenantSettings,
+    }),
+    shallow
+  );
