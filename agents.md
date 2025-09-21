@@ -70,14 +70,16 @@
 ---
 
 ## Agent 6 — Hero Section
-**Scope:** Main landing section (logo, slogan, CTA).  
-**Tasks:**  
-- Center logo properly.  
-- Add slogan text with correct typography.  
-- Add primary CTA button with hover state.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Main landing section (logo, slogan, CTA).
+**Tasks:**
+- Center logo properly.
+- Add slogan text with correct typography.
+- Add primary CTA button with hover state.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Added PortalHero with tenant-aware copy, CTA to /pos, and a metrics panel; wrapped portal page in shared PageContainer for balanced spacing.
+- Responsive testing: 360px (stacked layout), 768px (hero + metrics side-by-side), 1280px (ample white space for summary cards); keyboard nav confirms CTA focus ring and activation via Enter.
 
 ---
 
