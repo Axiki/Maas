@@ -90,6 +90,9 @@ export interface Customer {
   email?: string;
   loyaltyPoints: number;
   storeCreditBalance: number;
+  tags?: string[];
+  groups?: string[];
+  loyaltyTier?: string;
 }
 
 export interface Order {
@@ -141,6 +144,119 @@ export interface Payment {
 export interface CartItem extends OrderLine {
   product: Product;
   variant?: ProductVariant;
+}
+
+// Promotions
+export type PromotionType = 'PERCENT' | 'AMOUNT' | 'BXGY' | 'BUNDLE';
+
+export type PromotionTarget =
+  | { type: 'ORDER' }
+  | { type: 'CATEGORY'; categoryIds: string[] }
+  | { type: 'PRODUCT'; productIds?: string[]; variantIds?: string[] };
+
+export interface PromotionQuantityCondition {
+  productId?: string;
+  variantId?: string;
+  categoryId?: string;
+  quantity: number;
+}
+
+export type PromotionRewardType = 'FREE' | 'PRICE' | 'PERCENT' | 'AMOUNT';
+
+export interface PromotionRewardCondition extends PromotionQuantityCondition {
+  rewardType?: PromotionRewardType;
+  value?: number;
+}
+
+export interface PromotionPercentRule {
+  type: 'PERCENT';
+  target: PromotionTarget;
+  value: number;
+  capAmount?: number;
+}
+
+export interface PromotionAmountRule {
+  type: 'AMOUNT';
+  target: PromotionTarget;
+  value: number;
+}
+
+export interface PromotionBxgyRule {
+  type: 'BXGY';
+  buy: PromotionQuantityCondition;
+  get: PromotionRewardCondition;
+}
+
+export interface PromotionBundleRule {
+  type: 'BUNDLE';
+  bundleItems: PromotionQuantityCondition[];
+  bundlePrice: number;
+}
+
+export type PromotionRule =
+  | PromotionPercentRule
+  | PromotionAmountRule
+  | PromotionBxgyRule
+  | PromotionBundleRule;
+
+export interface PromotionConstraint {
+  start?: string;
+  end?: string;
+  days?: number[];
+  startTime?: string;
+  endTime?: string;
+  stores?: string[];
+  orderTypes?: ('dine-in' | 'takeaway' | 'delivery')[];
+  minSubtotal?: number;
+  maxSubtotal?: number;
+  requiredCustomerTags?: string[];
+  requiredCustomerGroups?: string[];
+  requiredLoyaltyTier?: string;
+  maxRedemptionsPerOrder?: number;
+}
+
+export interface Promotion {
+  id: string;
+  name: string;
+  description?: string;
+  priority: number;
+  stackable: boolean;
+  status: 'active' | 'scheduled' | 'draft';
+  rule: PromotionRule;
+  constraints?: PromotionConstraint;
+}
+
+export interface AppliedPromotion {
+  promotionId: string;
+  name: string;
+  discount: number;
+  stackable: boolean;
+  summary?: string;
+}
+
+export interface IneligiblePromotion {
+  promotionId: string;
+  name: string;
+  reason: string;
+  detail?: string;
+  suggestion?: string;
+}
+
+export interface PromotionEvaluationContext {
+  items: CartItem[];
+  promotions: Promotion[];
+  orderType: 'dine-in' | 'takeaway' | 'delivery';
+  customer?: Customer | null;
+  storeId?: string;
+  orderSubtotal?: number;
+  now?: Date;
+}
+
+export interface PromotionEvaluationResult {
+  adjustments: Record<string, number>;
+  totalDiscount: number;
+  appliedPromotions: AppliedPromotion[];
+  ineligiblePromotions: IneligiblePromotion[];
 }
 
 export interface KdsTicket {
