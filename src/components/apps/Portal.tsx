@@ -1,22 +1,50 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import * as LucideIcons from 'lucide-react';
 import { MotionWrapper } from '../ui/MotionWrapper';
 import { useAuthStore } from '../../stores/authStore';
-import { getAvailableApps } from '../../config/apps';
+import { getLauncherApps, splitLauncherApps } from '../../services/launcherService';
 import { theme } from '../../config/theme';
 import { Card } from '@mas/ui';
 
 const MotionCard = motion(Card);
+type LucideIconComponent = React.ComponentType<{ size?: number; className?: string }>;
+const lucideIconMap = LucideIcons as Record<string, LucideIconComponent>;
+const fallbackIcon = LucideIcons.Package as LucideIconComponent;
 
 export const Portal: React.FC = () => {
   const navigate = useNavigate();
   const { user, tenant } = useAuthStore();
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const availableApps = user ? getAvailableApps(user.role) : [];
+  const launcherApps = useMemo(() => {
+    if (!user) {
+      return [];
+    }
+
+    return getLauncherApps({
+      role: user.role,
+      permissions: user.permissions,
+      favorites: user.favoriteApps,
+      subscriptionTier: tenant?.subscriptionTier ?? 'core',
+      includeRestricted: true
+    });
+  }, [
+    tenant?.subscriptionTier,
+    user,
+    user?.favoriteApps,
+    user?.permissions,
+    user?.role
+  ]);
+
+  const { favorites, regular, restricted } = useMemo(
+    () => splitLauncherApps(launcherApps),
+    [launcherApps]
+  );
+
+  const accessibleApps = useMemo(() => [...favorites, ...regular], [favorites, regular]);
 
   useEffect(() => {
     if (gridRef.current) {
@@ -39,7 +67,7 @@ export const Portal: React.FC = () => {
         }
       );
     }
-  }, [availableApps]);
+  }, [accessibleApps]);
 
   const handleAppClick = (route: string) => {
     navigate(route);
@@ -56,8 +84,8 @@ export const Portal: React.FC = () => {
         </div>
 
         <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {availableApps.map((app) => {
-            const IconComponent = (LucideIcons as any)[app.icon] || LucideIcons.Package;
+          {accessibleApps.map((app) => {
+            const IconComponent = lucideIconMap[app.icon] ?? fallbackIcon;
 
             return (
               <MotionCard
@@ -68,18 +96,23 @@ export const Portal: React.FC = () => {
                 className="cursor-pointer border-line/70 hover:border-primary-200 transition-all duration-200 group shadow-sm hover:shadow-md"
                 onClick={() => handleAppClick(app.route)}
               >
-                <div className="flex items-start justify-between mb-4">
+                <div className="flex items-start justify-between mb-4 gap-3">
                   <div className="p-3 rounded-lg bg-primary-100 group-hover:bg-primary-500 transition-colors">
                     <IconComponent size={24} className="text-primary-600 group-hover:text-white transition-colors" />
                   </div>
 
-                  {app.hasNotifications && <div className="w-2 h-2 rounded-full bg-danger animate-pulse" />}
-
-                  {app.isPWA && (
-                    <div className="text-xs text-muted font-medium px-2 py-1 bg-surface-200 rounded">
-                      PWA
-                    </div>
-                  )}
+                  <div className="flex items-center gap-2 ml-auto">
+                    {app.badges.map((badge) => (
+                      <span
+                        key={`${app.id}-${badge.type}-${badge.label}`}
+                        className="text-xs font-medium px-2 py-1 rounded bg-surface-200 text-foreground/70 border border-line/60"
+                      >
+                        {badge.label}
+                      </span>
+                    ))}
+                    {app.hasNotifications && <div className="w-2 h-2 rounded-full bg-danger animate-pulse" />}
+                    {app.isFavorite && <LucideIcons.Star size={16} className="text-primary-500" />}
+                  </div>
                 </div>
 
                 <h3 className="font-semibold text-lg mb-2 group-hover:text-primary-600 transition-colors">{app.name}</h3>
@@ -89,6 +122,47 @@ export const Portal: React.FC = () => {
             );
           })}
         </div>
+
+        {restricted.length > 0 && (
+          <div className="mt-12">
+            <div className="flex items-center gap-2 mb-4 text-sm font-semibold text-foreground/80">
+              <LucideIcons.Lock size={16} />
+              Restricted Access
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {restricted.map((app) => {
+                const IconComponent = lucideIconMap[app.icon] ?? fallbackIcon;
+
+                return (
+                  <Card
+                    key={app.id}
+                    padding
+                    className="border-dashed border-line bg-surface-200/60 text-foreground/60 cursor-not-allowed"
+                  >
+                    <div className="flex items-start justify-between mb-4 gap-3">
+                      <div className="p-3 rounded-lg bg-surface-200">
+                        <IconComponent size={24} className="text-muted" />
+                      </div>
+                      <div className="flex items-center gap-2 ml-auto">
+                        {app.badges.map((badge) => (
+                          <span
+                            key={`${app.id}-restricted-${badge.type}-${badge.label}`}
+                            className="text-xs font-medium px-2 py-1 rounded border border-dashed border-line/60 text-muted"
+                          >
+                            {badge.label}
+                          </span>
+                        ))}
+                        <LucideIcons.ShieldAlert size={16} className="text-muted" />
+                      </div>
+                    </div>
+                    <h3 className="font-semibold text-lg mb-2">{app.name}</h3>
+                    <p className="text-muted text-sm leading-relaxed">{app.description}</p>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card>

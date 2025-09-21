@@ -13,7 +13,8 @@ export const mockTenant: Tenant = {
       animationSpeed: 1.0,
       surfaces: ['background', 'cards']
     }
-  }
+  },
+  subscriptionTier: 'pro'
 };
 
 export const mockStore: Store = {
@@ -30,7 +31,16 @@ export const mockUser: User = {
   name: 'Sarah Johnson',
   role: 'manager',
   storeId: 'store-1',
-  pin: '1234'
+  pin: '1234',
+  permissions: [
+    'catalog:manage',
+    'inventory:manage',
+    'kitchen:view',
+    'promotions:manage',
+    'reports:view',
+    'reservations:manage'
+  ],
+  favoriteApps: ['pos', 'reports', 'inventory']
 };
 
 export const mockCategories: Category[] = [
