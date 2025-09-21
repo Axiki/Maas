@@ -189,3 +189,5 @@ export interface MotionPresets {
     duration: number;
   };
 }
+
+export * from './promotions';

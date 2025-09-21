@@ -118,10 +118,22 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 15 — Promotions Builder
+**Scope:** Promotions data modelling, builder UI, and routing.
+**Tasks:**
+- Provide list/detail interface for promotion campaigns.
+- Implement editors for eligibility, rewards, scheduling, and stacking.
+- Ensure motion respects reduced-motion preferences and reuse shared controls.
+**Status:** DONE
+**Log:**
+- 2025-01-14: Added typed promotion models, mock campaigns, the PromotionsBuilder experience with reusable UI controls, reduced-motion aware transitions, and wired the `/promotions` route. Lint still flags pre-existing issues in legacy modules; builder-specific checks are clean.
