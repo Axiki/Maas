@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import * as LucideIcons from 'lucide-react';
 import { MotionWrapper } from '../ui/MotionWrapper';
+import { PortalHero } from './portal/PortalHero';
 import { useAuthStore } from '../../stores/authStore';
 import { getAvailableApps } from '../../config/apps';
 import { theme } from '../../config/theme';
@@ -47,50 +48,54 @@ export const Portal: React.FC = () => {
 
   return (
     <MotionWrapper type="page" className="p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2">Welcome back, {user?.name}</h2>
-          <p className="text-muted">
-            {tenant?.name} • {user?.role}
-          </p>
-        </div>
+      <div className="mx-auto flex max-w-7xl flex-col gap-10 lg:gap-12">
+        <PortalHero userName={user?.name} tenantName={tenant?.name} userRole={user?.role} />
 
-        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {availableApps.map((app) => {
-            const IconComponent = (LucideIcons as any)[app.icon] || LucideIcons.Package;
+        <div className="space-y-4">
+          <div>
+            <h2 className="text-2xl font-semibold text-ink">Apps &amp; workflows</h2>
+            <p className="text-sm text-muted">
+              Jump into the tools your team uses every shift.
+            </p>
+          </div>
 
-            return (
-              <MotionCard
-                key={app.id}
-                whileHover={{ scale: 1.02, boxShadow: theme.elevation.modal }}
-                whileTap={{ scale: 0.98 }}
-                padding
-                className="cursor-pointer border-line/70 hover:border-primary-200 transition-all duration-200 group shadow-sm hover:shadow-md"
-                onClick={() => handleAppClick(app.route)}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="p-3 rounded-lg bg-primary-100 group-hover:bg-primary-500 transition-colors">
-                    <IconComponent size={24} className="text-primary-600 group-hover:text-white transition-colors" />
+          <div ref={gridRef} className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {availableApps.map((app) => {
+              const IconComponent = (LucideIcons as any)[app.icon] || LucideIcons.Package;
+
+              return (
+                <MotionCard
+                  key={app.id}
+                  whileHover={{ scale: 1.02, boxShadow: theme.elevation.modal }}
+                  whileTap={{ scale: 0.98 }}
+                  padding
+                  className="cursor-pointer border-line/70 transition-all duration-200 group shadow-sm hover:shadow-md hover:border-primary-200"
+                  onClick={() => handleAppClick(app.route)}
+                >
+                  <div className="mb-4 flex items-start justify-between">
+                    <div className="rounded-lg bg-primary-100 p-3 transition-colors group-hover:bg-primary-500">
+                      <IconComponent size={24} className="transition-colors text-primary-600 group-hover:text-white" />
+                    </div>
+
+                    {app.hasNotifications && <div className="h-2 w-2 rounded-full bg-danger animate-pulse" />}
+
+                    {app.isPWA && (
+                      <div className="rounded px-2 py-1 text-xs font-medium text-muted bg-surface-200">
+                        PWA
+                      </div>
+                    )}
                   </div>
 
-                  {app.hasNotifications && <div className="w-2 h-2 rounded-full bg-danger animate-pulse" />}
+                  <h3 className="mb-2 text-lg font-semibold transition-colors group-hover:text-primary-600">{app.name}</h3>
 
-                  {app.isPWA && (
-                    <div className="text-xs text-muted font-medium px-2 py-1 bg-surface-200 rounded">
-                      PWA
-                    </div>
-                  )}
-                </div>
-
-                <h3 className="font-semibold text-lg mb-2 group-hover:text-primary-600 transition-colors">{app.name}</h3>
-
-                <p className="text-muted text-sm leading-relaxed">{app.description}</p>
-              </MotionCard>
-            );
-          })}
+                  <p className="text-sm leading-relaxed text-muted">{app.description}</p>
+                </MotionCard>
+              );
+            })}
+          </div>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
           <Card>
             <h3 className="font-semibold mb-4">Today&apos;s Summary</h3>
             <div className="space-y-3">
