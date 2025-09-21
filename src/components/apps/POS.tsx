@@ -6,26 +6,30 @@ import { MotionWrapper, AnimatedList } from '../ui/MotionWrapper';
 import { useCartStore } from '../../stores/cartStore';
 import { useOfflineStore } from '../../stores/offlineStore';
 import { useAuthStore } from '../../stores/authStore';
-import { Product, Category } from '../../types';
+import { Product, Category, Customer } from '../../types';
 import { mockProducts, mockCategories } from '../../data/mockData';
+import { CustomerPickerModal } from './customers/CustomerPickerModal';
 
 export const POS: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [products] = useState<Product[]>(mockProducts);
   const [categories] = useState<Category[]>(mockCategories);
+  const [isCustomerPickerOpen, setCustomerPickerOpen] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
   
   const { 
     items, 
-    subtotal, 
-    tax, 
-    total, 
+    subtotal,
+    tax,
+    total,
     orderType,
-    addItem, 
-    updateItemQuantity, 
+    customer,
+    addItem,
+    updateItemQuantity,
     removeItem,
-    setOrderType 
+    setOrderType,
+    setCustomer
   } = useCartStore();
   
   const { queueOrder } = useOfflineStore();
@@ -71,6 +75,7 @@ export const POS: React.FC = () => {
       userId: user.id,
       type: orderType,
       status: 'confirmed' as const,
+      customerId: customer?.id,
       lines: items.map(item => ({
         id: item.id,
         productId: item.productId,
@@ -133,6 +138,48 @@ export const POS: React.FC = () => {
                   Takeaway
                 </button>
               </div>
+            </div>
+
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={() => setCustomerPickerOpen(true)}
+                className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-left text-sm font-medium transition hover:border-[#EE766D] hover:bg-[#EE766D]/10 ${
+                  customer ? 'border-[#EE766D] bg-[#EE766D]/10 text-[#24242E]' : 'border-line text-[#24242E]'
+                }`}
+              >
+                <User size={16} />
+                {customer ? `Linked: ${customer.name}` : 'Link customer'}
+              </button>
+
+              {customer && (
+                <div className="rounded-lg border border-line bg-surface-200 p-3 text-sm">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-semibold text-[#24242E]">{customer.name}</p>
+                      <p className="text-xs text-muted">
+                        {customer.loyaltyPoints} pts • Credit ${customer.storeCreditBalance.toFixed(2)}
+                      </p>
+                      {customer.tags && customer.tags.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-2 text-[11px]">
+                          {customer.tags.map(tag => (
+                            <span key={tag} className="rounded-full bg-[#D6D6D6]/60 px-2.5 py-1 text-[#24242E]">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setCustomer(null)}
+                      className="rounded-full border border-line px-3 py-1 text-xs font-medium text-muted transition hover:border-[#EE766D] hover:text-[#EE766D]"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -320,6 +367,14 @@ export const POS: React.FC = () => {
           </div>
         </div>
       </div>
+      <CustomerPickerModal
+        isOpen={isCustomerPickerOpen}
+        onClose={() => setCustomerPickerOpen(false)}
+        onSelect={(selected: Customer) => {
+          setCustomer(selected);
+          setCustomerPickerOpen(false);
+        }}
+      />
     </MotionWrapper>
   );
 };

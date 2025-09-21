@@ -1,4 +1,4 @@
-import { Product, Category, Customer, User, Store, Tenant } from '../types';
+import { Product, Category, User, Store, Tenant } from '../types';
 
 export const mockTenant: Tenant = {
   id: 'tenant-1',
@@ -255,28 +255,4 @@ export const mockProducts: Product[] = [
   }
 ];
 
-export const mockCustomers: Customer[] = [
-  {
-    id: 'cust-1',
-    name: 'John Smith',
-    phone: '555-0101',
-    email: 'john.smith@email.com',
-    loyaltyPoints: 1250,
-    storeCreditBalance: 15.50
-  },
-  {
-    id: 'cust-2',
-    name: 'Emily Davis',
-    phone: '555-0102',
-    email: 'emily.davis@email.com',
-    loyaltyPoints: 750,
-    storeCreditBalance: 0
-  },
-  {
-    id: 'cust-3',
-    name: 'Michael Johnson',
-    phone: '555-0103',
-    loyaltyPoints: 2100,
-    storeCreditBalance: 25.00
-  }
-];
+export { mockCustomers } from './mockCustomers';

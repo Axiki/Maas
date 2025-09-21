@@ -118,10 +118,22 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 14 — Customers
+**Scope:** Customers dashboard, data seeding, POS customer linking.
+**Tasks:**
+- Implement CRM dashboard views (profiles, loyalty, credit, gift cards).
+- Seed customer mock data with loyalty balances and histories.
+- Expose selectors and integrate POS customer picker.
+**Status:** DONE
+**Log:**
+- Implemented tabbed Customers dashboard with animated detail drawers, seeded loyalty/credit/gift card data, and wired POS picker modal using shared selectors; no blocking issues.
