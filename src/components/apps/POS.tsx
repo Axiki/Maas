@@ -1,13 +1,57 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
-import { Search, Plus, Minus, Trash2, User, CreditCard, Clock } from 'lucide-react';
+import {
+  Search,
+  Plus,
+  Minus,
+  Trash2,
+  CreditCard,
+  Clock,
+  Banknote,
+  Wallet,
+  AlertTriangle,
+  X
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { MotionWrapper, AnimatedList } from '../ui/MotionWrapper';
 import { useCartStore } from '../../stores/cartStore';
 import { useOfflineStore } from '../../stores/offlineStore';
 import { useAuthStore } from '../../stores/authStore';
-import { Product, Category } from '../../types';
+import { Product, Category, PaymentMethod } from '../../types';
 import { mockProducts, mockCategories } from '../../data/mockData';
+
+type TenderMethod = Extract<PaymentMethod, 'cash' | 'card' | 'wallet'>;
+
+const tenderMethodDetails: Record<PaymentMethod, { label: string; icon: LucideIcon }> = {
+  cash: { label: 'Cash', icon: Banknote },
+  card: { label: 'Card', icon: CreditCard },
+  wallet: { label: 'Wallet', icon: Wallet },
+  'store-credit': { label: 'Store Credit', icon: Wallet }
+};
+
+const tenderMethods: TenderMethod[] = ['cash', 'card', 'wallet'];
+
+interface PaymentModalState {
+  method: TenderMethod;
+  amount: string;
+  reference: string;
+}
+
+const referenceFieldCopy: Record<TenderMethod, { label: string; placeholder: string }> = {
+  cash: {
+    label: 'Notes (optional)',
+    placeholder: 'Drawer or cashier note'
+  },
+  card: {
+    label: 'Reference',
+    placeholder: 'Approval code or last 4 digits'
+  },
+  wallet: {
+    label: 'Transaction Reference',
+    placeholder: 'Wallet transaction ID'
+  }
+};
 
 export const POS: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,20 +59,26 @@ export const POS: React.FC = () => {
   const [products] = useState<Product[]>(mockProducts);
   const [categories] = useState<Category[]>(mockCategories);
   const gridRef = useRef<HTMLDivElement>(null);
+  const [paymentModal, setPaymentModal] = useState<PaymentModalState | null>(null);
+  const [modalError, setModalError] = useState<string | null>(null);
   
-  const { 
-    items, 
-    subtotal, 
-    tax, 
-    total, 
+  const {
+    items,
+    subtotal,
+    tax,
+    total,
     orderType,
-    addItem, 
-    updateItemQuantity, 
+    addItem,
+    updateItemQuantity,
     removeItem,
-    setOrderType 
+    setOrderType,
+    payments,
+    addPayment,
+    removePayment,
+    clearPayments
   } = useCartStore();
-  
-  const { queueOrder } = useOfflineStore();
+
+  const { queueOrder, isOffline } = useOfflineStore();
   const { user, store } = useAuthStore();
 
   // Filter products
@@ -43,7 +93,7 @@ export const POS: React.FC = () => {
   useEffect(() => {
     if (gridRef.current && filteredProducts.length > 0) {
       const productCards = gridRef.current.children;
-      
+
       gsap.fromTo(productCards,
         { y: 12, opacity: 0, scale: 0.95 },
         {
@@ -58,15 +108,114 @@ export const POS: React.FC = () => {
     }
   }, [filteredProducts]);
 
+  useEffect(() => {
+    if (items.length === 0 && payments.length > 0) {
+      clearPayments();
+    }
+  }, [items.length, payments.length, clearPayments]);
+
+  const hasItems = items.length > 0;
+  const dueCents = Math.max(0, Math.round(total * 100));
+  const paidCents = payments.reduce((sum, payment) => sum + Math.round(payment.amount * 100), 0);
+  const remainingCentsRaw = dueCents - paidCents;
+  const remainingCents = remainingCentsRaw > 0 ? remainingCentsRaw : 0;
+  const paymentTotal = paidCents / 100;
+  const balanceDue = remainingCents / 100;
+  const changeDue = remainingCentsRaw < 0 ? Math.abs(remainingCentsRaw) / 100 : 0;
+  const isFullyPaid = dueCents === 0 ? hasItems : paidCents >= dueCents;
+  const canCheckout = hasItems && isFullyPaid;
+  const canAddTenders = hasItems && remainingCents > 0;
+
+  useEffect(() => {
+    if (paymentModal && (!hasItems || remainingCents === 0)) {
+      setPaymentModal(null);
+      setModalError(null);
+    }
+  }, [paymentModal, hasItems, remainingCents]);
+
+  useEffect(() => {
+    if (!paymentModal) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setPaymentModal(null);
+        setModalError(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [paymentModal]);
+
+  const handleOpenPaymentModal = (method: TenderMethod) => {
+    if (!canAddTenders) return;
+    if (isOffline && method !== 'cash') return;
+
+    const defaultAmount = remainingCents / 100;
+    setPaymentModal({
+      method,
+      amount: defaultAmount > 0 ? defaultAmount.toFixed(2) : '',
+      reference: ''
+    });
+    setModalError(null);
+  };
+
+  const handleClosePaymentModal = () => {
+    setPaymentModal(null);
+    setModalError(null);
+  };
+
+  const handleConfirmPayment = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!paymentModal) return;
+
+    const parsedAmount = Number(paymentModal.amount);
+    if (!Number.isFinite(parsedAmount)) {
+      setModalError('Enter a valid amount.');
+      return;
+    }
+
+    const cents = Math.round(parsedAmount * 100);
+    if (cents <= 0) {
+      setModalError('Amount must be greater than zero.');
+      return;
+    }
+
+    if (paymentModal.method !== 'cash' && cents > remainingCents) {
+      setModalError('Amount exceeds remaining balance.');
+      return;
+    }
+
+    addPayment({
+      method: paymentModal.method,
+      amount: cents / 100,
+      reference: paymentModal.reference
+    });
+
+    setPaymentModal(null);
+    setModalError(null);
+  };
+
+  const updateModalField = <K extends keyof PaymentModalState>(
+    field: K,
+    value: PaymentModalState[K]
+  ) => {
+    setPaymentModal((prev) => (prev ? { ...prev, [field]: value } : prev));
+    if (modalError) {
+      setModalError(null);
+    }
+  };
+
   const handleAddProduct = (product: Product) => {
     addItem(product);
   };
 
   const handleCheckout = async () => {
-    if (items.length === 0 || !user || !store) return;
+    if (!canCheckout || !user || !store) return;
 
+    const orderId = `order-${Date.now()}`;
     const order = {
-      id: `order-${Date.now()}`,
+      id: orderId,
       storeId: store.id,
       userId: user.id,
       type: orderType,
@@ -84,7 +233,15 @@ export const POS: React.FC = () => {
       subtotal,
       tax,
       total,
-      payments: [],
+      payments: payments.map(payment => ({
+        id: payment.id,
+        orderId,
+        method: payment.method,
+        amount: payment.amount,
+        reference: payment.reference,
+        idempotencyKey: payment.idempotencyKey,
+        createdAt: payment.createdAt
+      })),
       createdAt: new Date(),
       updatedAt: new Date(),
       offlineGuid: `offline-${Date.now()}`
@@ -206,13 +363,122 @@ export const POS: React.FC = () => {
                 <span>${total.toFixed(2)}</span>
               </div>
             </div>
-            
+
+            <div className="space-y-4 mb-4">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="text-sm font-semibold">Payments</h4>
+                  {payments.length > 0 && (
+                    <span className="text-xs text-muted font-medium">
+                      Paid ${paymentTotal.toFixed(2)}
+                    </span>
+                  )}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {tenderMethods.map((method) => {
+                    const { label, icon: Icon } = tenderMethodDetails[method];
+                    const isDisabled = !canAddTenders || (isOffline && method !== 'cash');
+
+                    return (
+                      <button
+                        key={method}
+                        type="button"
+                        onClick={() => handleOpenPaymentModal(method)}
+                        disabled={isDisabled}
+                        className="flex items-center gap-2 rounded-lg border border-line bg-surface-100 px-3 py-2 text-xs font-medium transition-colors hover:border-primary-200 hover:text-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <Icon size={16} />
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+                {isOffline && (
+                  <p className="mt-2 flex items-start gap-2 text-xs text-warning">
+                    <AlertTriangle size={14} className="mt-0.5" />
+                    <span>Offline mode active. Card and wallet payments are unavailable.</span>
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                {payments.length === 0 ? (
+                  <p className="text-xs text-muted">Add tenders to distribute the payment across methods.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {payments.map((payment) => {
+                      const { label, icon: Icon } = tenderMethodDetails[payment.method];
+
+                      return (
+                        <div
+                          key={payment.id}
+                          className="flex items-center justify-between rounded-lg bg-surface-200 px-3 py-2 text-sm"
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-100 text-primary-600">
+                              <Icon size={16} />
+                            </span>
+                            <div>
+                              <p className="font-medium">{label}</p>
+                              {payment.reference && (
+                                <p className="text-xs text-muted">Ref: {payment.reference}</p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="font-semibold text-primary-600 font-tabular">
+                              ${payment.amount.toFixed(2)}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => removePayment(payment.id)}
+                              className="p-1 text-muted transition-colors hover:text-danger"
+                              aria-label={`Remove ${label} payment`}
+                            >
+                              <X size={14} />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-1.5 rounded-lg bg-surface-200 p-3 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted">Paid</span>
+                  <span className="font-medium font-tabular">${paymentTotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className={balanceDue > 0 ? 'text-warning font-semibold' : 'text-muted'}>
+                    Balance
+                  </span>
+                  <span
+                    className={`font-tabular ${balanceDue > 0 ? 'text-warning font-semibold' : ''}`}
+                  >
+                    ${balanceDue.toFixed(2)}
+                  </span>
+                </div>
+                {changeDue > 0 && (
+                  <div className="flex justify-between text-success font-semibold">
+                    <span>Change Due</span>
+                    <span className="font-tabular">${changeDue.toFixed(2)}</span>
+                  </div>
+                )}
+              </div>
+
+              {!isFullyPaid && hasItems && (
+                <p className="text-xs text-danger">Apply payments until the remaining balance is covered.</p>
+              )}
+            </div>
+
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleCheckout}
-              disabled={items.length === 0}
-              className="w-full bg-primary-500 text-white py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
+              disabled={!canCheckout}
+              className="w-full bg-primary-500 text-white py-3 rounded-lg font-medium disabled:cursor-not-allowed disabled:opacity-50 hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
             >
               <CreditCard size={18} />
               Process Payment
@@ -320,6 +586,98 @@ export const POS: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {paymentModal && (
+        <motion.div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          onClick={handleClosePaymentModal}
+        >
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.2 }}
+            className="w-full max-w-md rounded-xl border border-line bg-surface-100 p-6 shadow-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="payment-modal-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3 id="payment-modal-title" className="text-lg font-semibold">
+                Record {tenderMethodDetails[paymentModal.method].label} Payment
+              </h3>
+              <button
+                type="button"
+                onClick={handleClosePaymentModal}
+                className="p-1 text-muted transition-colors hover:text-danger"
+                aria-label="Close payment modal"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <form className="space-y-4" onSubmit={handleConfirmPayment}>
+              <div>
+                <label htmlFor="payment-amount" className="mb-1 block text-sm font-medium">
+                  Amount
+                </label>
+                <input
+                  id="payment-amount"
+                  type="number"
+                  inputMode="decimal"
+                  step="0.01"
+                  min="0"
+                  max={paymentModal.method === 'cash' ? undefined : balanceDue.toFixed(2)}
+                  value={paymentModal.amount}
+                  onChange={(event) => updateModalField('amount', event.target.value)}
+                  className="w-full rounded-lg border border-line bg-surface-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  required
+                  autoFocus
+                />
+                {paymentModal.method === 'cash' ? (
+                  <p className="mt-1 text-xs text-muted">
+                    Remaining balance: ${balanceDue.toFixed(2)}
+                  </p>
+                ) : (
+                  <p className="mt-1 text-xs text-muted">
+                    Cannot exceed remaining balance (${balanceDue.toFixed(2)}).
+                  </p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="payment-reference" className="mb-1 block text-sm font-medium">
+                  {referenceFieldCopy[paymentModal.method].label}
+                </label>
+                <input
+                  id="payment-reference"
+                  type="text"
+                  value={paymentModal.reference}
+                  onChange={(event) => updateModalField('reference', event.target.value)}
+                  placeholder={referenceFieldCopy[paymentModal.method].placeholder}
+                  className="w-full rounded-lg border border-line bg-surface-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+              </div>
+              {modalError && <p className="text-sm text-danger">{modalError}</p>}
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={handleClosePaymentModal}
+                  className="rounded-lg border border-line px-4 py-2 text-sm font-medium text-muted transition-colors hover:text-ink"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600"
+                >
+                  Add Payment
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </motion.div>
+      )}
     </MotionWrapper>
   );
 };

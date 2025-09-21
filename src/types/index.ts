@@ -128,10 +128,21 @@ export interface SelectedModifier {
   price: number;
 }
 
+export type PaymentMethod = 'cash' | 'card' | 'wallet' | 'store-credit';
+
 export interface Payment {
   id: string;
   orderId: string;
-  method: 'cash' | 'card' | 'wallet' | 'store-credit';
+  method: PaymentMethod;
+  amount: number;
+  reference?: string;
+  idempotencyKey: string;
+  createdAt: Date;
+}
+
+export interface CartPayment {
+  id: string;
+  method: PaymentMethod;
   amount: number;
   reference?: string;
   idempotencyKey: string;
