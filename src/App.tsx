@@ -6,6 +6,7 @@ import { Login } from './components/auth/Login';
 import { Portal } from './components/apps/Portal';
 import { POS } from './components/apps/POS';
 import { BackOffice } from './components/apps/BackOffice';
+import { DeviceManager } from './components/apps/devices/DeviceManager';
 import { useAuthStore } from './stores/authStore';
 import { useOfflineStore } from './stores/offlineStore';
 
@@ -65,6 +66,7 @@ function App() {
           <Route path="reports" element={<Reports />} />
           <Route path="calendar" element={<Calendar />} />
           <Route path="accounting" element={<Accounting />} />
+          <Route path="devices" element={<DeviceManager />} />
           <Route path="backoffice" element={<BackOffice />} />
         </Route>
       </Routes>
