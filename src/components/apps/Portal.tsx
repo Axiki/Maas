@@ -8,6 +8,8 @@ import { useAuthStore } from '../../stores/authStore';
 import { getAvailableApps } from '../../config/apps';
 import { theme } from '../../config/theme';
 import { Card } from '@mas/ui';
+import { IncidentBanner } from '../ui/IncidentBanner';
+import { useTelemetryStore } from '../../stores/telemetryStore';
 
 const MotionCard = motion(Card);
 
@@ -15,8 +17,19 @@ export const Portal: React.FC = () => {
   const navigate = useNavigate();
   const { user, tenant } = useAuthStore();
   const gridRef = useRef<HTMLDivElement>(null);
+  const { alerts, acknowledgeAlert } = useTelemetryStore((state) => ({
+    alerts: state.alerts,
+    acknowledgeAlert: state.acknowledgeAlert,
+  }));
 
   const availableApps = user ? getAvailableApps(user.role) : [];
+
+  const criticalPortalAlerts = alerts.filter(
+    (alert) =>
+      !alert.acknowledged &&
+      alert.severity === 'critical' &&
+      (alert.scopes.includes('portal') || alert.scopes.includes('global')),
+  );
 
   useEffect(() => {
     if (gridRef.current) {
@@ -48,6 +61,12 @@ export const Portal: React.FC = () => {
   return (
     <MotionWrapper type="page" className="p-6">
       <div className="max-w-7xl mx-auto">
+        {criticalPortalAlerts.length > 0 && (
+          <div className="mb-6">
+            <IncidentBanner alerts={criticalPortalAlerts} onAcknowledge={acknowledgeAlert} />
+          </div>
+        )}
+
         <div className="mb-8">
           <h2 className="text-3xl font-bold mb-2">Welcome back, {user?.name}</h2>
           <p className="text-muted">

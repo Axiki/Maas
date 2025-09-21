@@ -189,3 +189,47 @@ export interface MotionPresets {
     duration: number;
   };
 }
+
+// Observability & telemetry
+export type IncidentSeverity = 'info' | 'warning' | 'critical';
+
+export type ObservabilityScope = 'portal' | 'backoffice' | 'pos' | 'global';
+
+export interface ObservabilityAlert {
+  id: string;
+  title: string;
+  message: string;
+  severity: IncidentSeverity;
+  type: 'sync' | 'availability' | 'performance' | 'data';
+  incidentId?: string;
+  createdAt: string;
+  acknowledged?: boolean;
+  scopes: ObservabilityScope[];
+  metadata?: Record<string, unknown>;
+}
+
+export interface SyncHealth {
+  status: 'healthy' | 'degraded' | 'failed';
+  summary: string;
+  pendingItems?: number;
+  lastSuccessfulSync?: string;
+  impactedStores?: string[];
+}
+
+export interface TelemetrySnapshot {
+  fetchedAt: string;
+  alerts: ObservabilityAlert[];
+  syncHealth: SyncHealth;
+}
+
+export interface ApiResponseMeta {
+  correlationId?: string;
+  fallbackIncidentId?: string;
+  [key: string]: unknown;
+}
+
+export interface ApiResponse<T> {
+  data: T;
+  incidentId?: string;
+  meta?: ApiResponseMeta;
+}

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import localforage from 'localforage';
 import { Order, Product, Category } from '../types';
+import { logger } from '../utils/logger';
 
 interface OfflineState {
   isOffline: boolean;
@@ -41,6 +42,7 @@ export const useOfflineStore = create<OfflineState>((set, get) => ({
 
   setOfflineStatus: (status) => {
     set({ isOffline: !status });
+    logger.info('Offline status updated', { isOffline: !status });
     if (status) {
       // When coming online, sync queued orders
       get().syncQueuedOrders();
@@ -52,6 +54,11 @@ export const useOfflineStore = create<OfflineState>((set, get) => ({
     const newQueue = [...queuedOrders, order];
     
     set({ queuedOrders: newQueue });
+    logger.info('Order queued for offline sync', {
+      orderId: order.id,
+      offlineGuid: order.offlineGuid,
+      queueLength: newQueue.length,
+    });
     await ordersStore.setItem('queuedOrders', newQueue);
   },
 
@@ -74,13 +81,18 @@ export const useOfflineStore = create<OfflineState>((set, get) => ({
 
     try {
       // In a real implementation, we would sync with the server here
-      console.log('Syncing queued orders:', queuedOrders);
-      
+      logger.withIncident(get().lastSyncTime?.toISOString(), () => {
+        logger.info('Syncing queued orders', {
+          count: queuedOrders.length,
+        });
+      });
+
       // Clear queued orders after successful sync
       set({ queuedOrders: [] });
       await ordersStore.removeItem('queuedOrders');
+      logger.info('Queued orders synced successfully');
     } catch (error) {
-      console.error('Failed to sync orders:', error);
+      logger.error('Failed to sync orders', { error });
     }
   },
 
@@ -99,8 +111,13 @@ export const useOfflineStore = create<OfflineState>((set, get) => ({
         lastSyncTime: lastSync ? new Date(lastSync) : null,
         queuedOrders: queuedOrders || []
       });
+      logger.debug('Loaded cached offline data', {
+        productCount: products?.length ?? 0,
+        categoryCount: categories?.length ?? 0,
+        queuedOrderCount: queuedOrders?.length ?? 0,
+      });
     } catch (error) {
-      console.error('Failed to load cached data:', error);
+      logger.error('Failed to load cached data', { error });
     }
   }
 }));
