@@ -16,8 +16,11 @@
 - Fix misaligned sections, spacing, and grid inconsistencies.  
 - Improve responsiveness (mobile/tablet/desktop).  
 - Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Status:** DONE
+**Log:**
+- Reworked the POS root container to `flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]`, reordered markup so the product grid precedes the cart on large screens, and applied responsive cart widths (`w-full lg:w-96 xl:w-[28rem]`) while preserving existing scrollable regions.
+- Smoke-tested /pos at 320 px, 768 px, and desktop widths via Playwright; layout stacks correctly on mobile, splits with the cart on the right for larger breakpoints, and bounded scrolling behaved as expected.
+- `npm run lint` currently fails due to pre-existing issues in other modules (unused icons, escape sequences); no new lint errors introduced within the layout scope.
 
 ---
 
