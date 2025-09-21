@@ -189,3 +189,96 @@ export interface MotionPresets {
     duration: number;
   };
 }
+
+// Inventory domain
+export type InventoryMovementType =
+  | 'receipt'
+  | 'transfer'
+  | 'adjustment'
+  | 'sale'
+  | 'waste';
+
+export type InventoryBatchStatus = 'healthy' | 'warning' | 'critical';
+
+export type InventoryCountStatus = 'scheduled' | 'in-progress' | 'completed';
+
+export type InventoryAlertType = 'reorder' | 'expiry';
+
+export type InventoryAlertSeverity = 'warning' | 'danger';
+
+export interface InventoryItem {
+  sku: string;
+  name: string;
+  category: string;
+  uom: string;
+  supplier: string;
+  parLevel: number;
+  reorderPoint: number;
+  onHand: number;
+  allocated: number;
+  available: number;
+  avgDailyUsage: number;
+  cost: number;
+  lastMovementAt: string;
+  lastCountAt: string;
+  fefoEnabled: boolean;
+  batches: string[];
+}
+
+export interface InventoryBatch {
+  id: string;
+  sku: string;
+  lotCode: string;
+  supplier: string;
+  receivedAt: string;
+  expiryDate: string;
+  quantity: number;
+  remaining: number;
+  fefoOrder: number;
+}
+
+export interface InventoryBatchWithMeta extends InventoryBatch {
+  daysUntilExpiry: number;
+  status: InventoryBatchStatus;
+}
+
+export interface InventoryMovement {
+  id: string;
+  sku: string;
+  type: InventoryMovementType;
+  reference: string;
+  quantity: number;
+  uom: string;
+  createdAt: string;
+  source?: string;
+  destination?: string;
+  note?: string;
+}
+
+export interface InventoryCount {
+  id: string;
+  name: string;
+  scheduledFor: string;
+  status: InventoryCountStatus;
+  assignee: string;
+  variance?: number;
+}
+
+export interface InventoryAlert {
+  sku: string;
+  name: string;
+  type: InventoryAlertType;
+  severity: InventoryAlertSeverity;
+  message: string;
+  available?: number;
+  reorderPoint?: number;
+  lotCode?: string;
+  daysUntilExpiry?: number;
+}
+
+export interface InventoryKpis {
+  totalSkus: number;
+  onHandValue: number;
+  lowStock: number;
+  nearExpiry: number;
+}

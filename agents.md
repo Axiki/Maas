@@ -118,10 +118,22 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 13 — Inventory Dashboard
+**Scope:** Build inventory dashboards, FEFO surfacing, and stock health indicators.
+**Tasks:**
+- Design the inventory command center with KPIs, alerts, and tabbed views.
+- Implement shared status pills for stock levels and expiry windows.
+- Wire mock inventory data into a lightweight store feeding the dashboard.
+**Status:** DONE
+**Log:**
+- Created FEFO-aware mock inventory data, Zustand store selectors, reusable status pills, and the Inventory dashboard route with KPIs, alerts, and tabbed views; `npm run lint` still fails due to pre-existing violations outside this scope.
