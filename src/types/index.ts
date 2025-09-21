@@ -189,3 +189,35 @@ export interface MotionPresets {
     duration: number;
   };
 }
+
+export type AuditEntryStatus = 'approved' | 'rejected';
+
+export interface AuditActor {
+  id: string;
+  name: string;
+  role: UserRole;
+}
+
+export interface AuditTarget {
+  type: 'cart-item' | 'order' | 'payment' | string;
+  id: string;
+}
+
+export interface DiscountApprovalMetadata {
+  discountAmount: number;
+  discountPercent: number;
+  requiresApproval: boolean;
+  reason?: string | null;
+}
+
+export interface AuditTrailEntry {
+  id: string;
+  type: 'discount-approval';
+  status: AuditEntryStatus;
+  actor: AuditActor | null;
+  approver: AuditActor | null;
+  target: AuditTarget;
+  metadata: DiscountApprovalMetadata;
+  timestamp: string;
+  source: 'pos' | 'backoffice' | string;
+}
