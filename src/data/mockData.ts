@@ -1,4 +1,5 @@
 import { Product, Category, Customer, User, Store, Tenant } from '../types';
+import { derivePinHash } from '../utils';
 
 export const mockTenant: Tenant = {
   id: 'tenant-1',
@@ -30,7 +31,12 @@ export const mockUser: User = {
   name: 'Sarah Johnson',
   role: 'manager',
   storeId: 'store-1',
-  pin: '1234'
+  security: {
+    pinHash: derivePinHash('1234'),
+    pinUpdatedAt: '2024-02-01T12:00:00.000Z',
+    twoFactorEnabled: false,
+    recoveryEmail: 'security@bellavista.com'
+  }
 };
 
 export const mockCategories: Category[] = [

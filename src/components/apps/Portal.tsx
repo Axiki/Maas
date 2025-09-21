@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import * as LucideIcons from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { MotionWrapper } from '../ui/MotionWrapper';
 import { useAuthStore } from '../../stores/authStore';
 import { getAvailableApps } from '../../config/apps';
@@ -16,7 +17,7 @@ export const Portal: React.FC = () => {
   const { user, tenant } = useAuthStore();
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const availableApps = user ? getAvailableApps(user.role) : [];
+  const availableApps = useMemo(() => (user ? getAvailableApps(user.role) : []), [user]);
 
   useEffect(() => {
     if (gridRef.current) {
@@ -57,7 +58,8 @@ export const Portal: React.FC = () => {
 
         <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {availableApps.map((app) => {
-            const IconComponent = (LucideIcons as any)[app.icon] || LucideIcons.Package;
+            const iconRegistry = LucideIcons as Record<string, LucideIcon>;
+            const IconComponent = iconRegistry[app.icon] ?? LucideIcons.Package;
 
             return (
               <MotionCard
