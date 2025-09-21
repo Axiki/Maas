@@ -80,8 +80,8 @@ export const BackOffice: React.FC = () => {
             </div>
 
             <div className="space-y-4">
-              <label className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-ink">Grain intensity</span>
+              <label className="form-field">
+                <span className="form-label">Grain intensity</span>
                 <input
                   type="range"
                   min={0}
@@ -91,13 +91,13 @@ export const BackOffice: React.FC = () => {
                   onChange={(event) =>
                     updatePaperShader({ intensity: parseFloat(event.target.value) })
                   }
-                  className="w-full accent-primary-500"
+                  className="form-range"
                 />
-                <span className="text-xs text-muted">{paperShader.intensity.toFixed(2)}</span>
+                <span className="form-hint">{paperShader.intensity.toFixed(2)}</span>
               </label>
 
-              <label className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-ink">Animation speed</span>
+              <label className="form-field">
+                <span className="form-label">Animation speed</span>
                 <input
                   type="range"
                   min={0}
@@ -107,9 +107,9 @@ export const BackOffice: React.FC = () => {
                   onChange={(event) =>
                     updatePaperShader({ animationSpeed: parseFloat(event.target.value) })
                   }
-                  className="w-full accent-primary-500"
+                  className="form-range"
                 />
-                <span className="text-xs text-muted">{paperShader.animationSpeed.toFixed(1)}x</span>
+                <span className="form-hint">{paperShader.animationSpeed.toFixed(1)}x</span>
               </label>
             </div>
 

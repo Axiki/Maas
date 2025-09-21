@@ -106,14 +106,16 @@
 ---
 
 ## Agent 9 — Forms & Inputs
-**Scope:** Input fields, contact forms, search bars.  
-**Tasks:**  
-- Style inputs and textareas.  
-- Apply palette + typography.  
-- Add focus states and validation feedback.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Input fields, contact forms, search bars.
+**Tasks:**
+- Style inputs and textareas.
+- Apply palette + typography.
+- Add focus states and validation feedback.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Refactored login, POS search/category, and BackOffice range controls to consume the new `.form-*` helpers, added helper styles tied to the #EE766D/#24242E/#D6D6D6 palette, and ensured focus-within/pressed states keep 4.5:1 contrast by pairing the accent fill with dark ink text (contrast check: #24242E on #EE766D ≈ 5.45:1; white on #EE766D would fail at 2.82:1).
+- Verified hover/focus states through manual review and ran `npm run lint`; lint still reports pre-existing issues in unrelated files (Portal, PaperShader, StatusIndicator, themeStore) so no changes applied outside this scope.
 
 ---
 
