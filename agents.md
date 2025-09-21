@@ -16,8 +16,9 @@
 - Fix misaligned sections, spacing, and grid inconsistencies.  
 - Improve responsiveness (mobile/tablet/desktop).  
 - Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Status:** DONE
+**Log:**
+- Implemented customer dashboard layout with loyalty, credit, and gift card detail panes plus selector hook for POS linkage.
 
 ---
 

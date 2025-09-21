@@ -6,6 +6,7 @@ import { Login } from './components/auth/Login';
 import { Portal } from './components/apps/Portal';
 import { POS } from './components/apps/POS';
 import { BackOffice } from './components/apps/BackOffice';
+import { CustomersDashboard } from './components/apps/customers/CustomersDashboard';
 import { useAuthStore } from './stores/authStore';
 import { useOfflineStore } from './stores/offlineStore';
 
@@ -13,7 +14,6 @@ import { useOfflineStore } from './stores/offlineStore';
 const KDS = () => <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-6"><h2 className="text-2xl font-bold">Kitchen Display System</h2><p className="text-muted mt-2">Coming soon...</p></motion.div>;
 const Products = () => <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-6"><h2 className="text-2xl font-bold">Product Catalog</h2><p className="text-muted mt-2">Coming soon...</p></motion.div>;
 const Inventory = () => <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-6"><h2 className="text-2xl font-bold">Inventory Management</h2><p className="text-muted mt-2">Coming soon...</p></motion.div>;
-const Customers = () => <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-6"><h2 className="text-2xl font-bold">Customer Management</h2><p className="text-muted mt-2">Coming soon...</p></motion.div>;
 const Promotions = () => <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-6"><h2 className="text-2xl font-bold">Promotions</h2><p className="text-muted mt-2">Coming soon...</p></motion.div>;
 const Reports = () => <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-6"><h2 className="text-2xl font-bold">Reports & Analytics</h2><p className="text-muted mt-2">Coming soon...</p></motion.div>;
 const Calendar = () => <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-6"><h2 className="text-2xl font-bold">Calendar & Reservations</h2><p className="text-muted mt-2">Coming soon...</p></motion.div>;
@@ -60,7 +60,7 @@ function App() {
           <Route path="kds" element={<KDS />} />
           <Route path="products" element={<Products />} />
           <Route path="inventory" element={<Inventory />} />
-          <Route path="customers" element={<Customers />} />
+          <Route path="customers" element={<CustomersDashboard />} />
           <Route path="promotions" element={<Promotions />} />
           <Route path="reports" element={<Reports />} />
           <Route path="calendar" element={<Calendar />} />
