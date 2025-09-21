@@ -18,20 +18,18 @@ export const AppShell: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const paperShader = useThemeStore((state) => state.paperShader);
+  const backgroundSurface = paperShader.surfaces.background;
 
   const currentApp = appConfigs.find((app) => location.pathname.startsWith(app.route));
   const isPortal = location.pathname === '/portal' || location.pathname === '/';
 
-  const shouldRenderPaper = paperShader.enabled && paperShader.surfaces.includes('background');
+  const shouldRenderPaper =
+    paperShader.enabled && backgroundSurface.enabled && backgroundSurface.intensity > 0;
 
   return (
     <div className="min-h-screen bg-bg-dust text-ink relative">
       {shouldRenderPaper && (
-        <PaperShader
-          intensity={paperShader.intensity}
-          animationSpeed={paperShader.animationSpeed}
-          surfaces={paperShader.surfaces}
-        />
+        <PaperShader surface="background" />
       )}
 
       <header className="bg-surface-100/80 backdrop-blur-sm border-b border-line sticky top-0 z-40">

@@ -118,10 +118,24 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 11 — Theme & Appearance Controls
+**Scope:** Theme store, shader behaviour, and appearance configuration panels.
+**Tasks:**
+- Extend theme persistence for per-surface shader controls.
+- Build BackOffice controls to tune shader settings live.
+- Ensure shader respects reduced motion preferences.
+- Sync settings with tenant/local storage mocks.
+**Status:** DONE
+**Log:**
+  - 2024-05-09: Reviewed current theme store and BackOffice UI. Planned per-surface schema for shader settings, migration strategy, and reduced-motion fallbacks.
+  - 2024-05-09: Implemented per-surface shader state with migration, updated PaperShader for reduced-motion/static fallback, refreshed BackOffice controls, and synced defaults with mock tenant/local storage. Global lint reports existing issues in POS/Portal/StatusIndicator outside this scope.
