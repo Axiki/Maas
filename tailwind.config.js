@@ -30,6 +30,20 @@ export default {
       fontFamily: {
         sans: ['"Inter"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
       },
+      fontSize: {
+        '2xs': ['var(--font-size-2xs)', { lineHeight: 'var(--line-height-loose)', letterSpacing: 'var(--tracking-wide)' }],
+        xs: ['var(--font-size-xs)', { lineHeight: 'var(--line-height-relaxed)', letterSpacing: 'var(--tracking-wide)' }],
+        sm: ['var(--font-size-sm)', { lineHeight: 'var(--line-height-relaxed)', letterSpacing: 'var(--tracking-normal)' }],
+        base: ['var(--font-size-md)', { lineHeight: 'var(--line-height-relaxed)', letterSpacing: 'var(--tracking-normal)' }],
+        lg: ['var(--font-size-lg)', { lineHeight: 'var(--line-height-relaxed)', letterSpacing: 'var(--tracking-normal)' }],
+        xl: ['var(--font-size-xl)', { lineHeight: 'var(--line-height-snug)', letterSpacing: 'calc(var(--tracking-tight) / 2)' }],
+        '2xl': ['var(--font-size-2xl)', { lineHeight: 'var(--line-height-snug)', letterSpacing: 'var(--tracking-tight)' }],
+        '3xl': ['var(--font-size-3xl)', { lineHeight: 'var(--line-height-snug)', letterSpacing: 'var(--tracking-tight)' }],
+        '4xl': ['var(--font-size-4xl)', { lineHeight: 'var(--line-height-snug)', letterSpacing: 'var(--tracking-tight)' }],
+        '5xl': ['var(--font-size-5xl)', { lineHeight: 'var(--line-height-tight)', letterSpacing: 'var(--tracking-tight)' }],
+        '6xl': ['var(--font-size-6xl)', { lineHeight: 'var(--line-height-tight)', letterSpacing: 'var(--tracking-tight)' }],
+        '7xl': ['var(--font-size-7xl)', { lineHeight: 'var(--line-height-tight)', letterSpacing: 'var(--tracking-tight)' }],
+      },
       borderRadius: {
         sm: 'var(--radius-sm)',
         md: 'var(--radius-md)',

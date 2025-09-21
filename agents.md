@@ -16,8 +16,8 @@
 - Fix misaligned sections, spacing, and grid inconsistencies.  
 - Improve responsiveness (mobile/tablet/desktop).  
 - Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Status:** TODO
+**Log:**
 
 ---
 
@@ -28,8 +28,8 @@
 - Replace off-palette values with correct ones.  
 - Ensure Tailwind config and global tokens are updated.  
 - Verify consistency across all components.  
-**Status:** TODO  
-**Log:**  
+**Status:** TODO
+**Log:**
 
 ---
 
@@ -40,8 +40,10 @@
 - Apply consistent font sizes for headings, body, buttons.  
 - Fix line-height and spacing issues.  
 - Document changes here.  
-**Status:** TODO  
-**Log:**  
+**Status:** DONE
+**Log:**
+- Established MAS typography scale (2xs 11px → 7xl 68px) with shared CSS variables, helper classes, and Tailwind font-size tokens to keep headings and body text consistent.
+- Ran `npm run lint` after changes; command failed because of pre-existing lint errors in POS.tsx, Portal.tsx, PaperShader.tsx, StatusIndicator.tsx, and themeStore.ts (unused vars, `any`, escape characters).
 
 ---
 
