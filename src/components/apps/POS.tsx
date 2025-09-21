@@ -225,14 +225,18 @@ export const POS: React.FC = () => {
           {/* Search & Categories */}
           <div className="p-4 border-b border-line">
             <div className="flex gap-4 mb-4">
-              <div className="relative flex-1 max-w-md">
-                <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted" />
+              <div className="form-field flex-1 max-w-md">
+                <Search
+                  size={18}
+                  className="form-icon absolute left-3 top-1/2 -translate-y-1/2"
+                  aria-hidden="true"
+                />
                 <input
                   type="text"
                   placeholder="Search products..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-line rounded-lg bg-surface-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="form-control form-control-sm pl-10"
                 />
               </div>
             </div>
@@ -241,11 +245,9 @@ export const POS: React.FC = () => {
             <div className="flex gap-2 overflow-x-auto pb-2">
               <button
                 onClick={() => setSelectedCategory('all')}
-                className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors ${
-                  selectedCategory === 'all'
-                    ? 'bg-primary-500 text-white'
-                    : 'bg-surface-200 text-muted hover:bg-line'
-                }`}
+                className={`form-chip ${selectedCategory === 'all' ? 'form-chip--active' : ''}`}
+                aria-pressed={selectedCategory === 'all'}
+                type="button"
               >
                 All Items
               </button>
@@ -253,11 +255,9 @@ export const POS: React.FC = () => {
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors ${
-                    selectedCategory === category.id
-                      ? 'bg-primary-500 text-white'
-                      : 'bg-surface-200 text-muted hover:bg-line'
-                  }`}
+                  className={`form-chip ${selectedCategory === category.id ? 'form-chip--active' : ''}`}
+                  aria-pressed={selectedCategory === category.id}
+                  type="button"
                 >
                   {category.name}
                 </button>

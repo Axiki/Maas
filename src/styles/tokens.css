@@ -12,6 +12,10 @@
   --color-ink-70: 10 10 10;
   --color-line: 217 215 211;
   --color-muted: 154 153 148;
+  --color-form-accent: 238 118 109;
+  --color-form-ink: 36 36 46;
+  --color-form-border: 214 214 214;
+  --color-form-contrast: 36 36 46;
   --color-success: 20 138 59;
   --color-warning: 196 138 10;
   --color-danger: 178 30 30;
@@ -45,6 +49,10 @@
   --color-ink-70: 245 245 244;
   --color-line: 74 74 74;
   --color-muted: 154 153 148;
+  --color-form-accent: 238 118 109;
+  --color-form-ink: 245 245 244;
+  --color-form-border: 96 96 96;
+  --color-form-contrast: 36 36 46;
   --color-success: 76 175 80;
   --color-warning: 255 152 0;
   --color-danger: 255 82 82;

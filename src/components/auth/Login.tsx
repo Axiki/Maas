@@ -53,8 +53,8 @@ export const Login: React.FC = () => {
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-ink mb-2">
+            <div className="form-field">
+              <label htmlFor="email" className="form-label">
                 Email Address
               </label>
               <input
@@ -62,14 +62,15 @@ export const Login: React.FC = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-line rounded-lg bg-surface-200/50 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
+                className="form-control"
                 placeholder="Enter your email"
+                autoComplete="email"
                 required
               />
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-ink mb-2">
+            <div className="form-field">
+              <label htmlFor="password" className="form-label">
                 Password
               </label>
               <div className="relative">
@@ -78,14 +79,16 @@ export const Login: React.FC = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 pr-12 border border-line rounded-lg bg-surface-200/50 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
+                  className="form-control pr-12"
                   placeholder="Enter your password"
+                  autoComplete="current-password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-ink transition-colors"
+                  className="form-icon-button"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
