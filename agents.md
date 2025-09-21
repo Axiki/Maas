@@ -16,8 +16,9 @@
 - Fix misaligned sections, spacing, and grid inconsistencies.  
 - Improve responsiveness (mobile/tablet/desktop).  
 - Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Status:** DONE
+**Log:**
+- Introduced a flex-based AppShell wrapper with a growing main area, added a shared PageContainer gutter, and wrapped the portal/backoffice entries to confirm consistent padding at sm/md/lg breakpoints via px-4/sm:px-6/lg:px-8 tokens.
 
 ---
 

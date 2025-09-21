@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, Button } from '@mas/ui';
+import { PageContainer } from '../layout/PageContainer';
 import { useTheme } from '../../stores/themeStore';
 
 const themeModes = [
@@ -25,7 +26,7 @@ export const BackOffice: React.FC = () => {
   };
 
   return (
-    <div className="p-6">
+    <PageContainer>
       <div className="max-w-5xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">Backoffice Settings</h1>
@@ -154,6 +155,6 @@ export const BackOffice: React.FC = () => {
           </div>
         </Card>
       </div>
-    </div>
+    </PageContainer>
   );
 };

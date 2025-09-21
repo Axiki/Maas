@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import * as LucideIcons from 'lucide-react';
 import { MotionWrapper } from '../ui/MotionWrapper';
+import { PageContainer } from '../layout/PageContainer';
 import { useAuthStore } from '../../stores/authStore';
 import { getAvailableApps } from '../../config/apps';
 import { theme } from '../../config/theme';
@@ -46,8 +47,8 @@ export const Portal: React.FC = () => {
   };
 
   return (
-    <MotionWrapper type="page" className="p-6">
-      <div className="max-w-7xl mx-auto">
+    <MotionWrapper type="page">
+      <PageContainer>
         <div className="mb-8">
           <h2 className="text-3xl font-bold mb-2">Welcome back, {user?.name}</h2>
           <p className="text-muted">
@@ -145,7 +146,7 @@ export const Portal: React.FC = () => {
             </div>
           </Card>
         </div>
-      </div>
+      </PageContainer>
     </MotionWrapper>
   );
 };
