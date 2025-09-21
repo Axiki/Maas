@@ -30,7 +30,10 @@ export const mockUser: User = {
   name: 'Sarah Johnson',
   role: 'manager',
   storeId: 'store-1',
-  pin: '1234'
+  security: {
+    pinHash: 'e62b3de9cf0f538f34abf4af7d42be1d',
+    pinUpdatedAt: new Date('2024-01-03T10:00:00Z').toISOString()
+  }
 };
 
 export const mockCategories: Category[] = [

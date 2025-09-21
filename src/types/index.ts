@@ -25,13 +25,36 @@ export interface Store {
   phone: string;
 }
 
+export type RestrictedPosAction = 'void-order' | 'process-refund' | 'manager-discount';
+
+export interface MultifactorState {
+  status: 'disabled' | 'pending' | 'verified';
+  method: 'totp';
+  temporarySecret?: string;
+  previewCodes?: string[];
+  recoveryCodes: string[];
+  expiresAt?: string;
+  lastVerifiedAt?: string;
+}
+
+export interface RolePermissions {
+  role: UserRole;
+  permittedWithoutPin: RestrictedPosAction[];
+  requiresPin: RestrictedPosAction[];
+}
+
+export interface UserSecurityProfile {
+  pinHash?: string;
+  pinUpdatedAt?: string;
+}
+
 export interface User {
   id: string;
   email: string;
   name: string;
   role: UserRole;
   storeId: string;
-  pin?: string;
+  security?: UserSecurityProfile;
   lastLogin?: Date;
 }
 
