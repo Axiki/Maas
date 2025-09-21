@@ -11,7 +11,7 @@ const themeModes = [
 const paperSurfaces: Array<'background' | 'cards'> = ['background', 'cards'];
 
 export const BackOffice: React.FC = () => {
-  const { mode, paperShader, setMode, updatePaperShader } = useTheme();
+  const { mode, resolvedMode, paperShader, setMode, updatePaperShader } = useTheme();
 
   const toggleSurface = (surface: 'background' | 'cards') => {
     const set = new Set(paperShader.surfaces);
@@ -58,7 +58,9 @@ export const BackOffice: React.FC = () => {
 
             <div className="rounded-lg border border-line bg-surface-200/60 p-4">
               <p className="text-sm text-muted">
-                Current mode: <span className="font-medium text-ink capitalize">{mode}</span>.
+                Preference:
+                <span className="font-medium text-ink capitalize"> {mode}</span>, rendering as
+                <span className="font-medium text-ink capitalize"> {resolvedMode}</span>.
               </p>
             </div>
           </Card>
