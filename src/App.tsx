@@ -6,6 +6,7 @@ import { Login } from './components/auth/Login';
 import { Portal } from './components/apps/Portal';
 import { POS } from './components/apps/POS';
 import { BackOffice } from './components/apps/BackOffice';
+import { ImportWizard } from './components/apps/imports/ImportWizard';
 import { useAuthStore } from './stores/authStore';
 import { useOfflineStore } from './stores/offlineStore';
 
@@ -59,6 +60,7 @@ function App() {
           <Route path="pos" element={<POS />} />
           <Route path="kds" element={<KDS />} />
           <Route path="products" element={<Products />} />
+          <Route path="imports" element={<ImportWizard />} />
           <Route path="inventory" element={<Inventory />} />
           <Route path="customers" element={<Customers />} />
           <Route path="promotions" element={<Promotions />} />

@@ -118,10 +118,22 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 11 — Imports
+**Scope:** Data import wizard experience and reusable utilities.
+**Tasks:**
+- Build guided wizard for uploads, mapping, validation, and review.
+- Create reusable upload + column mapping UI modules.
+- Provide validation mocks and document outstanding warnings.
+**Status:** DONE
+**Log:**
+- Added multi-step import wizard with reusable upload/mapping components, validation mock workflow, and portal registration. No backend endpoints were impacted.
