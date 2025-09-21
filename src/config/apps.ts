@@ -7,7 +7,8 @@ export const appConfigs: AppConfig[] = [
     description: 'Access all applications',
     icon: 'Grid3x3',
     route: '/portal',
-    roles: ['cashier', 'waiter', 'bartender', 'supervisor', 'manager', 'owner']
+    roles: ['cashier', 'waiter', 'bartender', 'supervisor', 'manager', 'owner'],
+    tier: 'core'
   },
   {
     id: 'pos',
@@ -16,6 +17,9 @@ export const appConfigs: AppConfig[] = [
     icon: 'ShoppingCart',
     route: '/pos',
     roles: ['cashier', 'waiter', 'bartender', 'supervisor', 'manager', 'owner'],
+    tier: 'core',
+    permissions: ['orders:manage'],
+    featureFlags: ['pwa-ready'],
     isPWA: true
   },
   {
@@ -24,7 +28,10 @@ export const appConfigs: AppConfig[] = [
     description: 'Manage kitchen orders',
     icon: 'Chef',
     route: '/kds',
-    roles: ['supervisor', 'manager', 'owner']
+    roles: ['supervisor', 'manager', 'owner'],
+    tier: 'plus',
+    permissions: ['kitchen:manage'],
+    featureFlags: ['kitchen-suite']
   },
   {
     id: 'products',
@@ -32,7 +39,9 @@ export const appConfigs: AppConfig[] = [
     description: 'Manage products and categories',
     icon: 'Package',
     route: '/products',
-    roles: ['manager', 'owner']
+    roles: ['manager', 'owner'],
+    tier: 'plus',
+    permissions: ['catalog:manage']
   },
   {
     id: 'inventory',
@@ -40,7 +49,9 @@ export const appConfigs: AppConfig[] = [
     description: 'Stock management and tracking',
     icon: 'Archive',
     route: '/inventory',
-    roles: ['manager', 'owner']
+    roles: ['manager', 'owner'],
+    tier: 'plus',
+    permissions: ['inventory:manage']
   },
   {
     id: 'customers',
@@ -48,7 +59,9 @@ export const appConfigs: AppConfig[] = [
     description: 'Customer management and loyalty',
     icon: 'Users',
     route: '/customers',
-    roles: ['cashier', 'waiter', 'bartender', 'supervisor', 'manager', 'owner']
+    roles: ['cashier', 'waiter', 'bartender', 'supervisor', 'manager', 'owner'],
+    tier: 'core',
+    permissions: ['customers:manage']
   },
   {
     id: 'promotions',
@@ -56,7 +69,9 @@ export const appConfigs: AppConfig[] = [
     description: 'Discounts and promotional rules',
     icon: 'Percent',
     route: '/promotions',
-    roles: ['supervisor', 'manager', 'owner']
+    roles: ['supervisor', 'manager', 'owner'],
+    tier: 'plus',
+    permissions: ['promotions:manage']
   },
   {
     id: 'reports',
@@ -64,7 +79,10 @@ export const appConfigs: AppConfig[] = [
     description: 'Sales and analytics reports',
     icon: 'BarChart3',
     route: '/reports',
-    roles: ['supervisor', 'manager', 'owner']
+    roles: ['supervisor', 'manager', 'owner'],
+    tier: 'premium',
+    permissions: ['reports:view'],
+    featureFlags: ['preview:analytics-v2']
   },
   {
     id: 'calendar',
@@ -72,7 +90,10 @@ export const appConfigs: AppConfig[] = [
     description: 'Reservations and scheduling',
     icon: 'Calendar',
     route: '/calendar',
-    roles: ['waiter', 'supervisor', 'manager', 'owner']
+    roles: ['waiter', 'supervisor', 'manager', 'owner'],
+    tier: 'plus',
+    permissions: ['calendar:manage'],
+    featureFlags: ['beta:calendar']
   },
   {
     id: 'accounting',
@@ -80,7 +101,9 @@ export const appConfigs: AppConfig[] = [
     description: 'Financial reporting and management',
     icon: 'DollarSign',
     route: '/accounting',
-    roles: ['manager', 'owner']
+    roles: ['manager', 'owner'],
+    tier: 'premium',
+    permissions: ['accounting:view']
   },
   {
     id: 'backoffice',
@@ -88,7 +111,10 @@ export const appConfigs: AppConfig[] = [
     description: 'Settings and administration',
     icon: 'Settings',
     route: '/backoffice',
-    roles: ['manager', 'owner']
+    roles: ['manager', 'owner'],
+    tier: 'premium',
+    permissions: ['settings:manage'],
+    featureFlags: ['preview:operations']
   }
 ];
 

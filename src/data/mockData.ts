@@ -13,7 +13,9 @@ export const mockTenant: Tenant = {
       animationSpeed: 1.0,
       surfaces: ['background', 'cards']
     }
-  }
+  },
+  subscriptionTier: 'plus',
+  featureFlags: ['beta:calendar']
 };
 
 export const mockStore: Store = {
@@ -30,7 +32,21 @@ export const mockUser: User = {
   name: 'Sarah Johnson',
   role: 'manager',
   storeId: 'store-1',
-  pin: '1234'
+  pin: '1234',
+  subscriptionTier: 'plus',
+  permissions: [
+    'orders:manage',
+    'kitchen:manage',
+    'catalog:manage',
+    'inventory:manage',
+    'customers:manage',
+    'promotions:manage',
+    'calendar:manage',
+    'reports:view',
+    'settings:manage'
+  ],
+  favoriteApps: ['pos', 'calendar', 'reports'],
+  featureFlags: ['preview:analytics-v2']
 };
 
 export const mockCategories: Category[] = [
