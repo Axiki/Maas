@@ -189,3 +189,53 @@ export interface MotionPresets {
     duration: number;
   };
 }
+
+// Telemetry & incidents
+export type TelemetrySeverity = 'info' | 'warning' | 'critical';
+
+export interface TelemetryEventBase {
+  id: string;
+  kind: 'incident' | 'health';
+  severity: TelemetrySeverity;
+  message: string;
+  detail?: string;
+  source?: string;
+  context?: Record<string, unknown>;
+  createdAt: string;
+}
+
+export interface TelemetryIncident extends TelemetryEventBase {
+  kind: 'incident';
+  status: 'open' | 'acknowledged' | 'resolved';
+  acknowledgedAt?: string;
+  resolvedAt?: string;
+  resolutionNote?: string;
+}
+
+export interface TelemetryHealthAlert extends TelemetryEventBase {
+  kind: 'health';
+  metrics?: Record<string, number>;
+  durationMs?: number;
+}
+
+export type TelemetryEvent = TelemetryIncident | TelemetryHealthAlert;
+
+export interface IncidentPayload {
+  severity: TelemetrySeverity;
+  message: string;
+  detail?: string;
+  source?: string;
+  context?: Record<string, unknown>;
+  status?: TelemetryIncident['status'];
+  resolutionNote?: string;
+}
+
+export interface HealthPayload {
+  severity: TelemetrySeverity;
+  message: string;
+  detail?: string;
+  source?: string;
+  context?: Record<string, unknown>;
+  metrics?: Record<string, number>;
+  durationMs?: number;
+}

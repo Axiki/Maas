@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Button } from '@mas/ui';
 import { useTheme } from '../../stores/themeStore';
+import { TelemetryLog } from '../telemetry/TelemetryLog';
 
 const themeModes = [
   { id: 'light', label: 'Light' },
@@ -132,6 +133,18 @@ export const BackOffice: React.FC = () => {
             </div>
           </Card>
         </div>
+
+        <Card className="space-y-4">
+          <div>
+            <h2 className="text-xl font-semibold">Telemetry &amp; Incident Feed</h2>
+            <p className="text-muted text-sm">
+              Review live incidents, acknowledgements, and health alerts surfaced by the telemetry client across
+              MAS services.
+            </p>
+          </div>
+
+          <TelemetryLog limit={6} />
+        </Card>
 
         <Card className="space-y-4">
           <h2 className="text-xl font-semibold">Live Preview</h2>
