@@ -25,7 +25,7 @@ export const AppShell: React.FC = () => {
   const shouldRenderPaper = paperShader.enabled && paperShader.surfaces.includes('background');
 
   return (
-    <div className="min-h-screen bg-bg-dust text-ink relative">
+    <div className="flex flex-col min-h-screen bg-bg-dust text-ink relative">
       {shouldRenderPaper && (
         <PaperShader
           intensity={paperShader.intensity}
@@ -86,7 +86,7 @@ export const AppShell: React.FC = () => {
         </div>
       </header>
 
-      <main className="relative z-10">
+      <main className="relative z-10 flex-1 w-full">
         <PageTransition>
           <Outlet />
         </PageTransition>
