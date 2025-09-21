@@ -1,12 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useThemeStore } from '../../stores/themeStore';
+import { PaperSurface } from '../../types';
 
 interface PaperShaderProps {
+  surface?: PaperSurface;
   intensity?: number;
   animationSpeed?: number;
   enabled?: boolean;
-  surfaces?: Array<'background' | 'cards'>;
   className?: string;
 }
 
@@ -77,11 +78,14 @@ void main() {
 }
 `;
 
+const STATIC_TEXTURE =
+  "url('data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'4\\' height=\\'4\\' viewBox=\\'0 0 4 4\\'%3E%3Cpath fill=\\'#000\\' fill-opacity=\\'0.03\\' d=\\'M1 3h1v1H1V3zm2-2h1v1H3V1z\\'%3E%3C/path%3E%3C/svg%3E')";
+
 export const PaperShader: React.FC<PaperShaderProps> = ({
+  surface = 'background',
   intensity,
   animationSpeed,
   enabled,
-  surfaces,
   className = '',
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -91,24 +95,61 @@ export const PaperShader: React.FC<PaperShaderProps> = ({
   const animationIdRef = useRef<number | null>(null);
   const [isSupported, setIsSupported] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
+  const [shouldReduceMotion, setShouldReduceMotion] = useState(false);
 
   const paperShader = useThemeStore((state) => state.paperShader);
+  const surfaceSettings = paperShader.surfaces[surface];
 
-  const effectiveIntensity = intensity ?? paperShader.intensity;
-  const effectiveSpeed = animationSpeed ?? paperShader.animationSpeed;
-  const effectiveEnabled =
-    (enabled ?? paperShader.enabled) &&
-    (surfaces ?? paperShader.surfaces).includes('background');
-  const effectiveSurfaces = surfaces ?? paperShader.surfaces;
+  const effectiveEnabled = Boolean(
+    enabled ?? (paperShader.enabled && surfaceSettings?.enabled)
+  );
+  const effectiveIntensity = intensity ?? surfaceSettings?.intensity ?? 0;
+  const effectiveSpeed = animationSpeed ?? surfaceSettings?.animationSpeed ?? 0;
+
+  const shouldAnimate =
+    effectiveEnabled && !shouldReduceMotion && effectiveSpeed > 0;
+
+  const containerClassName =
+    surface === 'background'
+      ? `fixed inset-0 pointer-events-none w-full h-full ${className}`.trim()
+      : className;
+  const baseStyle: React.CSSProperties =
+    surface === 'background' ? { zIndex: -1 } : {};
 
   useEffect(() => {
-    if (!effectiveEnabled || !canvasRef.current) {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handleChange = (event: MediaQueryListEvent) => {
+      setShouldReduceMotion(event.matches);
+    };
+
+    setShouldReduceMotion(mediaQuery.matches);
+
+    if ('addEventListener' in mediaQuery) {
+      mediaQuery.addEventListener('change', handleChange);
+    } else {
+      mediaQuery.addListener(handleChange);
+    }
+
+    return () => {
+      if ('removeEventListener' in mediaQuery) {
+        mediaQuery.removeEventListener('change', handleChange);
+      } else {
+        mediaQuery.removeListener(handleChange);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!shouldAnimate || !canvasRef.current) {
       return;
     }
 
     const canvas = canvasRef.current;
 
     try {
+      setIsVisible(true);
+      setIsSupported(true);
+
       const renderer = new THREE.WebGLRenderer({
         canvas,
         alpha: true,
@@ -127,7 +168,9 @@ export const PaperShader: React.FC<PaperShaderProps> = ({
         uniforms: {
           uTime: { value: 0 },
           uIntensity: { value: effectiveIntensity },
-          uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+          uResolution: {
+            value: new THREE.Vector2(window.innerWidth, window.innerHeight),
+          },
         },
         transparent: true,
         blending: THREE.MultiplyBlending,
@@ -144,12 +187,13 @@ export const PaperShader: React.FC<PaperShaderProps> = ({
       let lastTime = performance.now();
       let averageFrameTime = 0;
 
-      const animate = () => {
+      const animateFrame = () => {
         const currentTime = performance.now();
         const deltaTime = currentTime - lastTime;
 
         frameCount += 1;
-        averageFrameTime = (averageFrameTime * (frameCount - 1) + deltaTime) / frameCount;
+        averageFrameTime =
+          (averageFrameTime * (frameCount - 1) + deltaTime) / frameCount;
 
         if (frameCount > 60 && averageFrameTime > 2) {
           setIsVisible(false);
@@ -165,7 +209,7 @@ export const PaperShader: React.FC<PaperShaderProps> = ({
         renderer.render(scene, camera);
         lastTime = currentTime;
 
-        animationIdRef.current = requestAnimationFrame(animate);
+        animationIdRef.current = requestAnimationFrame(animateFrame);
       };
 
       const handleResize = () => {
@@ -178,52 +222,62 @@ export const PaperShader: React.FC<PaperShaderProps> = ({
         }
       };
 
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (prefersReducedMotion) {
-        setIsVisible(false);
-        return;
-      }
-
       handleResize();
       window.addEventListener('resize', handleResize);
 
-      animate();
+      animateFrame();
 
       return () => {
         window.removeEventListener('resize', handleResize);
         if (animationIdRef.current) {
           cancelAnimationFrame(animationIdRef.current);
+          animationIdRef.current = null;
         }
         renderer.dispose();
         material.dispose();
         geometry.dispose();
+        rendererRef.current = null;
+        sceneRef.current = null;
+        materialRef.current = null;
       };
     } catch (error) {
       console.warn('Paper shader not supported:', error);
       setIsSupported(false);
     }
-  }, [effectiveEnabled, effectiveIntensity, effectiveSpeed]);
+  }, [shouldAnimate, effectiveIntensity, effectiveSpeed]);
 
-  if (!effectiveEnabled || !isSupported || !isVisible) {
-    const showFallback = effectiveSurfaces.includes('background');
+  if (!effectiveEnabled) {
+    return null;
+  }
 
-    return showFallback ? (
+  const shouldRenderCanvas = shouldAnimate && isSupported && isVisible;
+
+  if (!shouldRenderCanvas) {
+    const fallbackOpacity = Math.min(0.85, Math.max(0.12, effectiveIntensity * 0.55));
+
+    return (
       <div
-        className={`fixed inset-0 pointer-events-none ${className}`}
+        className={containerClassName}
         style={{
-          background:
-            "url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'4\' height=\'4\' viewBox=\'0 0 4 4\'%3E%3Cpath fill=\'#000\' fill-opacity=\'0.02\' d=\'M1 3h1v1H1V3zm2-2h1v1H3V1z\'%3E%3C/path%3E%3C/svg%3E')",
-          opacity: effectiveIntensity * 0.3,
+          ...baseStyle,
+          backgroundImage: `linear-gradient(135deg, rgba(255, 255, 255, ${(0.16 * effectiveIntensity).toFixed(
+            3
+          )}), rgba(255, 255, 255, 0)), ${STATIC_TEXTURE}`,
+          backgroundSize: 'cover, 4px 4px',
+          opacity: fallbackOpacity,
+          mixBlendMode: 'multiply',
         }}
+        aria-hidden="true"
       />
-    ) : null;
+    );
   }
 
   return (
     <canvas
       ref={canvasRef}
-      className={`fixed inset-0 pointer-events-none w-full h-full ${className}`}
-      style={{ zIndex: -1 }}
+      className={containerClassName}
+      style={baseStyle}
+      aria-hidden="true"
     />
   );
 };

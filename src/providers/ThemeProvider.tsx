@@ -35,13 +35,15 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const root = document.documentElement;
-    if (paperShader.surfaces.includes('cards') && paperShader.enabled) {
+    const cardSurface = paperShader.surfaces.cards;
+
+    if (paperShader.enabled && cardSurface.enabled) {
       root.dataset.paperCards = 'true';
     } else {
       delete root.dataset.paperCards;
     }
 
-    root.style.setProperty('--paper-card-opacity', (paperShader.intensity * 0.35).toFixed(3));
+    root.style.setProperty('--paper-card-opacity', cardSurface.intensity.toFixed(3));
   }, [paperShader]);
 
   useEffect(() => {
