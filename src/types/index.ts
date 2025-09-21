@@ -92,6 +92,67 @@ export interface Customer {
   storeCreditBalance: number;
 }
 
+export interface Supplier {
+  id: string;
+  name: string;
+  contactName: string;
+  contactEmail: string;
+  contactPhone: string;
+  categories: string[];
+  leadTimeDays: number;
+  rating: number;
+  lastOrderDate: Date;
+  nextDeliveryDate: Date;
+  terms: string;
+  notes?: string;
+}
+
+export type PurchaseOrderStatus = 'draft' | 'sent' | 'received';
+
+export interface PurchaseOrderLine {
+  id: string;
+  productName: string;
+  quantityOrdered: number;
+  unitCost: number;
+  receivedQuantity: number;
+  variance?: number;
+}
+
+export interface PurchaseOrder {
+  id: string;
+  supplierId: string;
+  reference: string;
+  status: PurchaseOrderStatus;
+  expectedOn: Date;
+  createdAt: Date;
+  totalAmount: number;
+  currency: string;
+  lines: PurchaseOrderLine[];
+  notes?: string;
+}
+
+export type GoodsReceiptStatus = 'pending' | 'reconciled' | 'received';
+
+export interface GoodsReceiptItem {
+  id: string;
+  productName: string;
+  orderedQuantity: number;
+  receivedQuantity: number;
+  unitCost: number;
+}
+
+export interface GoodsReceipt {
+  id: string;
+  purchaseOrderId: string;
+  supplierId: string;
+  reference: string;
+  status: GoodsReceiptStatus;
+  receivedAt: Date;
+  receivedBy: string;
+  notes?: string;
+  items: GoodsReceiptItem[];
+}
+
 export interface Order {
   id: string;
   storeId: string;
