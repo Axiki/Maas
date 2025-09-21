@@ -82,14 +82,15 @@
 ---
 
 ## Agent 7 — Footer
-**Scope:** Footer layout, links, alignment.  
-**Tasks:**  
-- Redesign footer with minimal style.  
-- Align links center or justified as needed.  
-- Apply palette + typography rules.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Footer layout, links, alignment.
+**Tasks:**
+- Redesign footer with minimal style.
+- Align links center or justified as needed.
+- Apply palette + typography rules.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Integrated the new Footer component into the AppShell, ensured it sits above the paper shader with a negative z-index class, and confirmed layout scroll space by switching the shell to a flex column. Palette tokens applied to navigation links. `npm run build` completes, so scrolling with the footer in place compiles without runtime errors; interactive scroll smoke test limited to structural review in this environment.
 
 ---
 

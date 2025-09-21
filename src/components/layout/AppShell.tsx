@@ -10,6 +10,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { appConfigs } from '../../config/apps';
 import { ThemeModeToggle } from '../ui/ThemeModeToggle';
+import { Footer } from './Footer';
 
 const MotionButton = motion(Button);
 
@@ -25,12 +26,13 @@ export const AppShell: React.FC = () => {
   const shouldRenderPaper = paperShader.enabled && paperShader.surfaces.includes('background');
 
   return (
-    <div className="min-h-screen bg-bg-dust text-ink relative">
+    <div className="relative flex min-h-screen flex-col bg-bg-dust text-ink">
       {shouldRenderPaper && (
         <PaperShader
           intensity={paperShader.intensity}
           animationSpeed={paperShader.animationSpeed}
           surfaces={paperShader.surfaces}
+          className="-z-10"
         />
       )}
 
@@ -86,11 +88,13 @@ export const AppShell: React.FC = () => {
         </div>
       </header>
 
-      <main className="relative z-10">
+      <main className="relative z-10 flex-1">
         <PageTransition>
           <Outlet />
         </PageTransition>
       </main>
+
+      <Footer />
     </div>
   );
 };
