@@ -16,32 +16,33 @@
 - Fix misaligned sections, spacing, and grid inconsistencies.  
 - Improve responsiveness (mobile/tablet/desktop).  
 - Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Status:** TODO
+**Log:**
 
 ---
 
 ## Agent 2 — Palette
-**Scope:** Apply and enforce color palette (#EE766D, #24242E, #D6D6D6).  
-**Tasks:**  
-- Identify current colors in use.  
-- Replace off-palette values with correct ones.  
-- Ensure Tailwind config and global tokens are updated.  
-- Verify consistency across all components.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Apply and enforce color palette (#EE766D, #24242E, #D6D6D6).
+**Tasks:**
+- Identify current colors in use.
+- Replace off-palette values with correct ones.
+- Ensure Tailwind config and global tokens are updated.
+- Verify consistency across all components.
+**Status:** TODO
+**Log:**
 
 ---
 
 ## Agent 3 — Typography
-**Scope:** Fonts, sizes, weights, and readability.  
-**Tasks:**  
-- Analyze current font stack.  
-- Apply consistent font sizes for headings, body, buttons.  
-- Fix line-height and spacing issues.  
-- Document changes here.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Fonts, sizes, weights, and readability.
+**Tasks:**
+- Analyze current font stack.
+- Apply consistent font sizes for headings, body, buttons.
+- Fix line-height and spacing issues.
+- Document changes here.
+**Status:** DONE
+**Log:**
+- Before: Login, Portal, BackOffice, and AppShell headings/body copy each relied on ad-hoc Tailwind text utilities, leading to inconsistent sizing and line-height decisions. After: added shared `.type-heading-*` and `.type-body-*` classes in `src/index.css` and refactored those views to consume them for consistent typography without altering palette or layout.
 
 ---
 

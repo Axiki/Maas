@@ -47,14 +47,14 @@ export const Login: React.FC = () => {
             <div className="w-16 h-16 bg-primary-500 rounded-lg mx-auto mb-4 flex items-center justify-center">
               <span className="text-white font-bold text-xl">MAS</span>
             </div>
-            <h1 className="text-2xl font-bold text-ink">Welcome Back</h1>
-            <p className="text-muted mt-2">Sign in to your MAS account</p>
+            <h1 className="type-heading-lg text-ink">Welcome Back</h1>
+            <p className="type-body-md text-muted mt-2">Sign in to your MAS account</p>
           </div>
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-ink mb-2">
+              <label htmlFor="email" className="block type-body-md font-medium text-ink mb-2">
                 Email Address
               </label>
               <input
@@ -69,7 +69,7 @@ export const Login: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-ink mb-2">
+              <label htmlFor="password" className="block type-body-md font-medium text-ink mb-2">
                 Password
               </label>
               <div className="relative">
@@ -112,9 +112,9 @@ export const Login: React.FC = () => {
 
           {/* Demo Credentials */}
           <div className="mt-6 p-3 bg-primary-100/50 rounded-lg">
-            <p className="text-xs text-primary-700 font-medium mb-1">Demo Credentials:</p>
-            <p className="text-xs text-primary-600">Email: manager@bellavista.com</p>
-            <p className="text-xs text-primary-600">Password: password</p>
+            <p className="type-body-sm text-primary-700 font-medium mb-1">Demo Credentials:</p>
+            <p className="type-body-sm text-primary-600">Email: manager@bellavista.com</p>
+            <p className="type-body-sm text-primary-600">Password: password</p>
           </div>
         </div>
       </motion.div>

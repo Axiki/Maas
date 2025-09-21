@@ -28,8 +28,8 @@ export const BackOffice: React.FC = () => {
     <div className="p-6">
       <div className="max-w-5xl mx-auto space-y-8">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Backoffice Settings</h1>
-          <p className="text-muted max-w-2xl">
+          <h1 className="type-heading-xl mb-2">Backoffice Settings</h1>
+          <p className="type-body-lg text-muted max-w-2xl">
             Configure tenant appearance, theme behaviour, and paper shader presentation. These
             controls apply instantly across the suite for every user in this tenant.
           </p>
@@ -38,8 +38,8 @@ export const BackOffice: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="space-y-6">
             <div>
-              <h2 className="text-xl font-semibold">Theme Mode</h2>
-              <p className="text-muted text-sm">
+              <h2 className="type-heading-md">Theme Mode</h2>
+              <p className="type-body-md text-muted">
                 Choose how MAS adapts colours. Auto follows the system preference for each user.
               </p>
             </div>
@@ -57,7 +57,7 @@ export const BackOffice: React.FC = () => {
             </div>
 
             <div className="rounded-lg border border-line bg-surface-200/60 p-4">
-              <p className="text-sm text-muted">
+              <p className="type-body-md text-muted">
                 Current mode: <span className="font-medium text-ink capitalize">{mode}</span>.
               </p>
             </div>
@@ -66,8 +66,8 @@ export const BackOffice: React.FC = () => {
           <Card className="space-y-6">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <h2 className="text-xl font-semibold">Paper Shader</h2>
-                <p className="text-muted text-sm">
+                <h2 className="type-heading-md">Paper Shader</h2>
+                <p className="type-body-md text-muted">
                   Toggle the tactile grain layer and fine-tune its intensity and animation speed.
                 </p>
               </div>
@@ -81,7 +81,7 @@ export const BackOffice: React.FC = () => {
 
             <div className="space-y-4">
               <label className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-ink">Grain intensity</span>
+                <span className="type-body-md font-medium text-ink">Grain intensity</span>
                 <input
                   type="range"
                   min={0}
@@ -93,11 +93,11 @@ export const BackOffice: React.FC = () => {
                   }
                   className="w-full accent-primary-500"
                 />
-                <span className="text-xs text-muted">{paperShader.intensity.toFixed(2)}</span>
+                <span className="type-body-sm text-muted">{paperShader.intensity.toFixed(2)}</span>
               </label>
 
               <label className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-ink">Animation speed</span>
+                <span className="type-body-md font-medium text-ink">Animation speed</span>
                 <input
                   type="range"
                   min={0}
@@ -109,12 +109,12 @@ export const BackOffice: React.FC = () => {
                   }
                   className="w-full accent-primary-500"
                 />
-                <span className="text-xs text-muted">{paperShader.animationSpeed.toFixed(1)}x</span>
+                <span className="type-body-sm text-muted">{paperShader.animationSpeed.toFixed(1)}x</span>
               </label>
             </div>
 
             <div>
-              <h3 className="text-sm font-medium text-ink mb-2">Apply shader to</h3>
+              <h3 className="type-body-md font-medium text-ink mb-2">Apply shader to</h3>
               <div className="flex flex-wrap gap-2">
                 {paperSurfaces.map((surface) => {
                   const active = paperShader.surfaces.includes(surface);
@@ -134,8 +134,8 @@ export const BackOffice: React.FC = () => {
         </div>
 
         <Card className="space-y-4">
-          <h2 className="text-xl font-semibold">Live Preview</h2>
-          <p className="text-muted text-sm">
+          <h2 className="type-heading-md">Live Preview</h2>
+          <p className="type-body-md text-muted">
             Changes above update the experience instantly. Use this preview to confirm the contrast
             and motion feel right for your venue.
           </p>
@@ -143,9 +143,9 @@ export const BackOffice: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[1, 2, 3].map((item) => (
               <Card key={item} className="paper-card p-4 space-y-3">
-                <p className="text-sm text-muted uppercase tracking-wide">Sample Tile</p>
-                <p className="font-semibold text-lg">Surface {item}</p>
-                <p className="text-sm text-muted text-balance">
+                <p className="type-body-md text-muted uppercase tracking-wide">Sample Tile</p>
+                <p className="type-heading-sm">Surface {item}</p>
+                <p className="type-body-md text-muted text-balance">
                   The paper shader adds subtle grain and fiber texture, keeping contrast within
                   accessible ranges.
                 </p>
