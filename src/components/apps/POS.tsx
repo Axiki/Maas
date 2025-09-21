@@ -8,6 +8,7 @@ import { useOfflineStore } from '../../stores/offlineStore';
 import { useAuthStore } from '../../stores/authStore';
 import { Product, Category } from '../../types';
 import { mockProducts, mockCategories } from '../../data/mockData';
+import { mockPromotions } from '../../data/mockPromotions';
 
 export const POS: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,14 +19,16 @@ export const POS: React.FC = () => {
   
   const { 
     items, 
-    subtotal, 
-    tax, 
-    total, 
+    subtotal,
+    tax,
+    total,
     orderType,
-    addItem, 
-    updateItemQuantity, 
+    addItem,
+    updateItemQuantity,
     removeItem,
-    setOrderType 
+    setOrderType,
+    setPromotionDefinitions,
+    promotionEvaluation
   } = useCartStore();
   
   const { queueOrder } = useOfflineStore();
@@ -43,7 +46,7 @@ export const POS: React.FC = () => {
   useEffect(() => {
     if (gridRef.current && filteredProducts.length > 0) {
       const productCards = gridRef.current.children;
-      
+
       gsap.fromTo(productCards,
         { y: 12, opacity: 0, scale: 0.95 },
         {
@@ -57,6 +60,13 @@ export const POS: React.FC = () => {
       );
     }
   }, [filteredProducts]);
+
+  useEffect(() => {
+    setPromotionDefinitions(mockPromotions);
+  }, [setPromotionDefinitions]);
+
+  const grossSubtotal = subtotal + (promotionEvaluation?.totalSavings ?? 0);
+  const hasAppliedPromotions = Boolean(promotionEvaluation?.appliedPromotions.length);
 
   const handleAddProduct = (product: Product) => {
     addItem(product);
@@ -147,30 +157,49 @@ export const POS: React.FC = () => {
               </div>
             ) : (
               <AnimatedList className="p-4 space-y-3">
-                {items.map((item) => (
-                  <div key={item.id} className="bg-surface-200 rounded-lg p-3">
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm">{item.product.name}</h4>
-                        {item.variant && (
-                          <p className="text-xs text-muted">{item.variant.name}</p>
-                        )}
-                        <p className="text-sm font-medium text-primary-600">
-                          ${(item.price * item.quantity).toFixed(2)}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => removeItem(item.id)}
-                        className="p-1 text-muted hover:text-danger transition-colors"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
+                {items.map((item) => {
+                  const promoAmount = promotionEvaluation?.itemAdjustments?.[item.id] ?? 0;
+                  const promoBreakdown = promotionEvaluation?.itemBreakdown?.[item.id] ?? [];
+
+                  return (
+                    <div key={item.id} className="bg-surface-200 rounded-lg p-3">
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm">{item.product.name}</h4>
+                          {item.variant && (
+                            <p className="text-xs text-muted">{item.variant.name}</p>
+                          )}
+                          <p className="text-sm font-medium text-primary-600">
+                            ${(item.price * item.quantity).toFixed(2)}
+                          </p>
+                          {promoAmount > 0 && (
+                            <div className="mt-2 rounded-md bg-success/10 px-2 py-1">
+                              <p className="text-xs font-medium text-success">
+                                Saved ${promoAmount.toFixed(2)}
+                              </p>
+                              <ul className="mt-1 space-y-1">
+                                {promoBreakdown.map((detail) => (
+                                  <li key={`${detail.promotionId}-${detail.itemId}`} className="flex items-center justify-between text-xs text-success">
+                                    <span className="truncate pr-2">{detail.promotionName}</span>
+                                    <span>- ${detail.savings.toFixed(2)}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
                         <button
-                          onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
+                          onClick={() => removeItem(item.id)}
+                          className="p-1 text-muted hover:text-danger transition-colors"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
                           className="w-7 h-7 rounded-lg bg-surface-100 flex items-center justify-center hover:bg-line transition-colors"
                         >
                           <Minus size={14} />
@@ -184,8 +213,9 @@ export const POS: React.FC = () => {
                         </button>
                       </div>
                     </div>
-                  </div>
-                ))}
+                    </div>
+                  );
+                })}
               </AnimatedList>
             )}
           </div>
@@ -194,7 +224,17 @@ export const POS: React.FC = () => {
           <div className="p-4 border-t border-line">
             <div className="space-y-2 mb-4">
               <div className="flex justify-between text-sm">
-                <span>Subtotal</span>
+                <span>Items</span>
+                <span>${grossSubtotal.toFixed(2)}</span>
+              </div>
+              {promotionEvaluation && promotionEvaluation.totalSavings > 0 && (
+                <div className="flex justify-between text-sm text-success font-medium">
+                  <span>Promotions</span>
+                  <span>- ${promotionEvaluation.totalSavings.toFixed(2)}</span>
+                </div>
+              )}
+              <div className="flex justify-between text-sm">
+                <span>Net Subtotal</span>
                 <span>${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-sm">
@@ -207,6 +247,23 @@ export const POS: React.FC = () => {
               </div>
             </div>
             
+            {hasAppliedPromotions && promotionEvaluation && (
+              <div className="mb-3 rounded-lg border border-line bg-surface-100 p-3">
+                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted">
+                  <User size={12} />
+                  Promotions Applied
+                </div>
+                <ul className="mt-2 space-y-1 text-sm">
+                  {promotionEvaluation.appliedPromotions.map((promo) => (
+                    <li key={promo.id} className="flex items-center justify-between">
+                      <span className="pr-2 text-ink truncate">{promo.name}</span>
+                      <span className="text-success font-medium">-${promo.savings.toFixed(2)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

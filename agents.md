@@ -118,10 +118,24 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 28 — Promotions Engine
+**Scope:** Build and integrate promotion evaluation for POS experience.
+**Tasks:**
+- Implement promotions engine service to evaluate cart deals.
+- Connect promotion insights to POS totals and line items.
+- Add automated tests covering stackable versus non-stackable rules.
+- Capture coverage results for transparency.
+**Status:** DONE
+**Log:**
+- 2025-09-21: Reviewed requirements for promotion engine, POS integration, tests, and documentation needs.
+- 2025-09-21: Implemented promotions engine service, wired cart store + POS UI for savings preview, added loader-backed Node tests for stackable vs non-stackable scenarios, and captured coverage (overall lines 75.45%, promotionsEngine.ts lines 69.45%) via `npm test`.
