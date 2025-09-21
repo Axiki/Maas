@@ -118,10 +118,22 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 25 — Security & Access Controls
+**Scope:** POS overrides, authentication safeguards, MFA UX.
+**Tasks:**
+- Add hashed PIN validation for restricted POS actions.
+- Surface multi-factor setup & recovery management in BackOffice.
+- Ensure auth store tracks role permissions & MFA lifecycle.
+**Status:** DONE
+**Log:**
+- 2024-11-24: Implemented hashed PIN verification with modal override flows in POS, expanded auth store to manage MFA + role policies, and shipped BackOffice MFA setup UI with recovery rotation. No follow-ups pending; real backend wiring required when available.

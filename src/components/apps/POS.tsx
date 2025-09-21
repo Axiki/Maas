@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
-import { Search, Plus, Minus, Trash2, User, CreditCard, Clock } from 'lucide-react';
+import { Search, Plus, Minus, Trash2, CreditCard, Clock, ShieldCheck, BadgePercent, Ban } from 'lucide-react';
 import { MotionWrapper, AnimatedList } from '../ui/MotionWrapper';
 import { useCartStore } from '../../stores/cartStore';
 import { useOfflineStore } from '../../stores/offlineStore';
 import { useAuthStore } from '../../stores/authStore';
-import { Product, Category } from '../../types';
+import { Product, Category, RestrictedPosAction } from '../../types';
 import { mockProducts, mockCategories } from '../../data/mockData';
 
 export const POS: React.FC = () => {
@@ -15,21 +15,35 @@ export const POS: React.FC = () => {
   const [products] = useState<Product[]>(mockProducts);
   const [categories] = useState<Category[]>(mockCategories);
   const gridRef = useRef<HTMLDivElement>(null);
-  
-  const { 
-    items, 
-    subtotal, 
-    tax, 
-    total, 
+  const [pinModalOpen, setPinModalOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState<RestrictedPosAction | null>(null);
+  const [pinInput, setPinInput] = useState('');
+  const [pinError, setPinError] = useState('');
+  const [isVerifyingPin, setIsVerifyingPin] = useState(false);
+  const [authorizationMessage, setAuthorizationMessage] = useState<string | null>(null);
+
+  const {
+    items,
+    subtotal,
+    tax,
+    total,
     orderType,
-    addItem, 
-    updateItemQuantity, 
+    addItem,
+    updateItemQuantity,
     removeItem,
-    setOrderType 
+    setOrderType,
+    applyDiscount,
+    clearCart
   } = useCartStore();
-  
+
   const { queueOrder } = useOfflineStore();
-  const { user, store } = useAuthStore();
+  const { user, store, verifyPin, requiresPinForAction, rolePermissions } = useAuthStore();
+
+  const restrictedLabels: Record<RestrictedPosAction, string> = {
+    'void-order': 'Void current order',
+    'process-refund': 'Process refund',
+    'manager-discount': 'Manager discount'
+  };
 
   // Filter products
   const filteredProducts = products.filter(product => {
@@ -102,6 +116,80 @@ export const POS: React.FC = () => {
     }
   };
 
+  const resetPinState = () => {
+    setPinInput('');
+    setPinError('');
+    setPendingAction(null);
+    setIsVerifyingPin(false);
+  };
+
+  const handleRestrictedAction = (action: RestrictedPosAction) => {
+    setAuthorizationMessage(null);
+    if (requiresPinForAction(action)) {
+      setPendingAction(action);
+      setPinModalOpen(true);
+      setPinInput('');
+      setPinError('');
+      return;
+    }
+    executeRestrictedAction(action);
+  };
+
+  const applyManagerDiscount = () => {
+    const state = useCartStore.getState();
+    if (state.items.length === 0) {
+      setAuthorizationMessage('No items in the cart to discount.');
+      return;
+    }
+    state.items.forEach((item) => {
+      const modifierTotal = item.modifiers.reduce((sum, mod) => sum + mod.price, 0);
+      const gross = (item.price + modifierTotal) * item.quantity;
+      const discountValue = Math.round(gross * 0.1 * 100) / 100;
+      applyDiscount(item.id, discountValue);
+    });
+    setAuthorizationMessage('Manager discount applied (10% off each line).');
+  };
+
+  const executeRestrictedAction = (action: RestrictedPosAction) => {
+    switch (action) {
+      case 'void-order':
+        clearCart();
+        setAuthorizationMessage('Order cleared by authorized user.');
+        break;
+      case 'manager-discount':
+        applyManagerDiscount();
+        break;
+      case 'process-refund':
+        setAuthorizationMessage('Refund workflow initialized (demo).');
+        break;
+      default:
+        setAuthorizationMessage('Action completed.');
+    }
+    resetPinState();
+    setPinModalOpen(false);
+  };
+
+  const handlePinSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!pendingAction) return;
+    setIsVerifyingPin(true);
+    setPinError('');
+    const valid = await verifyPin(pinInput);
+    setIsVerifyingPin(false);
+
+    if (!valid) {
+      setPinError('Invalid PIN. Please try again or request supervisor assistance.');
+      return;
+    }
+
+    executeRestrictedAction(pendingAction);
+  };
+
+  const closePinModal = () => {
+    setPinModalOpen(false);
+    resetPinState();
+  };
+
   return (
     <MotionWrapper type="page">
       <div className="h-[calc(100vh-4rem)] flex">
@@ -110,12 +198,19 @@ export const POS: React.FC = () => {
           {/* Cart Header */}
           <div className="p-4 border-b border-line">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold">Current Order</h3>
+              <div>
+                <h3 className="font-semibold">Current Order</h3>
+                {rolePermissions && (
+                  <p className="mt-0.5 text-[11px] uppercase tracking-wide text-muted">
+                    PIN required: {rolePermissions.requiresPin.length > 0 ? rolePermissions.requiresPin.length : '0'} actions
+                  </p>
+                )}
+              </div>
               <div className="flex gap-1">
                 <button
                   onClick={() => setOrderType('dine-in')}
                   className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${
-                    orderType === 'dine-in' 
+                    orderType === 'dine-in'
                       ? 'bg-primary-500 text-white' 
                       : 'bg-surface-200 text-muted hover:bg-surface-300'
                   }`}
@@ -192,6 +287,11 @@ export const POS: React.FC = () => {
 
           {/* Cart Totals & Checkout */}
           <div className="p-4 border-t border-line">
+            {authorizationMessage && (
+              <div className="mb-3 rounded-lg border border-primary-200/60 bg-primary-100/40 px-3 py-2 text-xs text-primary-700">
+                {authorizationMessage}
+              </div>
+            )}
             <div className="space-y-2 mb-4">
               <div className="flex justify-between text-sm">
                 <span>Subtotal</span>
@@ -217,6 +317,32 @@ export const POS: React.FC = () => {
               <CreditCard size={18} />
               Process Payment
             </motion.button>
+            <div className="mt-3 grid grid-cols-1 gap-2">
+              <button
+                onClick={() => handleRestrictedAction('manager-discount')}
+                className="w-full rounded-lg border border-line bg-surface-200/70 px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-primary-200 hover:text-primary-600"
+              >
+                <span className="inline-flex items-center gap-2">
+                  <BadgePercent size={16} /> Manager Discount
+                </span>
+              </button>
+              <button
+                onClick={() => handleRestrictedAction('void-order')}
+                className="w-full rounded-lg border border-line bg-surface-200/70 px-4 py-2 text-sm font-medium text-danger transition-colors hover:border-danger hover:bg-danger/10"
+              >
+                <span className="inline-flex items-center gap-2">
+                  <Ban size={16} /> Void Order
+                </span>
+              </button>
+              <button
+                onClick={() => handleRestrictedAction('process-refund')}
+                className="w-full rounded-lg border border-line bg-surface-200/70 px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-primary-200 hover:text-primary-600"
+              >
+                <span className="inline-flex items-center gap-2">
+                  <ShieldCheck size={16} /> Start Refund
+                </span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -320,6 +446,56 @@ export const POS: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {pinModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 backdrop-blur-sm px-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            role="dialog"
+            aria-modal="true"
+            className="w-full max-w-sm rounded-xl border border-line bg-surface-100 p-6 shadow-xl"
+          >
+            <div className="mb-4 space-y-1">
+              <h3 className="text-lg font-semibold text-ink">PIN required</h3>
+              <p className="text-sm text-muted">
+                {pendingAction ? restrictedLabels[pendingAction] : 'Restricted action'} requires a supervisor PIN. PINs are stored as salted hashes.
+              </p>
+            </div>
+            <form onSubmit={handlePinSubmit} className="space-y-4">
+              <label className="block text-sm font-medium text-ink">
+                Enter PIN
+                <input
+                  type="password"
+                  inputMode="numeric"
+                  autoFocus
+                  value={pinInput}
+                  onChange={(event) => setPinInput(event.target.value)}
+                  className="mt-2 w-full rounded-lg border border-line bg-surface-200/60 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+              </label>
+              {pinError && <p className="text-sm text-danger">{pinError}</p>}
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={closePinModal}
+                  className="rounded-lg border border-line bg-surface-200/70 px-4 py-2 text-sm font-medium text-muted hover:text-ink"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isVerifyingPin}
+                  className="rounded-lg bg-primary-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-600 disabled:opacity-60"
+                >
+                  {isVerifyingPin ? 'Verifying…' : 'Authorize'}
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
     </MotionWrapper>
   );
 };
