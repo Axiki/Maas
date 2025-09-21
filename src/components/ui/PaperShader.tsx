@@ -77,6 +77,8 @@ void main() {
 }
 `;
 
+const fallbackPaperTexture = 'linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0))';
+
 export const PaperShader: React.FC<PaperShaderProps> = ({
   intensity,
   animationSpeed,
@@ -211,8 +213,7 @@ export const PaperShader: React.FC<PaperShaderProps> = ({
       <div
         className={`fixed inset-0 pointer-events-none ${className}`}
         style={{
-          background:
-            "url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'4\' height=\'4\' viewBox=\'0 0 4 4\'%3E%3Cpath fill=\'#000\' fill-opacity=\'0.02\' d=\'M1 3h1v1H1V3zm2-2h1v1H3V1z\'%3E%3C/path%3E%3C/svg%3E')",
+          background: fallbackPaperTexture,
           opacity: effectiveIntensity * 0.3,
         }}
       />
