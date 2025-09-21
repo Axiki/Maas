@@ -10,26 +10,27 @@
 ---
 
 ## Agent 1 — Layout
-**Scope:** Analyze and fix page layouts (grid, spacing, alignment, responsiveness).  
-**Tasks:**  
-- Review current layout structure.  
-- Fix misaligned sections, spacing, and grid inconsistencies.  
-- Improve responsiveness (mobile/tablet/desktop).  
-- Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Analyze and fix page layouts (grid, spacing, alignment, responsiveness).
+**Tasks:**
+- Review current layout structure.
+- Fix misaligned sections, spacing, and grid inconsistencies.
+- Improve responsiveness (mobile/tablet/desktop).
+- Keep existing functionality untouched.
+**Status:** TODO
+**Log:**
 
 ---
 
 ## Agent 2 — Palette
-**Scope:** Apply and enforce color palette (#EE766D, #24242E, #D6D6D6).  
-**Tasks:**  
-- Identify current colors in use.  
-- Replace off-palette values with correct ones.  
-- Ensure Tailwind config and global tokens are updated.  
-- Verify consistency across all components.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Apply and enforce color palette (#EE766D, #24242E, #D6D6D6).
+**Tasks:**
+- Identify current colors in use.
+- Replace off-palette values with correct ones.
+- Ensure Tailwind config and global tokens are updated.
+- Verify consistency across all components.
+**Status:** DONE
+**Log:**
+- Replaced light/dark tokens and synced theme config with the #EE766D/#24242E/#D6D6D6 ramp, including tuned state shades (success/warning/danger) for accessibility. Verified contrast ratios (light ink 13.85, light primary-700 4.78, dark primary-500 6.62, dark danger 4.86) and confirmed Tailwind already exposes the needed keys.
 
 ---
 
