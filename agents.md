@@ -10,14 +10,15 @@
 ---
 
 ## Agent 1 — Layout
-**Scope:** Analyze and fix page layouts (grid, spacing, alignment, responsiveness).  
-**Tasks:**  
-- Review current layout structure.  
-- Fix misaligned sections, spacing, and grid inconsistencies.  
-- Improve responsiveness (mobile/tablet/desktop).  
-- Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Analyze and fix page layouts (grid, spacing, alignment, responsiveness).
+**Tasks:**
+- Review current layout structure.
+- Fix misaligned sections, spacing, and grid inconsistencies.
+- Improve responsiveness (mobile/tablet/desktop).
+- Keep existing functionality untouched.
+**Status:** TODO
+**Log:**
+- Introduced a reusable `PageContainer` wrapper to centralize horizontal padding and max-width for the portal view; broader layout audit still outstanding.
 
 ---
 
@@ -70,14 +71,15 @@
 ---
 
 ## Agent 6 — Hero Section
-**Scope:** Main landing section (logo, slogan, CTA).  
-**Tasks:**  
-- Center logo properly.  
-- Add slogan text with correct typography.  
-- Add primary CTA button with hover state.  
-- Document changes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Main landing section (logo, slogan, CTA).
+**Tasks:**
+- Center logo properly.
+- Add slogan text with correct typography.
+- Add primary CTA button with hover state.
+- Document changes.
+**Status:** DONE
+**Log:**
+- Added `PortalHero` with welcome messaging, CTA wired to `/pos`, and contextual stats inside the new `PageContainer`; verified spacing at 360px, 768px, 1024px, and 1440px breakpoints to confirm consistent rhythm and responsive behaviour.
 
 ---
 
