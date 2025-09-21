@@ -118,10 +118,23 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 11 — Device Manager
+**Scope:** Hardware monitoring interface, diagnostics actions, and routing exposure.
+**Tasks:**
+- Build device manager view with connectivity overview.
+- Add simulated printer and cash drawer diagnostics.
+- Expose the screen through app configs and routing.
+- Align status badges with online/offline state.
+**Status:** DONE
+**Log:**
+- Implemented Device Manager page with offline-aware statuses, mock diagnostics handlers, and logging UI; updated routing and app configs to publish the new `/devices` route.

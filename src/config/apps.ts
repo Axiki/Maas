@@ -83,6 +83,14 @@ export const appConfigs: AppConfig[] = [
     roles: ['manager', 'owner']
   },
   {
+    id: 'devices',
+    name: 'Device Manager',
+    description: 'Monitor hardware connectivity and run diagnostics',
+    icon: 'Printer',
+    route: '/devices',
+    roles: ['supervisor', 'manager', 'owner']
+  },
+  {
     id: 'backoffice',
     name: 'Back Office',
     description: 'Settings and administration',
