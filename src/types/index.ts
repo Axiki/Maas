@@ -1,10 +1,4 @@
 // Core business entities
-export interface Tenant {
-  id: string;
-  name: string;
-  settings: TenantSettings;
-}
-
 export interface TenantSettings {
   currency: string;
   timezone: string;
@@ -15,6 +9,15 @@ export interface TenantSettings {
     animationSpeed: number;
     surfaces: ('background' | 'cards')[];
   };
+}
+
+export type SubscriptionTier = 'core' | 'pro' | 'enterprise';
+
+export interface Tenant {
+  id: string;
+  name: string;
+  settings: TenantSettings;
+  subscriptionTier: SubscriptionTier;
 }
 
 export interface Store {
@@ -33,6 +36,8 @@ export interface User {
   storeId: string;
   pin?: string;
   lastLogin?: Date;
+  permissions?: string[];
+  favoriteApps?: string[];
 }
 
 export type UserRole = 'cashier' | 'waiter' | 'bartender' | 'supervisor' | 'manager' | 'owner';
@@ -162,6 +167,13 @@ export interface KdsItem {
 }
 
 // App routing
+export interface AppAccessMetadata {
+  requiresSubscription: SubscriptionTier;
+  requiredPermissions?: string[];
+  restricted?: boolean;
+  restrictionLabel?: string;
+}
+
 export interface AppConfig {
   id: string;
   name: string;
@@ -169,6 +181,9 @@ export interface AppConfig {
   icon: string;
   route: string;
   roles: UserRole[];
+  tier: SubscriptionTier;
+  access: AppAccessMetadata;
+  isNew?: boolean;
   isFavorite?: boolean;
   hasNotifications?: boolean;
   isPWA?: boolean;
