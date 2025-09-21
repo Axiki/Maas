@@ -24,8 +24,16 @@ function App() {
   const { loadCachedData, setOfflineStatus } = useOfflineStore();
 
   useEffect(() => {
-    // Load cached data on startup
-    loadCachedData();
+    let cancelled = false;
+
+    const bootstrapOfflineCache = async () => {
+      await loadCachedData();
+      if (!cancelled && typeof navigator !== 'undefined') {
+        setOfflineStatus(navigator.onLine);
+      }
+    };
+
+    void bootstrapOfflineCache();
 
     // Setup online/offline event listeners
     const handleOnline = () => setOfflineStatus(true);
@@ -35,6 +43,7 @@ function App() {
     window.addEventListener('offline', handleOffline);
 
     return () => {
+      cancelled = true;
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };

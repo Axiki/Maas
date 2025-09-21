@@ -16,8 +16,9 @@
 - Fix misaligned sections, spacing, and grid inconsistencies.  
 - Improve responsiveness (mobile/tablet/desktop).  
 - Keep existing functionality untouched.  
-**Status:** TODO  
-**Log:**  
+**Status:** DONE
+**Log:**
+- Added IndexedDB-backed offline cache with 72h retention, sync reconciliation, conflict logging, and developer debug panel (Status indicator toggle + OfflineDebugPanel); documented manual offline-to-online test checklist. Lint run surfaces pre-existing issues in Portal, PaperShader, and themeStore modules.
 
 ---
 

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
-import { Search, Plus, Minus, Trash2, User, CreditCard, Clock } from 'lucide-react';
+import { Search, Plus, Minus, Trash2, CreditCard, Clock } from 'lucide-react';
 import { MotionWrapper, AnimatedList } from '../ui/MotionWrapper';
 import { useCartStore } from '../../stores/cartStore';
 import { useOfflineStore } from '../../stores/offlineStore';
 import { useAuthStore } from '../../stores/authStore';
-import { Product, Category } from '../../types';
+import { Product, Category, PricingRecord, TaxRateConfig } from '../../types';
 import { mockProducts, mockCategories } from '../../data/mockData';
 
 export const POS: React.FC = () => {
@@ -28,8 +28,57 @@ export const POS: React.FC = () => {
     setOrderType 
   } = useCartStore();
   
-  const { queueOrder } = useOfflineStore();
+  const { queueOrder, cacheCatalogSnapshot } = useOfflineStore();
   const { user, store } = useAuthStore();
+
+  useEffect(() => {
+    const now = new Date();
+    const updatedAt = now.toISOString();
+
+    const pricingSnapshot: PricingRecord[] = products.flatMap((product) => {
+      const baseRecord: PricingRecord = {
+        id: `${product.id}-base`,
+        productId: product.id,
+        currency: 'USD',
+        amount: product.price,
+        updatedAt
+      };
+
+      const variantRecords = product.variants.map((variant) => ({
+        id: `${variant.id}-variant`,
+        productId: product.id,
+        variantId: variant.id,
+        currency: 'USD',
+        amount: variant.price,
+        updatedAt
+      } satisfies PricingRecord));
+
+      return [baseRecord, ...variantRecords];
+    });
+
+    const taxMap = new Map<number, TaxRateConfig>();
+    products.forEach((product) => {
+      if (!taxMap.has(product.taxRate)) {
+        const id = `tax-${product.taxRate.toFixed(2)}`;
+        taxMap.set(product.taxRate, {
+          id,
+          name: `${product.taxRate.toFixed(2)}% Standard`,
+          rate: product.taxRate,
+          updatedAt
+        });
+      }
+    });
+
+    const taxes = Array.from(taxMap.values());
+
+    void cacheCatalogSnapshot({
+      products,
+      categories,
+      pricing: pricingSnapshot,
+      taxes,
+      cachedAt: now
+    });
+  }, [products, categories, cacheCatalogSnapshot]);
 
   // Filter products
   const filteredProducts = products.filter(product => {

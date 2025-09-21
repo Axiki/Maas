@@ -138,6 +138,23 @@ export interface Payment {
   createdAt: Date;
 }
 
+export interface PricingRecord {
+  id: string;
+  productId: string;
+  variantId?: string;
+  currency: string;
+  amount: number;
+  updatedAt: string;
+}
+
+export interface TaxRateConfig {
+  id: string;
+  name: string;
+  rate: number;
+  jurisdiction?: string;
+  updatedAt: string;
+}
+
 export interface CartItem extends OrderLine {
   product: Product;
   variant?: ProductVariant;
