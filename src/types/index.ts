@@ -69,6 +69,24 @@ export interface ProductVariant {
   sku: string;
 }
 
+export interface PricingSnapshot {
+  id: string;
+  productId: string;
+  variantId?: string;
+  currency: string;
+  price: number;
+  updatedAt: string;
+}
+
+export interface TaxRule {
+  id: string;
+  name: string;
+  rate: number;
+  jurisdiction?: string;
+  appliesTo: 'product' | 'service' | 'delivery' | 'all';
+  updatedAt: string;
+}
+
 export interface ModifierGroup {
   id: string;
   name: string;

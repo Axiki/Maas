@@ -118,10 +118,22 @@
 ---
 
 ## Agent 10 — Database/Functionality Checks
-**Scope:** Ensure functional logic and DB integration still work after UI changes.  
-**Tasks:**  
-- Verify forms still submit correctly.  
-- Confirm API/data fetching unaffected.  
-- Log any issues needing backend fixes.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Ensure functional logic and DB integration still work after UI changes.
+**Tasks:**
+- Verify forms still submit correctly.
+- Confirm API/data fetching unaffected.
+- Log any issues needing backend fixes.
+**Status:** TODO
+**Log:**
+
+---
+
+## Agent 21 — Offline Buffer
+**Scope:** Offline persistence, sync lifecycles, retention enforcement.
+**Tasks:**
+- Extend offline cache to cover pricing and tax datasets.
+- Enforce retention windows and cleanup routines (72h baseline).
+- Capture sync conflicts and outcomes for queued orders.
+**Status:** DONE
+**Log:**
+- 2024-05-07: Expanded offline store to cache pricing/tax data with timestamped payloads, added 72h retention pruning across datasets, introduced conflict detection with structured sync logs for UI visibility. No outstanding issues; next step is wiring UI surfaces to consume sync log + conflict feeds.
