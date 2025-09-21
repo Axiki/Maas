@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Grid3x3 } from 'lucide-react';
@@ -10,6 +10,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { appConfigs } from '../../config/apps';
 import { ThemeModeToggle } from '../ui/ThemeModeToggle';
+import { OfflineDebugPanel } from '../devtools/OfflineDebugPanel';
 
 const MotionButton = motion(Button);
 
@@ -18,9 +19,11 @@ export const AppShell: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const paperShader = useThemeStore((state) => state.paperShader);
+  const [isDebugOpen, setIsDebugOpen] = useState(false);
 
   const currentApp = appConfigs.find((app) => location.pathname.startsWith(app.route));
   const isPortal = location.pathname === '/portal' || location.pathname === '/';
+  const debugEnabled = import.meta.env.DEV;
 
   const shouldRenderPaper = paperShader.enabled && paperShader.surfaces.includes('background');
 
@@ -66,7 +69,14 @@ export const AppShell: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4">
-            <StatusIndicator />
+            <StatusIndicator
+              debugEnabled={debugEnabled}
+              debugOpen={isDebugOpen}
+              onToggleDebug={() => {
+                if (!debugEnabled) return;
+                setIsDebugOpen((prev) => !prev);
+              }}
+            />
             <ThemeModeToggle />
 
             {user && (
@@ -91,6 +101,10 @@ export const AppShell: React.FC = () => {
           <Outlet />
         </PageTransition>
       </main>
+
+      {debugEnabled && (
+        <OfflineDebugPanel open={isDebugOpen} onClose={() => setIsDebugOpen(false)} />
+      )}
     </div>
   );
 };
