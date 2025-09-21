@@ -46,14 +46,17 @@
 ---
 
 ## Agent 4 — Animations & Transitions
-**Scope:** Smooth motion, hover states, page transitions.  
-**Tasks:**  
-- Review current animations.  
-- Add smooth transitions to navbar, buttons, hero, and modals.  
-- Ensure performance is preserved.  
-- Document all changes here.  
-**Status:** TODO  
-**Log:**  
+**Scope:** Smooth motion, hover states, page transitions.
+**Tasks:**
+- Review current animations.
+- Add smooth transitions to navbar, buttons, hero, and modals.
+- Ensure performance is preserved.
+- Document all changes here.
+**Status:** DONE
+**Log:**
+- Implemented `shouldReduceMotion` guard + shared timing helper for Portal/POS GSAP entrances, using CSS token fallbacks to skip anims when reduced motion is enabled; verified via DevTools reduced-motion emulation that cards now render instantly with the toggle on.
+- Unified interactive transitions on Portal tiles and POS hotspots with `transition-all duration-150 ease-[var(--transition-route-ease)]` per motion token guidance.
+- `npm run lint` currently fails due to pre-existing unused imports/escape warnings outside this scope; no new lint regressions introduced.
 
 ---
 

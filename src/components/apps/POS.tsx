@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
-import { Search, Plus, Minus, Trash2, User, CreditCard, Clock } from 'lucide-react';
+import { Search, Plus, Minus, Trash2, CreditCard, Clock } from 'lucide-react';
 import { MotionWrapper, AnimatedList } from '../ui/MotionWrapper';
 import { useCartStore } from '../../stores/cartStore';
 import { useOfflineStore } from '../../stores/offlineStore';
 import { useAuthStore } from '../../stores/authStore';
 import { Product, Category } from '../../types';
 import { mockProducts, mockCategories } from '../../data/mockData';
+import { getMotionTiming, shouldReduceMotion } from '../../utils/motion';
 
 export const POS: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -41,21 +42,38 @@ export const POS: React.FC = () => {
 
   // GSAP animation for product grid
   useEffect(() => {
-    if (gridRef.current && filteredProducts.length > 0) {
-      const productCards = gridRef.current.children;
-      
-      gsap.fromTo(productCards,
+    if (!gridRef.current || filteredProducts.length === 0 || shouldReduceMotion()) {
+      return;
+    }
+
+    const { duration, delay: staggerDelay, ease } = getMotionTiming('itemStagger');
+
+    if (duration === 0 && staggerDelay === 0) {
+      return;
+    }
+
+    const productCards = gridRef.current.children;
+    if (productCards.length === 0) {
+      return;
+    }
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        productCards,
         { y: 12, opacity: 0, scale: 0.95 },
         {
           y: 0,
           opacity: 1,
           scale: 1,
-          duration: 0.15,
-          stagger: 0.02,
-          ease: "power2.out"
+          duration,
+          stagger: staggerDelay,
+          ease
         }
       );
-    }
+    }, gridRef);
+
+    return () => {
+      ctx.revert();
+    };
   }, [filteredProducts]);
 
   const handleAddProduct = (product: Product) => {
@@ -114,9 +132,9 @@ export const POS: React.FC = () => {
               <div className="flex gap-1">
                 <button
                   onClick={() => setOrderType('dine-in')}
-                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${
-                    orderType === 'dine-in' 
-                      ? 'bg-primary-500 text-white' 
+                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors transition-all duration-150 ease-[var(--transition-route-ease)] ${
+                    orderType === 'dine-in'
+                      ? 'bg-primary-500 text-white'
                       : 'bg-surface-200 text-muted hover:bg-surface-300'
                   }`}
                 >
@@ -124,9 +142,9 @@ export const POS: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setOrderType('takeaway')}
-                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${
-                    orderType === 'takeaway' 
-                      ? 'bg-primary-500 text-white' 
+                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors transition-all duration-150 ease-[var(--transition-route-ease)] ${
+                    orderType === 'takeaway'
+                      ? 'bg-primary-500 text-white'
                       : 'bg-surface-200 text-muted hover:bg-surface-300'
                   }`}
                 >
@@ -241,7 +259,7 @@ export const POS: React.FC = () => {
             <div className="flex gap-2 overflow-x-auto pb-2">
               <button
                 onClick={() => setSelectedCategory('all')}
-                className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors ${
+                className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors transition-all duration-150 ease-[var(--transition-route-ease)] ${
                   selectedCategory === 'all'
                     ? 'bg-primary-500 text-white'
                     : 'bg-surface-200 text-muted hover:bg-line'
@@ -253,7 +271,7 @@ export const POS: React.FC = () => {
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-colors transition-all duration-150 ease-[var(--transition-route-ease)] ${
                     selectedCategory === category.id
                       ? 'bg-primary-500 text-white'
                       : 'bg-surface-200 text-muted hover:bg-line'
@@ -277,7 +295,7 @@ export const POS: React.FC = () => {
                   whileHover={{ scale: 1.02, boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleAddProduct(product)}
-                  className="bg-surface-100 rounded-lg p-4 cursor-pointer border border-line hover:border-primary-200 transition-all group"
+                  className="bg-surface-100 rounded-lg p-4 cursor-pointer border border-line hover:border-primary-200 transition-all duration-150 ease-[var(--transition-route-ease)] group"
                 >
                   <div className="aspect-square bg-surface-200 rounded-lg mb-3 flex items-center justify-center">
                     {product.image ? (

@@ -1,13 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import * as LucideIcons from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { Card } from '@mas/ui';
 import { MotionWrapper } from '../ui/MotionWrapper';
 import { useAuthStore } from '../../stores/authStore';
 import { getAvailableApps } from '../../config/apps';
 import { theme } from '../../config/theme';
-import { Card } from '@mas/ui';
+import { getMotionTiming, shouldReduceMotion } from '../../utils/motion';
 
 const MotionCard = motion(Card);
 
@@ -16,12 +18,25 @@ export const Portal: React.FC = () => {
   const { user, tenant } = useAuthStore();
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const availableApps = user ? getAvailableApps(user.role) : [];
+  const availableApps = useMemo(() => (user ? getAvailableApps(user.role) : []), [user]);
+  const iconMap = LucideIcons as Record<string, LucideIcon>;
 
   useEffect(() => {
-    if (gridRef.current) {
-      const cards = gridRef.current.children;
+    if (!gridRef.current || shouldReduceMotion()) {
+      return;
+    }
 
+    const cards = gridRef.current.children;
+    if (cards.length === 0) {
+      return;
+    }
+    const { duration, delay: staggerDelay, ease } = getMotionTiming('itemStagger');
+
+    if (duration === 0 && staggerDelay === 0) {
+      return;
+    }
+
+    const ctx = gsap.context(() => {
       gsap.fromTo(
         cards,
         {
@@ -33,12 +48,16 @@ export const Portal: React.FC = () => {
           y: 0,
           opacity: 1,
           scale: 1,
-          duration: theme.motion.itemStagger.duration,
-          stagger: theme.motion.itemStagger.delay,
-          ease: 'power2.out',
+          duration,
+          stagger: staggerDelay,
+          ease,
         }
       );
-    }
+    }, gridRef);
+
+    return () => {
+      ctx.revert();
+    };
   }, [availableApps]);
 
   const handleAppClick = (route: string) => {
@@ -57,7 +76,7 @@ export const Portal: React.FC = () => {
 
         <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {availableApps.map((app) => {
-            const IconComponent = (LucideIcons as any)[app.icon] || LucideIcons.Package;
+            const IconComponent = iconMap[app.icon] ?? LucideIcons.Package;
 
             return (
               <MotionCard
@@ -65,7 +84,7 @@ export const Portal: React.FC = () => {
                 whileHover={{ scale: 1.02, boxShadow: theme.elevation.modal }}
                 whileTap={{ scale: 0.98 }}
                 padding
-                className="cursor-pointer border-line/70 hover:border-primary-200 transition-all duration-200 group shadow-sm hover:shadow-md"
+                className="cursor-pointer border-line/70 hover:border-primary-200 transition-all duration-150 ease-[var(--transition-route-ease)] group shadow-sm hover:shadow-md"
                 onClick={() => handleAppClick(app.route)}
               >
                 <div className="flex items-start justify-between mb-4">
