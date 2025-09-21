@@ -1,5 +1,10 @@
 import { create } from 'zustand';
 import { CartItem, Product, ProductVariant, SelectedModifier, Customer } from '../types';
+import {
+  evaluatePromotions,
+  PromotionDefinition,
+  PromotionEvaluation,
+} from '../services/promotionsEngine';
 import { v4 as uuidv4 } from 'uuid';
 
 interface CartState {
@@ -10,7 +15,9 @@ interface CartState {
   subtotal: number;
   tax: number;
   total: number;
-  
+  promotionDefinitions: PromotionDefinition[];
+  promotionEvaluation: PromotionEvaluation | null;
+
   addItem: (product: Product, variant?: ProductVariant, modifiers?: SelectedModifier[], quantity?: number) => void;
   updateItemQuantity: (itemId: string, quantity: number) => void;
   removeItem: (itemId: string) => void;
@@ -18,6 +25,7 @@ interface CartState {
   setCustomer: (customer: Customer | null) => void;
   setTableNumber: (tableNumber: string | null) => void;
   setOrderType: (orderType: 'dine-in' | 'takeaway' | 'delivery') => void;
+  setPromotionDefinitions: (promotions: PromotionDefinition[]) => void;
   clearCart: () => void;
   calculateTotals: () => void;
 }
@@ -30,6 +38,8 @@ export const useCartStore = create<CartState>((set, get) => ({
   subtotal: 0,
   tax: 0,
   total: 0,
+  promotionDefinitions: [],
+  promotionEvaluation: null,
 
   addItem: (product, variant, modifiers = [], quantity = 1) => {
     const state = get();
@@ -104,6 +114,10 @@ export const useCartStore = create<CartState>((set, get) => ({
   setCustomer: (customer) => set({ customer }),
   setTableNumber: (tableNumber) => set({ tableNumber }),
   setOrderType: (orderType) => set({ orderType }),
+  setPromotionDefinitions: (promotions) => {
+    set({ promotionDefinitions: promotions });
+    get().calculateTotals();
+  },
 
   clearCart: () => set({
     items: [],
@@ -111,27 +125,64 @@ export const useCartStore = create<CartState>((set, get) => ({
     tableNumber: null,
     subtotal: 0,
     tax: 0,
-    total: 0
+    total: 0,
+    promotionEvaluation: null,
   }),
 
   calculateTotals: () => {
-    const { items } = get();
+    const {
+      items,
+      promotionDefinitions,
+      customer,
+      orderType,
+    } = get();
+
+    let subtotalBeforePromotions = 0;
     let subtotal = 0;
     let tax = 0;
 
+    const promotionEvaluation = promotionDefinitions.length > 0
+      ? evaluatePromotions({
+          promotions: promotionDefinitions,
+          cart: {
+            items,
+            customer,
+            orderType,
+          },
+          channel: 'pos',
+        })
+      : null;
+
+    const promotionAdjustments = promotionEvaluation?.itemAdjustments ?? {};
+
     items.forEach(item => {
       const modifierTotal = item.modifiers.reduce((sum, mod) => sum + mod.price, 0);
-      const lineSubtotal = ((item.price + modifierTotal) * item.quantity) - item.discount;
-      const lineTax = lineSubtotal * (item.product.taxRate / 100);
-      
-      subtotal += lineSubtotal;
+      const baseLine = (item.price + modifierTotal) * item.quantity;
+      const manualDiscount = item.discount;
+      const promotionDiscount = promotionAdjustments[item.id] ?? 0;
+      const netLine = Math.max(baseLine - manualDiscount - promotionDiscount, 0);
+      const lineTax = netLine * (item.product.taxRate / 100);
+
+      subtotalBeforePromotions += Math.max(baseLine - manualDiscount, 0);
+      subtotal += netLine;
       tax += lineTax;
     });
+
+    const normalizedEvaluation: PromotionEvaluation | null = promotionEvaluation
+      ? {
+          ...promotionEvaluation,
+          totalSavings: Math.min(
+            promotionEvaluation.totalSavings,
+            Math.max(subtotalBeforePromotions, 0)
+          ),
+        }
+      : null;
 
     set({
       subtotal,
       tax,
-      total: subtotal + tax
+      total: subtotal + tax,
+      promotionEvaluation: normalizedEvaluation,
     });
   }
 }));

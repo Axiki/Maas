@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "test": "node --loader ./scripts/ts-test-loader.mjs --test --experimental-test-coverage src/services/__tests__/promotionsEngine.test.ts",
     "preview": "vite preview"
   },
   "dependencies": {
