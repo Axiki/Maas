@@ -52,8 +52,11 @@
 - Add smooth transitions to navbar, buttons, hero, and modals.  
 - Ensure performance is preserved.  
 - Document all changes here.  
-**Status:** TODO  
+**Status:** DONE  
 **Log:**  
+- Integrated `useReducedMotion` into `MotionWrapper`, added a `forceMotion` escape hatch, and confirmed transitions now drop duration/delay when reduced motion is preferred.
+- Extracted motion timing constants into `src/utils/motion.ts` and refactored all references, verifying Portal GSAP usage adopts the shared values.
+- Verified reduced-motion handling by reviewing the computed transition object in both preference branches and noted existing eslint warnings unrelated to this scope.
 
 ---
 

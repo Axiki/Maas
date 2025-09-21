@@ -7,6 +7,7 @@ import { MotionWrapper } from '../ui/MotionWrapper';
 import { useAuthStore } from '../../stores/authStore';
 import { getAvailableApps } from '../../config/apps';
 import { theme } from '../../config/theme';
+import { itemStaggerTiming } from '../../utils/motion';
 import { Card } from '@mas/ui';
 
 const MotionCard = motion(Card);
@@ -33,8 +34,8 @@ export const Portal: React.FC = () => {
           y: 0,
           opacity: 1,
           scale: 1,
-          duration: theme.motion.itemStagger.duration,
-          stagger: theme.motion.itemStagger.delay,
+          duration: itemStaggerTiming.duration,
+          stagger: itemStaggerTiming.delay,
           ease: 'power2.out',
         }
       );
