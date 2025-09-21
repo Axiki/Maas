@@ -88,8 +88,9 @@
 - Align links center or justified as needed.  
 - Apply palette + typography rules.  
 - Document changes.  
-**Status:** TODO  
+**Status:** DONE  
 **Log:**  
+- Integrated the new footer component into the app shell with a flex column layout, verified PaperShader remains at z-index -1 while the footer carries z-30, and confirmed the main area uses flex-1 so the footer sticks to the viewport base without blocking scrollable content.
 
 ---
 
