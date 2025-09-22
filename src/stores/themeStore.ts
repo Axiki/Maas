@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { shallow } from 'zustand/shallow';
 import { TenantSettings } from '../types';
 
 export type ThemeMode = 'light' | 'dark' | 'auto';
@@ -148,11 +149,7 @@ const hydrateResolvedMode = (modeOverride?: ThemeMode) => {
   const systemMode = detectSystemMode(currentSystemMode);
   const resolvedMode = mode === 'auto' ? systemMode : mode;
 
-  useThemeStore.setState(
-    { systemMode, resolvedMode },
-    false,
-    'theme/hydrate-resolved-mode'
-  );
+  useThemeStore.setState({ systemMode, resolvedMode });
 };
 
 useThemeStore.persist?.onFinishHydration?.((state) => {
@@ -163,10 +160,11 @@ if (useThemeStore.persist?.hasHydrated?.()) {
   hydrateResolvedMode();
 }
 
-export const useTheme = () =>
-  useThemeStore((state) => ({
-    mode: state.mode,
-    resolvedMode: state.resolvedMode,
-    systemMode: state.systemMode,
-    paperShader: state.paperShader,
-  }));
+const themeSelector = (state: ThemeState) => ({
+  mode: state.mode,
+  resolvedMode: state.resolvedMode,
+  systemMode: state.systemMode,
+  paperShader: state.paperShader,
+});
+
+export const useTheme = () => useThemeStore(themeSelector, shallow);

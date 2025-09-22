@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Wifi, WifiOff, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { WifiOff, Clock, CheckCircle } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { useOfflineStore } from '../../stores/offlineStore';
 

@@ -205,18 +205,23 @@ export const PaperShader: React.FC<PaperShaderProps> = ({
   }, [effectiveEnabled, effectiveIntensity, effectiveSpeed]);
 
   if (!effectiveEnabled || !isSupported || !isVisible) {
-    const showFallback = effectiveSurfaces.includes('background');
+    if (!effectiveSurfaces.includes('background')) {
+      return null;
+    }
 
-    return showFallback ? (
+    const fallbackSvg =
+      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"4\" height=\"4\" viewBox=\"0 0 4 4\"><path fill=\"#000\" fill-opacity=\"0.02\" d=\"M1 3h1v1H1V3zm2-2h1v1H3V1z\" /></svg>";
+    const fallbackBackground = `url("data:image/svg+xml,${encodeURIComponent(fallbackSvg)}")`;
+
+    return (
       <div
         className={`fixed inset-0 pointer-events-none ${className}`}
         style={{
-          background:
-            "url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'4\' height=\'4\' viewBox=\'0 0 4 4\'%3E%3Cpath fill=\'#000\' fill-opacity=\'0.02\' d=\'M1 3h1v1H1V3zm2-2h1v1H3V1z\'%3E%3C/path%3E%3C/svg%3E')",
+          background: fallbackBackground,
           opacity: effectiveIntensity * 0.3,
         }}
       />
-    ) : null;
+    );
   }
 
   return (

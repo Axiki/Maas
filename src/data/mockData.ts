@@ -80,7 +80,14 @@ export const mockProducts: Product[] = [
     variants: [],
     modifierGroups: [],
     isActive: true,
-    stationTags: ['cold-prep']
+    stationTags: ['cold-prep'],
+    promotionBadges: [
+      {
+        id: 'promo-lunch-combo',
+        label: 'Lunch Combo -$4',
+        tone: 'info'
+      }
+    ]
   },
   {
     id: 'prod-2',
@@ -126,7 +133,14 @@ export const mockProducts: Product[] = [
     ],
     modifierGroups: [],
     isActive: true,
-    stationTags: ['pizza']
+    stationTags: ['pizza'],
+    promotionBadges: [
+      {
+        id: 'promo-lunch-combo',
+        label: 'Lunch Combo -$4',
+        tone: 'info'
+      }
+    ]
   },
   {
     id: 'prod-4',
@@ -140,7 +154,14 @@ export const mockProducts: Product[] = [
     variants: [],
     modifierGroups: [],
     isActive: true,
-    stationTags: ['dessert']
+    stationTags: ['dessert'],
+    promotionBadges: [
+      {
+        id: 'promo-dessert-bundle',
+        label: 'Buy 2 Get 1 Dessert',
+        tone: 'reward'
+      }
+    ]
   },
   {
     id: 'prod-5',
@@ -157,7 +178,14 @@ export const mockProducts: Product[] = [
     ],
     modifierGroups: [],
     isActive: true,
-    stationTags: ['bar']
+    stationTags: ['bar'],
+    promotionBadges: [
+      {
+        id: 'promo-happy-hour',
+        label: '20% Happy Hour',
+        tone: 'discount'
+      }
+    ]
   },
   {
     id: 'prod-6',

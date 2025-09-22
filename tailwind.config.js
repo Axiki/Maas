@@ -30,6 +30,71 @@ export default {
       fontFamily: {
         sans: ['"Inter"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
       },
+      fontSize: {
+        'heading-xl': [
+          'var(--font-size-heading-xl)',
+          {
+            lineHeight: 'var(--line-height-heading-xl)',
+            letterSpacing: 'var(--letter-spacing-heading-tight)',
+          },
+        ],
+        'heading-lg': [
+          'var(--font-size-heading-lg)',
+          {
+            lineHeight: 'var(--line-height-heading-lg)',
+            letterSpacing: 'var(--letter-spacing-heading-tight)',
+          },
+        ],
+        'heading-md': [
+          'var(--font-size-heading-md)',
+          {
+            lineHeight: 'var(--line-height-heading-md)',
+            letterSpacing: 'var(--letter-spacing-heading)',
+          },
+        ],
+        'heading-sm': [
+          'var(--font-size-heading-sm)',
+          {
+            lineHeight: 'var(--line-height-heading-sm)',
+            letterSpacing: 'var(--letter-spacing-heading)',
+          },
+        ],
+        'heading-xs': [
+          'var(--font-size-heading-xs)',
+          {
+            lineHeight: 'var(--line-height-heading-xs)',
+            letterSpacing: 'var(--letter-spacing-heading)',
+          },
+        ],
+        'body-lg': [
+          'var(--font-size-body-lg)',
+          {
+            lineHeight: 'var(--line-height-body-lg)',
+            letterSpacing: 'var(--letter-spacing-body)',
+          },
+        ],
+        'body-md': [
+          'var(--font-size-body-md)',
+          {
+            lineHeight: 'var(--line-height-body-md)',
+            letterSpacing: 'var(--letter-spacing-body)',
+          },
+        ],
+        'body-sm': [
+          'var(--font-size-body-sm)',
+          {
+            lineHeight: 'var(--line-height-body-sm)',
+            letterSpacing: 'var(--letter-spacing-body)',
+          },
+        ],
+        'body-xs': [
+          'var(--font-size-body-xs)',
+          {
+            lineHeight: 'var(--line-height-body-xs)',
+            letterSpacing: 'var(--letter-spacing-body)',
+          },
+        ],
+      },
       borderRadius: {
         sm: 'var(--radius-sm)',
         md: 'var(--radius-md)',

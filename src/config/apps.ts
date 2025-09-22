@@ -43,6 +43,14 @@ export const appConfigs: AppConfig[] = [
     roles: ['manager', 'owner']
   },
   {
+    id: 'purchasing',
+    name: 'Purchasing',
+    description: 'Suppliers, purchase orders, and goods received notes',
+    icon: 'Truck',
+    route: '/purchasing',
+    roles: ['manager', 'owner']
+  },
+  {
     id: 'customers',
     name: 'Customers',
     description: 'Customer management and loyalty',
@@ -83,11 +91,35 @@ export const appConfigs: AppConfig[] = [
     roles: ['manager', 'owner']
   },
   {
+    id: 'imports',
+    name: 'Imports',
+    description: 'Bulk CSV import with validation',
+    icon: 'Upload',
+    route: '/imports',
+    roles: ['manager', 'owner']
+  },
+  {
     id: 'backoffice',
     name: 'Back Office',
     description: 'Settings and administration',
     icon: 'Settings',
     route: '/backoffice',
+    roles: ['manager', 'owner']
+  },
+  {
+    id: 'devices',
+    name: 'Devices',
+    description: 'Manage registers, printers, and diagnostics',
+    icon: 'Monitor',
+    route: '/devices',
+    roles: ['supervisor', 'manager', 'owner']
+  },
+  {
+    id: 'ux-demo',
+    name: 'UX Demo',
+    description: 'Showcase of UX polish components',
+    icon: 'Sparkles',
+    route: '/ux-demo',
     roles: ['manager', 'owner']
   }
 ];

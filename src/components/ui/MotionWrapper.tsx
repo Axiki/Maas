@@ -62,12 +62,15 @@ export const MotionWrapper: React.FC<MotionWrapperProps> = ({
 };
 
 export const AnimatedList: React.FC<{
-  children: React.ReactNode[];
+  children: React.ReactNode;
   className?: string;
 }> = ({ children, className = '' }) => {
+  // Convert children to array if it's not already
+  const childrenArray = React.Children.toArray(children);
+
   return (
     <div className={className}>
-      {children.map((child, index) => (
+      {childrenArray.map((child, index) => (
         <MotionWrapper
           key={index}
           type="list-item"

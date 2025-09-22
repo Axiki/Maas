@@ -1,0 +1,122 @@
+@layer base {
+  :root {
+    --font-family-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    --font-size-heading-xl: clamp(2.5rem, 1rem + 3vw, 3rem);
+    --line-height-heading-xl: 1.1;
+
+    --font-size-heading-lg: clamp(2rem, 0.95rem + 2.3vw, 2.5rem);
+    --line-height-heading-lg: 1.15;
+
+    --font-size-heading-md: clamp(1.75rem, 0.9rem + 1.8vw, 2.125rem);
+    --line-height-heading-md: 1.2;
+
+    --font-size-heading-sm: clamp(1.5rem, 1.1rem + 1vw, 1.625rem);
+    --line-height-heading-sm: 1.3;
+
+    --font-size-heading-xs: clamp(1.25rem, 1.05rem + 0.5vw, 1.375rem);
+    --line-height-heading-xs: 1.35;
+
+    --font-size-body-lg: 1.125rem;
+    --line-height-body-lg: 1.65;
+
+    --font-size-body-md: 1rem;
+    --line-height-body-md: 1.6;
+
+    --font-size-body-sm: 0.875rem;
+    --line-height-body-sm: 1.5;
+
+    --font-size-body-xs: 0.75rem;
+    --line-height-body-xs: 1.45;
+
+    --letter-spacing-heading-tight: -0.02em;
+    --letter-spacing-heading: -0.01em;
+    --letter-spacing-body: 0em;
+  }
+}
+
+@layer utilities {
+  .heading-xl {
+    font-family: var(--font-family-sans);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-heading-xl);
+    line-height: var(--line-height-heading-xl);
+    letter-spacing: var(--letter-spacing-heading-tight);
+  }
+
+  .heading-lg {
+    font-family: var(--font-family-sans);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-heading-lg);
+    line-height: var(--line-height-heading-lg);
+    letter-spacing: var(--letter-spacing-heading-tight);
+  }
+
+  .heading-md {
+    font-family: var(--font-family-sans);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-heading-md);
+    line-height: var(--line-height-heading-md);
+    letter-spacing: var(--letter-spacing-heading);
+  }
+
+  .heading-sm {
+    font-family: var(--font-family-sans);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-heading-sm);
+    line-height: var(--line-height-heading-sm);
+    letter-spacing: var(--letter-spacing-heading);
+  }
+
+  .heading-xs {
+    font-family: var(--font-family-sans);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-heading-xs);
+    line-height: var(--line-height-heading-xs);
+    letter-spacing: var(--letter-spacing-heading);
+  }
+
+  .body-lg {
+    font-family: var(--font-family-sans);
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-body-lg);
+    line-height: var(--line-height-body-lg);
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  .body-md {
+    font-family: var(--font-family-sans);
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  .body-sm {
+    font-family: var(--font-family-sans);
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-body-sm);
+    line-height: var(--line-height-body-sm);
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  .body-xs {
+    font-family: var(--font-family-sans);
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-body-xs);
+    line-height: var(--line-height-body-xs);
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  .body-strong {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .body-medium {
+    font-weight: var(--font-weight-medium);
+  }
+}

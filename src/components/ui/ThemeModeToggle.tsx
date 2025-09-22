@@ -15,7 +15,7 @@ const labelMap = {
   auto: 'Auto mode',
 };
 
-export const ThemeModeToggle: React.FC = () => {
+export const ThemeModeToggle: React.FC<React.ComponentProps<typeof Button>> = ({ className, ...props }) => {
   const mode = useThemeStore((state) => state.mode);
   const setMode = useThemeStore((state) => state.setMode);
 
@@ -35,6 +35,8 @@ export const ThemeModeToggle: React.FC = () => {
       onClick={cycleTheme}
       aria-label={`Toggle theme (current: ${labelMap[mode]})`}
       title={`Switch theme (current: ${labelMap[mode]})`}
+      className={className}
+      {...props}
     >
       <Icon size={18} />
     </Button>
